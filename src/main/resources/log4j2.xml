@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p --- [%t] %c{1}.%M - %m%n"/>
+        </Console>
+        <RollingRandomAccessFile  name="RollingFile" fileName="C:/Logs/app.log"
+                     filePattern="C:/Logs/app-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %5p --- [%t] %c{1}.%M - %m%n"/>
+            <TimeBasedTriggeringPolicy />
+        </RollingRandomAccessFile>
+        <Async name="Async">
+			<AppenderRef ref="RollingFile"/>
+        </Async>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+			 <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

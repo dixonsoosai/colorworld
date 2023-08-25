@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Invoice</title>
+  <style>
+    body {
+      width: 870px;
+      border: 1.5px solid;
+    }
+
+    .no-margin-padding {
+      margin: 0px 0px 0px 0px;
+      padding: 0px 0px 0px 0px;
+    }
+
+    .header {
+      text-align: center;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid;
+    }
+
+    .tax-invoice {
+      text-decoration: underline;
+    }
+
+    .row {
+      display: flex;
+    }
+
+    .column {
+      flex: 50%;
+    }
+
+    .company-details {
+      border-width: 0px;
+      border-right: 1.5px solid;
+      padding: 2px;
+    }
+
+    .bill-details {
+      align-items: center;
+    }
+
+    .bill-invoice,
+    .bill-date {
+      padding: 2px;
+    }
+
+    .bill tbody tr td {
+      text-align: center;
+    }
+
+    .bill tbody tr td:nth-child(1),
+    .bill tbody tr td:nth-child(2),
+    .bill tbody tr td:nth-child(3) {
+      text-align: left;
+    }
+
+    .bill tbody tr td:nth-child(8),
+    .bill tbody tr td:nth-child(10),
+    .bill tbody tr td:nth-child(11) {
+      text-align: right;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+
+    table th,
+    table td {
+      padding: 4px;
+    }
+
+    .bill table,
+    .bill table td:first-child,
+    .bill table td:last-child,
+    .bill th:first-child,
+    .bill th:last-child {
+      border-left: 0px;
+      border-right: 0px;
+    }
+    .bill table td, .bill table tr {
+      border-bottom: 0px;
+      border-top: 0px;
+    }
+    .c1 table {
+      padding: 2px;
+      border: 0px;
+    }
+    .c1 table td {
+      border: 0px;
+      border-bottom: 1.5px solid;
+    }
+    .c1 table tr:last-child {
+      border-bottom: 0px;
+    }
+    .declaration {
+      padding: 3px;
+    }
+    .c2 table {
+      border-top: 0px;
+      border-bottom: 0px;
+      border-right: 0px;
+    }
+
+    .c2 table tr:first-child td {
+      border-top: 0px;
+    }
+
+    .c2 table tr:last-child td {
+      border-bottom: 0px;
+    }
+
+    .c2 td:nth-child(1) {
+      width: 166px;
+    }
+
+    .c2 td:nth-child(2) {
+      text-align: right;
+      width: 73px;
+      border-right: 0px;
+    }
+
+    .account-details {
+      padding: 2px;
+    }
+
+    .gst-details table th,
+    .gst-details table td,
+    .gst-details table {
+      border-style: solid;
+      border-left: 0px;
+      border-collapse: collapse;
+    }
+
+    .container {
+      border-top: 1.5px solid;
+      border-bottom: 1.5px solid;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .gst-details table td {
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h4 class="tax-invoice no-margin-padding">TAX INVOICE</h4>
+    <h1 class="no-margin-padding">${CompanyName}</h1>
+    <p class="no-margin-padding">${CompanyDescription}</p>
+    <p class="no-margin-padding">${CompanyAddress}</p> 
+    <p class="no-margin-padding">${CompanyContact&GST}</p>
+  </div>
+  <div class="bill-header">
+    <div class="row">
+      <div class="column company-details">M/S. ${PartyCompany}</div>
+      <div class="column bill-details">
+        <div class="bill-invoice">Invoice no: ${InvoiceNo}</div>
+        <div class="bill-date">Date: ${InvoiceDate}</div>
+      </div>
+    </div>
+  </div>
+  <div class="bill">
+    <table width="100%">
+      <thead>
+        <th>Challan<br>No</th>
+        <th>Quantity</th>
+        <th>Description</th>
+        <th>HSN<br>Code</th>
+        <th>Rate<br>per unit</th>
+        <th>Taxable</th>
+        <th>C%</th>
+        <th>CGST</th>
+        <th>S%</th>
+        <th>SGST</th>
+        <th style="width:70px!important">Amount</th>
+      </thead>
+      <tbody>
+        ${BillBody}  
+      <tbody>
+    </table>
+  </div>
+  <div class="bill-footer">
+    <div class="row">
+      <div class="c1">
+        <table style="width: 100%;">
+          <tbody>
+            <tr>
+              <td>Party GST No: ${PartyGST}</td>
+            </tr>
+            <tr>
+              <td>Amount in words: ${AmountInWords}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="declaration">
+          Declaration:<br>
+              We declare that this invoice shows the actual price of the goods described and all particulars
+              are true and correct
+        </div>
+      </div>
+      <div class="c2">
+        <table>
+          <tbody>
+            <tr>
+              <td>Amount before Tax</td>
+              <td>${AmtB4Tax}</td>
+            </tr>
+            <tr>
+              <td>Total CGST</td>
+              <td>${TotalCGST}</td>
+            </tr>
+            <tr>
+              <td>Total SGST</td>
+              <td>${TotalSGST}</td>
+            </tr>
+            <tr>
+              <td>Rounding off</td>
+              <td>${RoundingOff}</td>
+            </tr>
+            <tr>
+              <td>Total Amount</td>
+              <td>${TotalAmount}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+  <div class="gst-details">
+    <div class="row">
+      <div class="column">
+        <table style="width:100%">
+          <thead>
+            <th>GST</th>
+            <th>Taxable</th>
+            <th>CGST</th>
+            <th>SGST</th>
+            <th>Total GST</th>
+          </thead>
+          <tbody>
+            ${GSTBody}
+          </tbody>
+        </table>
+      </div>
+      <div class="column container" style="text-align: right;">
+        <div>For ${CompanyName}</div>
+        <div>Proprietor</div>
+      </div>
+    </div>
+  </div>
+  <div class="account-details">
+    <b>${CompanyAccountDetails}</b>
+  </div>
+</body>
+
+</html>
