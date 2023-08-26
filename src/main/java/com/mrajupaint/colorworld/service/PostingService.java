@@ -73,11 +73,11 @@ public class PostingService {
 		}
 		
 		pdfService.generatePDF(taxInvoice);
-		
+		/*
 		transactionRepository.addTransaction(taxInvoice.getDetails());
 		sSTNHDPRepository.save(taxInvoice.getHeader());
 		sSGNJNPRepository.saveAll(taxInvoice.getGst());
-		
+		*/
 		return new ServiceResponse<>(200, AppConstants.SUCCESS, 
 				"Bill generated successfully",null);
 	}
@@ -110,7 +110,6 @@ public class PostingService {
 		}
 		int currentDate = Integer.parseInt(AppUtils.formatDate(sstnhdp.getTntime(), "yyyyMMdd"));
 		sstnhdp.setTnblty(AppConstants.TAX_INVOICE);
-		sstnhdp.setTncurdt(currentDate);
 		sstnhdp.setTnbillno(billNum);
 		return "****";
 	}
@@ -122,8 +121,6 @@ public class PostingService {
 		double totalTaxable = 0, totalCGST = 0,totalSGST = 0,totalTamt = 0;
 		
 		var header = taxInvoice.getHeader();
-		int currentDate = Integer.parseInt(AppUtils.formatDate(header.getTntime(), "yyyyMMdd"));
-
 		for(int i=0; i< taxInvoice.getGst().size(); i++) {
 			var gst = taxInvoice.getGst().get(i);
 			if(gst.getGngstp().equals("Total")) {
@@ -139,8 +136,6 @@ public class PostingService {
 				sAmt += gst.getGnsamt();
 				tAmt += gst.getGntamt();
 			}
-			gst.setGnbltyp(AppConstants.TAX_INVOICE);
-			gst.setGndate(currentDate);
 			gst.setGnbill(billNum);
 		}
 		
@@ -161,17 +156,7 @@ public class PostingService {
 			billCAmt += billDetails.getTncamt();
 			billSAmt += billDetails.getTnsamt();
 			billTAmt += billDetails.getTntamt();
-			
 			billDetails.setTnbillno(billNum);
-			billDetails.setTnblty(AppConstants.TAX_INVOICE);
-			billDetails.setTncurdt(currentDate);
-			billDetails.setTntime(header.getTntime());
-			
-			billDetails.setTnrtna(header.getTnrtna());
-			billDetails.setTncsrv(header.getTncsrv());
-			billDetails.setTnprbn(header.getTnprbn());
-			billDetails.setTntotal(header.getTntotal());
-			billDetails.setTngdtl(header.getTngdtl());
 		}
 		if(billTaxable != totalTaxable || billCAmt != totalCGST || 
 				billSAmt != totalSGST || header.getTntotal() != billTAmt) {

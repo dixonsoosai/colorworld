@@ -33,21 +33,15 @@ public class TransactionRepository {
 		}
 	    sql = """
 	    		INSERT INTO colorworld.sstnjnp(
-        		tnbillno, tncurdt, tntime, tnname, tnchqdt, tnchallan, tncmpy, tncmpd, 
+        		tnbillno, tnchallan, tncmpy, tncmpd, 
         		tncolor, tnscnnm, tnprice, tntxable, tnsamt, tncamt, tntamt, tntqty, 
-        		tnuqty, tnunit, tnpdcd, tnhsnc, tncgst, tnsgst, tnmrp, tncuspr, tnmcpr, 
-        		tnspcpr, tngstpr, tntotal, tnprbn, tngdtl, tncsrv, tnrtna, tnblty)
-        		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 
-        		?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        		tnuqty, tnunit, tnpdcd, tnhsnc, tncgst, tnsgst)
+        		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         		""";
         List<Object[]> batchArgs = new ArrayList<>();
         
         for (var entity : entities) {
             Object[] args = {entity.getTnbillno(), 
-            		entity.getTncurdt(),
-            		entity.getTntime(),
-            		entity.getTnname(),
-            		entity.getTnchqdt(),
             		entity.getTnchallan(),
             		entity.getTncmpy(),
             		entity.getTncmpd(),
@@ -65,17 +59,6 @@ public class TransactionRepository {
             		entity.getTnhsnc(),
             		entity.getTncgst(),
             		entity.getTnsgst(),
-            		entity.getTnmrp(),
-            		entity.getTncuspr(),
-            		entity.getTnmcpr(),
-            		entity.getTnspcpr(),
-            		entity.getTngstpr(),
-            		entity.getTntotal(),
-            		entity.getTnprbn(),
-            		entity.getTngdtl(),
-            		entity.getTncsrv(),
-            		entity.getTnrtna(),
-            		entity.getTnblty()
             		};
             batchArgs.add(args);
         }
@@ -86,4 +69,19 @@ public class TransactionRepository {
         	}
         }
     }
+	
+	public List<SSTNJNP> getTransaction(int billnum) {
+		String sql = """
+				SELECT * FROM colorworld.sstnjnp WHERE tnbillno = %d
+				""".formatted(billnum);
+		
+		return jdbcTemplate.query(sql, (rs, rowNum) -> {
+			SSTNJNP transaction = new SSTNJNP();
+			transaction.setTnbillno(rs.getInt("tnbillno"));
+			transaction.setTncamt(rs.getInt("tncamt"));
+			return transaction;
+		});
+	}
+		
+	
 }

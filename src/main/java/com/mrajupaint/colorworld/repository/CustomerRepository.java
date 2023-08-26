@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import com.mrajupaint.colorworld.entity.Customer;
 
 @Repository
-public interface CustomerRepository extends JpaRepository<Customer, String> {
+public interface CustomerRepository extends JpaRepository<Customer, Integer> {
 
-	int deleteByJpname(String customerName);
+	int deleteByJpid(int customerId);
 
 }

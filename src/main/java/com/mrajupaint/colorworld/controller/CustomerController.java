@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrajupaint.colorworld.common.AppConstants;
@@ -40,31 +40,34 @@ public class CustomerController {
 	}
 	
 	@LogTime
-	@GetMapping("customer/{customerName}")
-	public ResponseEntity<ServiceResponse<Customer>> getCustomer(@PathVariable String customerName) {
+	@GetMapping("customer")
+	public ResponseEntity<ServiceResponse<Customer>> getCustomer(
+			@RequestParam("customerId") String customerId) {
 		var response = new ServiceResponse<Customer>();
 		response.setCode(HttpStatus.OK.value());
 		response.setStatus(AppConstants.SUCCESS);
 		response.setErrorMessage(Strings.EMPTY);
-		response.setData(customerService.getCustomer(customerName));
+		response.setData(customerService.getCustomer(Integer.parseInt(customerId)));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@LogTime
 	@PutMapping("customer")
-	public ResponseEntity<ServiceResponse<Object>> addCustomer(@RequestBody Customer customer) throws Exception {
+	public ResponseEntity<ServiceResponse<Object>> addCustomer(
+			@RequestBody Customer customer) throws Exception {
 		var response = customerService.addCustomer(customer);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
 	@LogTime
 	@DeleteMapping("customer")
-	public ResponseEntity<ServiceResponse<String>> deleteCustomer(@RequestBody String customerName) throws ColorWorldException {
+	public ResponseEntity<ServiceResponse<String>> deleteCustomer(
+			@RequestParam("customerId") String customerId) throws ColorWorldException {
 		var response = new ServiceResponse<String>();
 		response.setCode(HttpStatus.OK.value());
 		response.setStatus("Success");
 		response.setErrorMessage(Strings.EMPTY);
-		response.setData(customerService.deleteCustomer(customerName));
+		response.setData(customerService.deleteCustomer(Integer.parseInt(customerId)));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 

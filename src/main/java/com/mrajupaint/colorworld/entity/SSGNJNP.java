@@ -16,14 +16,6 @@ public class SSGNJNP
 	@Id
 	@Column
 	private int gnbill;
-	@Column
-	private int gndate;
-	@Column
-	private java.sql.Timestamp gntime;
-	@Column
-	private String gnname;
-	@Column
-	private String gnpgst;
 	@Id
 	@Column
 	private String gngstp;
@@ -35,6 +27,4 @@ public class SSGNJNP
 	private double gnsamt;
 	@Column
 	private double gntamt;
-	@Column
-	private String gnbltyp;
 }

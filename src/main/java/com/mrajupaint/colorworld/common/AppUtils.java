@@ -10,6 +10,16 @@ import com.mrajupaint.colorworld.exception.ColorWorldException;
 
 public class AppUtils {
 
+	private static final String[] units = {"Zero", "One", "Two", "Three", "Four", "Five", "Six", 
+			"Seven", "Eight", "Nine"};
+	
+	private static final String[] teens = { "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", 
+			"Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+		    };
+
+	private static final String[] tens = { "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty",
+			"Seventy", "Eighty", "Ninety"};
+
 	public static boolean isBlank(String inputString) {
 		return Objects.isNull(inputString) || inputString.length() == 0;
 	}
@@ -49,6 +59,19 @@ public class AppUtils {
 
 	public static String formatDate(LocalDateTime date, String pattern) {
 		return DateTimeFormatter.ofPattern(pattern).format(date);
+	}
+	
+	public static String convertToWords(int num) {
+		return "Seventy seven thousand seven hundred and seventy seven";
+	}
+	
+	public static String rephraseBill(int billnum) {
+		String bill = String.valueOf(billnum);
+		if(billnum <= 2000000) {
+			return bill;
+		}
+		int year = Integer.parseInt(bill.substring(0, 4));
+		return bill.substring(4,7) + "/" + year + "-" + (year + 1);
 	}
 	
 	AppUtils() throws ColorWorldException {

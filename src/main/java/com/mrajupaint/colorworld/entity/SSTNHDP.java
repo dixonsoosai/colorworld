@@ -23,8 +23,6 @@ public class SSTNHDP
 	@Column
 	private String tnpgst;
 	@Column
-	private int tncurdt;
-	@Column
 	private java.sql.Timestamp tntime;
 	@Column
 	private double tntotal;

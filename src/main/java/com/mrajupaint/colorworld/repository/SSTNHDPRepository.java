@@ -18,4 +18,6 @@ public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, SSTNHDP_KEY> {
 			+ "where tntime between :startDate and :endDate and tnblty = 'T'",
 			nativeQuery = true)
 	Optional<Integer> getBillNo(@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate);
+
+	SSTNHDP getByTnbillno(int billnum);
 }

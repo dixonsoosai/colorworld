@@ -53,16 +53,16 @@ public class CustomerService {
 	}
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
-	public String deleteCustomer(String customerName) throws ColorWorldException {
-		int count = customerRepository.deleteByJpname(customerName);
+	public String deleteCustomer(int customerId) throws ColorWorldException {
+		int count = customerRepository.deleteByJpid(customerId);
 		if(count > 1) {
 			throw new ColorWorldException("Exception while deleting Customer");
 		}
 		return "Customer deleted successfully";
 	}
 	
-	public Customer getCustomer(String customerName) {
-		var customer = customerRepository.findById(customerName);
+	public Customer getCustomer(int customerId) {
+		var customer = customerRepository.findById(customerId);
 		if(customer.isPresent()) {
 			return customer.get();
 		}
