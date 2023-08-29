@@ -9,9 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mrajupaint.colorworld.common.AppConstants;
@@ -40,8 +40,9 @@ public class ProductController {
 	}
 	
 	@LogTime
-	@GetMapping("product/{productCode}")
-	public ResponseEntity<ServiceResponse<Product>> product(@PathVariable String productCode) {
+	@GetMapping("product")
+	public ResponseEntity<ServiceResponse<Product>> product(
+			@RequestParam("productCode") String productCode) {
 		var response = new ServiceResponse<Product>();
 		response.setCode(HttpStatus.OK.value());
 		response.setStatus(AppConstants.SUCCESS);
@@ -59,7 +60,8 @@ public class ProductController {
 	
 	@LogTime
 	@DeleteMapping("product")
-	public ResponseEntity<ServiceResponse<String>> deleteProduct(@RequestBody String productCode) throws ColorWorldException {
+	public ResponseEntity<ServiceResponse<String>> deleteProduct(
+			@RequestParam("productCode") String productCode) throws ColorWorldException {
 		var response = new ServiceResponse<String>();
 		response.setCode(HttpStatus.OK.value());
 		response.setStatus("Success");

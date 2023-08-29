@@ -10,6 +10,7 @@ colorworld-ui/node_modules
 colorworld-ui/.angular
 colorworld-ui/.editorconfig
 colorworld-ui/.browserslistrc
+colorworld-ui/package-lock.json
 
 ### STS ###
 .apt_generated

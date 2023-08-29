@@ -2,12 +2,16 @@ package com.mrajupaint.colorworld.service;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.text.NumberFormat;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +21,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
@@ -83,7 +86,8 @@ public class PDFService {
 	public void generatePDF(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			File file = new File("C:\\Users\\Tiaa user\\Documents\\colorworld\\src\\main\\resources\\templates\\invoice_template1.html");
+			//TODO: Replace line
+			File file = new File("C:\\Users\\Tiaa user\\Documents\\colorworld\\src\\main\\resources\\templates\\invoice_template.html");
 					//ResourceUtils.getFile("classpath:templates/invoice_template1.html");
 			
 			String finalContent = editContent(file, placeholder);
@@ -97,6 +101,14 @@ public class PDFService {
 	}
 	
 	private void downloadContent(String content, String outputFile) {
+		//Download HTML file also
+		//TODO: Delete line
+		try {
+			new File("C:\\Logs\\sample.html").delete();
+			Files.writeString(Path.of("C:\\Logs\\sample.html"), content, StandardOpenOption.CREATE_NEW);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		try(OutputStream fileOutputStream = new FileOutputStream(outputFile)) {
 			ConverterProperties converterProperties = new ConverterProperties();
 			converterProperties.setImmediateFlush(false);
@@ -190,7 +202,18 @@ public class PDFService {
 					formatNum(gst.getGntamt()));
 			gstBody.append(line);
 		}
-		
+		for(int i = gstList.size(); i< 3 ; i++) {
+			var line = """
+					<tr style=\"height: 27.2px;\" class= \"blank-row\">
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					</tr>
+					""";
+			gstBody.append(line);
+		}
 		for(var bill: billList) {
 			var line = """
 				<tr>
@@ -223,7 +246,7 @@ public class PDFService {
 			billBody.append(line);
 		}
 		
-		for(int i = billList.size(); i<= 82 ; i++) {
+		for(int i = billList.size(); i<= 75 ; i++) {
 			var line = """
 					<tr style=\"height: 27.2px;\">
 					     <td></td>
@@ -243,6 +266,25 @@ public class PDFService {
 		}
 		replaceKeyword.put("@BillBody", billBody.toString());		
 		replaceKeyword.put("@GSTBody", gstBody.toString());
+		
+		//Read Signature File
+		//TODO: Replace line
+		String filePath = "C:\\Users\\Tiaa user\\Documents\\colorworld\\src\\main\\resources\\templates\\sign.jpeg";
+			//ResourceUtils.getFile("classpath:templates/sign.jpeg");		
+		try {
+            File signFile = new File(filePath);
+            String ext = filePath.substring(filePath.indexOf(".") + 1);
+            try(FileInputStream fileInputStream = new FileInputStream(signFile)) {
+	            byte[] imageData = new byte[(int) signFile.length()];
+	            fileInputStream.read(imageData);
+	            String base64Image = "data:image/" + ext + ";base64," + 
+	            		Base64.getEncoder().encodeToString(imageData);
+	            replaceKeyword.put("@img", base64Image);
+            }
+        } catch (IOException e) {
+            LOGGER.error("Failed to read signature file: {}", e.getMessage(), e);
+        }
+		
 		return replaceKeyword;
 	}
 }

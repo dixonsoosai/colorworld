@@ -123,23 +123,16 @@
                 "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
                 "node_modules/primeng/resources/primeng.min.css",
                 "node_modules/primeflex/primeflex.css",
-                "node_modules/primeicons/primeicons.css",
                 "node_modules/quill/dist/quill.snow.css",
-                "node_modules/boxicons/css/boxicons.min.css"
+                "node_modules/boxicons/css/boxicons.min.css",
+                "node_modules/bootstrap/dist/css/bootstrap.min.css"
               ],
-              "scripts": [],
-              "allowedCommonJsDependencies": [
-                "chart.js",
-                "xlsx",
-                "jspdf-autotable",
-                "file-saver",
-                "jspdf",
-                "quill"
-              ]
+              "scripts": ["../node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.js"
+            ]
             }
           }
         }
       }
-    },
-    "defaultProject": "example-app"
+    }
 }

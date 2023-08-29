@@ -32,20 +32,45 @@
       text-decoration: underline;
     }
 
-    .company-details {
-      border-width: 0px;
-      border-right: 1.5px solid;
+    .bill-header {
+      border: none;
+    }
+
+    .invoice_num {
+      padding: 2px;
+      border-bottom: 1px solid;
+    }
+
+    .invoice_date {
       padding: 2px;
     }
 
-    .bill-details {
-      align-items: center;
+    .customer_name {
+      padding: 2px;
     }
+
+    .bill table, .bill table thead, .bill table th, .bill table td {
+      border: 1px solid;
+      border-collapse: collapse;
+    }
+
+    .bill table td {
+      border-bottom: 0px none;
+      border-top: 0px none;
+    }
+
+    .bill table td:first-child, .bill table th:first-child, .bill table {
+      border-left: 0px none;
+    }
+
+    .bill table td:last-child, .bill table th:last-child, .bill table {
+      border-right: 0px none;
+    }
+
     .bill tbody tr td {
       text-align: center;
     }
 
-    .bill tbody tr td:nth-child(2),
     .bill tbody tr td:nth-child(3) {
       text-align: left;
     }
@@ -56,94 +81,75 @@
       text-align: right;
     }
 
-    table,
-    th,
-    td {
-      border: 1px solid black;
-      border-collapse: collapse;
+    table {
+      border-spacing: 0;
     }
-
     table th,
     table td {
       padding: 4px;
     }
 
-    .bill table,
-    .bill table td:first-child,
-    .bill table td:last-child,
-    .bill th:first-child,
-    .bill th:last-child {
-      border-left: 0px;
-      border-right: 0px;
-    }
-    .bill table td, .bill table tr {
-      border-bottom: 0px;
-      border-top: 0px;
-    }
-    .c1 table {
-      padding: 2px;
-      border: 0px;
-    }
-    .c1 table td {
-      border: 0px;
-      border-bottom: 1.5px solid;
-    }
-    .c1 table tr:last-child {
-      border-bottom: 0px;
-    }
     .declaration {
       padding: 3px;
     }
-    .c2 table {
-      border-top: 0px;
-      border-bottom: 0px;
-      border-right: 0px;
-    }
-
-    .c2 table tr:first-child td {
-      border-top: 0px;
-    }
-
-    .c2 table tr:last-child td {
-      border-bottom: 0px;
-    }
-
-    .c2 td:nth-child(1) {
-      width: 166px;
-    }
-
-    .c2 td:nth-child(2) {
-      text-align: right;
-      width: 73px;
-      border-right: 0px;
-    }
-
     .account-details {
       padding: 2px;
     }
 
-    .gst-details table th,
-    .gst-details table td,
-    .gst-details table {
-      border-style: solid;
-      border-left: 0px;
-      border-collapse: collapse;
+    .gst-details {
+      border-top: 1px solid;
+      border-bottom: 1px solid;
     }
-
     .gst-details table td {
       text-align: right;
     }
 
     .grid-table {
       width: 100%;
+      border:none;
+      border-spacing: 0px;
     }
     .grid-table td {
       margin: 0 0 0 0;
       padding: 0 0 0 0;
     }
-    .account-table td:last-child {
-      text-align: right;
+    .account-table, .account-table td {
+      margin: 0px 0px 0px 0px;
+      border: 1px solid;
+      border-collapse: collapse;
+      border-spacing: 0;
     }
+
+    .account-table {
+      border : 0 0 0 0;
+    }
+
+    .account-table tr:first-child td {
+      border-top : 0px;
+    }
+
+    .account-table tr:last-child td {
+      border-bottom : 0px;
+    }
+
+    .account-table td:last-child {
+      width: 52px;
+      text-align: right;
+      border-right: 0px;
+    }
+
+    .gst-table, .gst-table td , .gst-table th{
+      margin: 0px 0px 0px 0px;
+      border: 1px solid;
+      border-collapse: collapse;
+      border-spacing: 0;
+      padding: 4px;
+    }
+
+    .blank-row td {
+      border-width:0px;
+    }
+
   </style>
 </head>
 
@@ -155,21 +161,23 @@
     <p>@CompanyAddress</p> 
     <p>@CompanyContact&GST</p>
   </div>
+
   <div class="bill-header">
     <table class="grid-table">
       <tbody>
         <tr>
-          <td style="width: 50%;">
-            <div>M/S. @PartyCompany</div>
+          <td style="width: 50%;" style = "border-right: 1px solid">
+            <p class="customer_name">M/S. @PartyCompany</p>
           </td>
           <td style="width: 50%">
-            <div style="padding: 2px;border-bottom: 1px solid;">Invoice no: @InvoiceNo</div>
-            <div style="padding: 2px;">Date: @InvoiceDate</div>
+            <div class="invoice_num">Invoice no: @InvoiceNo</div>
+            <div class="invoice_date">Date: @InvoiceDate</div>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+
   <div class="bill">
     <table width="100%">
       <thead>
@@ -190,6 +198,7 @@
       <tbody>
     </table>
   </div>
+
   <div class="bill-footer">
     <table style="width: 100%;">
       <tbody>
@@ -203,12 +212,12 @@
                   are true and correct
             </div>
           </td>
-          <td style="width:auto" class="no-margin-padding">
-            <table class= "account-table" style="width: 100%;">
+          <td style="width:30%" class="no-margin-padding">
+            <table class= "account-table" style="width: 100%;" cell-spacing="0">
               <tbody>
                 <tr>
-                  <td style="width: auto;">Amount before Tax</td>
-                  <td style="width: 48px; text-align: right;">@AmtB4Tax</td>
+                  <td>Amount before Tax</td>
+                  <td>@AmtB4Tax</td>
                 </tr>
                 <tr>
                   <td>Total CGST</td>
@@ -234,13 +243,12 @@
     </table>
   </div>
 
-
   <div class="gst-details">
     <table class="grid-table">
       <tbody>
         <tr>
-          <td style="width: 70%;">
-            <table style="width:100%">
+          <td style="width: 70%; height:100%;border-right: 1px solid;">
+            <table class="gst-table" style="width:100%;">
               <thead>
                 <th>GST</th>
                 <th>Taxable</th>
@@ -255,6 +263,8 @@
           </td>
           <td style="width: auto;">
             <div>For @CompanyName</div>
+            <div>
+              <img src="@img" height="50px" width="80px"></div>
             <div>Proprietor</div>
           </td>
         </tr>

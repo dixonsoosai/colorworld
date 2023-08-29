@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TableCellEditDemo } from 'src/app/demo/table-cell-edit-demo';
 
 // Import PrimeNG modules
 import { AccordionModule } from 'primeng/accordion';
@@ -95,15 +94,15 @@ import { CardModule } from 'primeng/card';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProductService } from 'src/service/productservice';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
-
-const routes: Routes = [
-  { path: '', redirectTo: '/table', pathMatch: 'full' },
-  { path: 'table', component: TableCellEditDemo },
-  { path: 'sidebar', component: SidebarComponent },
-];
+import { HomeComponent } from './home/home.component';
+import { ProductsComponent } from './products/products.component';
+import { CustomersComponent } from './customers/customers.component';
+import { TaxInvoiceComponent } from './billing/tax-invoice/tax-invoice.component';
+import { AccountsComponent } from './billing/accounts/accounts.component';
+import { InvoiceHistoryComponent } from './billing/invoice-history/invoice-history.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 @NgModule({
   imports: [
@@ -142,6 +141,7 @@ const routes: Routes = [
     FieldsetModule,
     FileUploadModule,
     GalleriaModule,
+    HttpClientModule,
     InplaceModule,
     InputMaskModule,
     InputSwitchModule,
@@ -201,7 +201,7 @@ const routes: Routes = [
     CardModule,
     AppRoutingModule,
   ],
-    declarations: [ AppComponent],
+    declarations: [ AppComponent, HomeComponent, ProductsComponent, CustomersComponent, TaxInvoiceComponent, AccountsComponent, InvoiceHistoryComponent, DashboardComponent],
     exports:[RouterModule],
     bootstrap: [ AppComponent ],
     providers: [ ProductService ],
