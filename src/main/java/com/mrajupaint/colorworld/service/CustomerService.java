@@ -30,11 +30,17 @@ public class CustomerService {
 		if(customer.getJpname().isBlank()) {
 			errorMessage.put("JPNAME", "Customer Name cannot be blank");
 		}
-		if(!customer.getJpmobno().matches("^(?:\\d{10})?$")) {
-			errorMessage.put("JPMOBNO", "Invalid Mob no");
+		
+		if(!"".equals(customer.getJpmobno())) {		
+			if(!customer.getJpmobno().matches("^(?:\\d{10})?$")) {
+				errorMessage.put("JPMOBNO", "Invalid Mob no");
+			}
 		}
-		if(!customer.getJppgst().matches("^(?:X{5}|[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1})$")) {
-			errorMessage.put("JPPGST", "Party's GST is not in correct format");
+		
+		if(!"".equals(customer.getJppgst())) {		
+			if(!customer.getJppgst().matches("^(?:X{5}|[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9]{1})$")) {
+				errorMessage.put("JPPGST", "Party's GST is not in correct format");
+			}
 		}
 		//Add Default Date
 		if(!errorMessage.isEmpty()) {

@@ -1,0 +1,18 @@
+.cust_row:hover {
+	background-color: #abc9fb;
+	cursor: pointer;
+}
+
+.cust_row {
+	background-color:transparent;
+}
+
+.borderless {
+	border: none;
+	border-bottom: 1px solid;
+}
+
+label {
+	font-size: medium;
+	vertical-align: bottom;
+}

@@ -245,6 +245,8 @@
   z-index: 1;
   width: calc(100vw - 255px);
   overflow-x: hidden!important;
+  transition: all 0.5s ease;
+  height: calc(100vh - 67px);
 }
 
 @media (max-width: 400px) {
@@ -257,20 +259,15 @@
   .sidebar.close{
     width: 0;
   }
-  .home-section{
+  .home-section, .content{
     left: 78px;
     width: calc(100% - 78px);
     z-index: 100;
   }
+
   .sidebar.close ~ .home-section{
     width: 100%;
     left: 0;
-  }
-  .content {
-    position: relative;
-    top:50px;
-    left: 78px;
-    z-index: 1;
   }
 }
 
