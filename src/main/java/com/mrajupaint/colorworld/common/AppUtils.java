@@ -10,16 +10,6 @@ import com.mrajupaint.colorworld.exception.ColorWorldException;
 
 public class AppUtils {
 
-	private static final String[] units = {"Zero", "One", "Two", "Three", "Four", "Five", "Six", 
-			"Seven", "Eight", "Nine"};
-	
-	private static final String[] teens = { "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", 
-			"Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
-		    };
-
-	private static final String[] tens = { "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty",
-			"Seventy", "Eighty", "Ninety"};
-
 	public static boolean isBlank(String inputString) {
 		return Objects.isNull(inputString) || inputString.length() == 0;
 	}

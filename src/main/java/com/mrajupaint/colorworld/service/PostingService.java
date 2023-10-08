@@ -108,7 +108,6 @@ public class PostingService {
 				return "Invalid Total Cash Transaction";
 			}
 		}
-		int currentDate = Integer.parseInt(AppUtils.formatDate(sstnhdp.getTntime(), "yyyyMMdd"));
 		sstnhdp.setTnblty(AppConstants.TAX_INVOICE);
 		sstnhdp.setTnbillno(billNum);
 		return "****";

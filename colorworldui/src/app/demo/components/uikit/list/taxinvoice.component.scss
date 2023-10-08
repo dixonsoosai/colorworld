@@ -1,0 +1,36 @@
+.search-form {
+    position: relative;
+  }
+  
+  .search-form .bx-search {
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    color: #9ca3af;
+  }
+  
+  .search-form-input {
+    height: 55px;
+    text-indent: 33px;
+    border-radius: 10px;
+  }
+  
+  // hide scrollbar ui but keep functionality
+  .plist::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .plist {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  p-calendar > span > input {
+    display: none;
+  }
+  
+  .product, .search-form-input  {
+    border: 1px solid blueviolet;
+  }
+  

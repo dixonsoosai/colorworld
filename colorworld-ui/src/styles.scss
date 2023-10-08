@@ -1,62 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+/* You can add global styles to this file, and also import other style files */
 
-*{
-    font-family: 'Poppins', 'sans-serif';
-}
+$gutter: 1rem; //for primeflex grid system
+@import "assets/layout/styles/layout/layout.scss";
 
-body {
-    margin: 0px;
-}
-    
-.lds-ripple {
-    position: absolute;
-    opacity: 0.2;
-    height: 100%;
-    width: 100%;
-    background-color: black;
-  }
-  .lds-ripple div {
-    position: absolute;
-    top:50%;
-    left: 50%;
-    width: 80px;
-    height: 80px;
-    border: 4px solid white;
-    opacity: 1;
-    border-radius: 50%;
-    animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-  }
-  .lds-ripple div:nth-child(2) {
-    animation-delay: -0.5s;
-  }
-  @keyframes lds-ripple {
-    0% {
-      top: 36px;
-      left: 36px;
-      width: 0;
-      height: 0;
-      opacity: 0;
-    }
-    4.9% {
-      top: 36px;
-      left: 36px;
-      width: 0;
-      height: 0;
-      opacity: 0;
-    }
-    5% {
-      top: 36px;
-      left: 36px;
-      width: 0;
-      height: 0;
-      opacity: 1;
-    }
-    100% {
-      top: 0px;
-      left: 0px;
-      width: 72px;
-      height: 72px;
-      opacity: 0;
-    }
-  }
-  
+/* PrimeNG */
+@import "../node_modules/primeng/resources/primeng.min.css";
+@import "../node_modules/primeflex/primeflex.scss";
+@import "../node_modules/primeicons/primeicons.css";
+
+/* Demos */
+@import "assets/demo/styles/flags/flags.css";
+@import "assets/demo/styles/badges.scss";
+@import "assets/demo/styles/code.scss";

@@ -28,7 +28,7 @@ import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.service.AccountRegisterService;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("sale-purchase")
 public class AccountRegisterController {
 

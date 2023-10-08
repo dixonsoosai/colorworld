@@ -1,0 +1,394 @@
+<div class="fluid-container p-4">
+    <p-toast></p-toast>
+    <!-- Product list screen -->
+    <div class="" id="products" *ngIf="!isInvoiceScreen">
+        <div class="row sticky-top">
+            <div class="col-10">
+                <div class="search-form pl-2 pr-2">
+                    <i class="bx bx-search"></i>
+                    <input type="text" class="form-control search-form-input" id="search" name="search"
+                        placeholder="Search product..." [ngModel]="searchText">
+                </div>
+            </div>
+            <div class="col-2 d-flex justify-content-end">
+                <button class="btn btn-primary ms-auto" (click)="goToInvoice()">View Invoice</button>
+            </div>
+        </div>
+        <div class="overflow-auto plist" style="height: 75vh;">
+            <div class="progress-spinner text-center" *ngIf="!isLoading">
+                <p-progressSpinner styleClass="w-8rem h-8rem" strokeWidth="3" fill="var(--surface-ground)"
+                    animationDuration=".5s"></p-progressSpinner>
+            </div>
+            <div class="row p-2">
+                <div class="col-lg-4 col-md-6 col-sm-12 pb-2" *ngFor="let cproduct of productList">
+                    <div class="card product">
+                        <div class="card-body">
+                            <h5 class="card-title text-center">{{cproduct.pnscnm}}</h5>
+                            <p class="card-text">{{cproduct.pncmpy}}</p>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item pl-0 d-flex justify-content-between"><span>Product Code
+                                    </span><b class="me">{{cproduct.pnpdcd}}</b></li>
+                                <li class="list-group-item pl-0 d-flex justify-content-between"><span>Quantity </span><b
+                                        class="me">{{cproduct.pnuqty}}</b></li>
+                                <li class="list-group-item pl-0 d-flex justify-content-between"><span>Price </span><b
+                                        class="me">{{cproduct.pnmrp}}</b></li>
+                                <li class="list-group-item pl-0 d-flex justify-content-between"><span>Unit </span><b
+                                        class="me">{{cproduct.pnunit}}</b></li>
+                            </ul>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-outline-primary me" (click)="addToInvoice(cproduct)">Add to
+                                    Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoice screen -->
+    <div class="" id="invoice" *ngIf="isInvoiceScreen">
+
+        <div class="d-flex justify-content-end">
+            <button class="btn btn-text" (click)="back()">Back</button>
+        </div>
+
+            <div class="card">
+                <div class="card-header">
+                    Customer Details
+                </div>
+                <div class="card-body">
+
+                    <div class="flex">
+                        
+                    </div>
+
+                    <div class="mt-2">
+                        <span class="p-float-label">
+                            <input pInputText class="p-inputtext-sm" id="username" [(ngModel)]="customer.jpname"
+                                (ngModelChange)="fetchCustomers($event)" />
+                            <label htmlFor="username">Customer Name</label>
+                        </span>
+                    </div>
+                    <div class="mt-2">
+                        <p-listbox *ngIf="listView" [options]="customers" [(ngModel)]="customer"
+                            [listStyle]="{ 'max-height': '250px' }" (click)="selectCust(customer)">
+                            <ng-template let-cust pTemplate="item">
+                                <div class="flex align-items-center gap-2">
+                                    <div>{{ cust.jpname }}</div>
+                                </div>
+                            </ng-template>
+                        </p-listbox>
+                    </div>
+                    <div class="mt-2 pt-3">
+                        <span class="p-float-label">
+                            <input pInputText id="username" class="p-inputtext-sm" [(ngModel)]="customer.jppgst" />
+                            <label htmlFor="username">GST</label>
+                        </span>
+                    </div>
+                    <div class="mt-2 pt-3">
+                        <span class="p-float-label">
+                            <p-inputNumber inputId="integeronly" class="p-inputtext-sm"
+                                [(ngModel)]="customer.jpmobno"> </p-inputNumber>
+                            <label htmlFor="number-input">Mobile Number</label>
+                        </span>
+                    </div>
+                    <div class="mt-2 pt-3">
+                        <span class="p-float-label">
+                            <textarea class="p-textarea-sm" id="float-input" rows="5" pInputTextarea
+                                [(ngModel)]="customer.jpadd"></textarea>
+                            <label for="float-input">Address</label>
+                        </span>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-info">Add</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-2">
+                <div class="card-body">
+                    Select Date: <p-calendar [(ngModel)]="selectedDate" dateFormat="dd.mm.yy"
+                        [showIcon]="true"></p-calendar>
+                </div>
+            </div>
+
+
+
+        <div class="row p-4">
+            <div class="col bg-white p-4 rounded border border-primary border-2">
+                <!-- Company header -->
+                <div class="row d-flex justify-content-between">
+                    <p class="strong text-center">INVOICE DETAILS</p>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col">
+                                <p class="h3">Color World</p>
+                                <p class="h6 text-muted">+91xxxxxxxx, xxxx@xxxxx.com</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <p class="h6 text-muted text-end">Address line 1</p>
+                        <p class="h6 text-muted text-end">Address 2</p>
+                        <p class="h6 text-muted text-end">Address line 3</p>
+                    </div>
+                </div>
+                <!-- customer section -->
+                <div class="p-3 bg-light rounded">
+                    <div class="row d-flex justify-content-between">
+                        <div class="col">
+                            <p class="h6 strong">INVOICE NUMBER</p>
+                            <p class="h6 text-muted">Invoice - 12345689</p>
+                            <p class="h6 text-muted mb-0 pb-0">Date - {{selectedDate | date: 'dd/MM/yyyy'}}</p>
+                        </div>
+                        <div class="col">
+                            <p class="h6 strong text-end">Customer Details</p>
+                            <p class="body1 text-muted text-end m-0 p-0">{{customer.jpname}}</p>
+                            <p class="body1 text-muted text-end m-0 p-0"><span *ngIf="customer.jpmobno"
+                                    style="font-size: 0.6rem;">Mob - </span>{{customer.jpmobno || ''}}</p>
+                            <p class="body1 text-muted text-end m-0 p-0"><span *ngIf="customer.jppgst"
+                                    style="font-size: 0.6rem;">GST - </span>{{customer.jppgst || ''}}</p>
+                            <p class="body1 text-muted text-end m-0 p-0"><span *ngIf="customer.jpadd"
+                                    style="font-size: 0.6rem;">Address - </span>{{customer.jpadd || ''}}</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Product Details -->
+                <div class="d-flex justify-content-between pt-4">
+                    <p class="h6">Product Details</p>
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                        data-bs-target="#staticBackdrop">Add Product</button>
+                </div>
+                <hr />
+                <!-- Product table -->
+                <div class="pb-4">
+                    <p-table [value]="selectedProducts" dataKey="pnhsnc" editMode="row"
+                        [tableStyle]="{ 'min-width': '50rem' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th style="width:10%">Challan</th>
+                                <th style="width:25%">Product</th>
+                                <th style="width:15%">HSNC</th>
+                                <th style="width:10%">Quantity</th>
+                                <th style="width:10%">Unit</th>
+                                <th style="width:10%">Price</th>
+                                <th style="width:10%">CGST</th>
+                                <th style="width:10%">SGST</th>
+                                <th style="width:10%">Final Price</th>
+                                <th style="width:10%"></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="emptymessage" let-columns>
+                            <tr>
+                                <td [attr.colspan]="9" class="text-center">
+                                    No records found
+                                </td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-cproduct let-editing="editing" let-ri="rowIndex">
+                            <tr [pEditableRow]="cproduct">
+                                <td></td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="cproduct.pnscnm">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{cproduct.pnscnm}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="cproduct.pnhsnc">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{cproduct.pnhsnc}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="cproduct.pnuqty">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{cproduct.pnuqty}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="cproduct.pnunit">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{cproduct.pnunit}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="cproduct.pnmrp">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{cproduct.pnmrp}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="cproduct.pncgst">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{cproduct.pncgstam}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>
+                                    <p-cellEditor>
+                                        <ng-template pTemplate="input">
+                                            <input pInputText type="text" [(ngModel)]="cproduct.pnsgst">
+                                        </ng-template>
+                                        <ng-template pTemplate="output">
+                                            {{cproduct.pnsgstam}}
+                                        </ng-template>
+                                    </p-cellEditor>
+                                </td>
+                                <td>{{cproduct.pnfmrp}}</td>
+                                <td>
+                                    <div class="flex align-items-center justify-content-center gap-2">
+                                        <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow
+                                            icon="pi pi-pencil" (click)="onRowEditInit(cproduct, ri)"
+                                            class="p-button-rounded p-button-text"></button>
+                                        <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow
+                                            icon="pi pi-check" (click)="onRowEditSave(cproduct, ri)"
+                                            class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                                        <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow
+                                            icon="pi pi-times" (click)="onRowEditCancel(cproduct, ri)"
+                                            class="p-button-rounded p-button-text p-button-danger"></button>
+                                        <button *ngIf="!editing" pButton pRipple type="button" pCancelEditableRow
+                                            icon="pi pi-trash" (click)="onRowEditCancel(cproduct, ri)"
+                                            class="p-button-rounded p-button-text p-button-danger"></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+                <!-- show when no product selected -->
+
+                <!-- Billing Summary -->
+                <div class="p-4 bg-light ms-auto rounded" style="width: 50%;">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item pl-0 bg-light d-flex justify-content-between"><span>Taxable
+                                Amount</span><b class="me">123</b></li>
+                        <li class="list-group-item pl-0 bg-light d-flex justify-content-between"><span>Total CGST
+                            </span><b class="me">123</b></li>
+                        <li class="list-group-item pl-0 bg-light d-flex justify-content-between"><span>Total SGST
+                            </span><b class="me">123</b></li>
+                        <li class="list-group-item pl-0 bg-light d-flex justify-content-between"><span>Total
+                                Ammount</span><b class="me">123</b></li>
+                    </ul>
+                </div>
+
+                <!-- GST table -->
+                <hr />
+                <p class="h6">GST Details</p>
+                <div class="pb-4">
+                    <p-table [value]="gstdetails" dataKey="id" [tableStyle]="{'max-width': '70%'}">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>GST (%)</th>
+                                <th>CGST (%)</th>
+                                <th>SGST (%)</th>
+                                <th>Total GST</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-detail let-ri="rowIndex">
+                            <tr [pEditableRow]="detail">
+                                <td>{{detail?.type}}</td>
+                                <td>{{detail?.gstp}}</td>
+                                <td>{{detail?.gstp}}</td>
+                                <td>{{detail?.total}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+
+        <!-- add product Modal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-keyboard="false"
+            style="background-color: rgba(0, 0, 0, 0.5);" data-bs-backdrop="false" data-bs-keyboard="false"
+            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Add Product</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group row mb-2">
+                            <label for="cust-name" class="col-sm-4 col-form-label font-bold block">Product Name</label>
+                            <div class="col-sm">
+                                <input type="text" class="form-control p-inputtext-sm borderless" pInputText
+                                    [(ngModel)]="product.pnscnm">
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="cust-name" class="col-sm-4 col-form-label font-bold block">Price</label>
+                            <div class="col-sm">
+                                <input type="text" class="form-control p-inputtext-sm borderless" pInputText
+                                    [(ngModel)]="product.pnmrp">
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="cust-name" class="col-sm-4 col-form-label font-bold block">HSN Code</label>
+                            <div class="col-sm">
+                                <input type="text" class="form-control p-inputtext-sm borderless" pInputText
+                                    [(ngModel)]="product.pnhsnc">
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="cust-name" class="col-sm-4 col-form-label font-bold block">Quantity</label>
+                            <div class="col-sm">
+                                <input type="text" class="form-control p-inputtext-sm borderless" pInputText
+                                    [(ngModel)]="product.pnuqty">
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="cust-name" class="col-sm-4 col-form-label font-bold block">Unit</label>
+                            <div class="col-sm">
+                                <input type="text" class="form-control p-inputtext-sm borderless" pInputText
+                                    [(ngModel)]="product.pnunit">
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="cust-name" class="col-sm-4 col-form-label font-bold block">SGST (%)</label>
+                            <div class="col-sm">
+                                <input type="text" class="form-control p-inputtext-sm borderless" pInputText
+                                    [(ngModel)]="product.pnsgst">
+                            </div>
+                        </div>
+                        <div class="form-group row mb-2">
+                            <label for="cust-name" class="col-sm-4 col-form-label font-bold block">CGST (%)</label>
+                            <div class="col-sm">
+                                <input type="text" class="form-control p-inputtext-sm borderless" pInputText
+                                    [(ngModel)]="product.pnsgst">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                            (click)="clear()">Close</button>
+                        <button type="button" class="btn btn-primary" (click)="addNewProduct()">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

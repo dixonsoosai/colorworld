@@ -1,0 +1,173 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-card>
+    <div class="flex justify-content-between">
+		<div class="field grid">
+			<label htmlFor="name3" class="col-12 mb-2 md:col-2 md:mb-0">Search</label>
+			<div class="col-12 md:col-10">
+				<span class="p-input-icon-left">
+					<i class="pi pi-search"></i>
+					<input type="text" pInputText (keyup)="filter($event)"/>
+				</span>
+			</div>
+		</div>
+		<div class="flex justify-content-between gap-3">
+			<p-multiSelect [options]="units" [(ngModel)]="filteredUnits" optionLabel="name"
+				defaultLabel="Select a Unit" (onChange) = "filterUnits()">
+			</p-multiSelect>	
+			<p-button label="Add" (click)="show()"></p-button>
+		</div>
+
+    </div>
+    <div class="flex flex-wrap justify-content-between gap-1" id="productView">
+        <div *ngFor="let product of productList" style="width:32%;height:100%" class="my-2">
+			<p-card header="{{product.pnscnm}}">
+				<p class="card-text">{{product.pncmpy}}</p>
+				<div class="flex row justify-content-between">
+					<span>Product Code</span>
+					<b>{{product.pnpdcd}}</b>
+				</div>
+				<div class="flex row justify-content-between">
+					<span>Product Name</span>
+					<b>{{product.pnscnm}}</b>
+				</div>
+				<div class="row flex justify-content-between">
+					<span>Quantity</span>
+					<b>{{product.pnuqty}}</b>
+				</div>
+				<div class="row flex justify-content-between">
+					<span>Price</span>
+					<b>{{product.pnmrp}}</b>
+				</div>
+				<div class="row flex justify-content-between">
+					<span>Unit</span>
+					<b>{{product.pnunit}}</b>
+				</div>
+				<div class="mt-4 flex justify-content-end gap-3">
+					<p-button label="View" styleClass="p-button-outlined" (click) ="view(product)"></p-button>
+					<p-button label="Delete" styleClass="p-button-outlined" (click)="delete(product)"></p-button>
+				</div>
+            </p-card>
+        </div>
+    </div>
+</p-card>
+
+
+
+
+<p-dialog header="Add/Edit Product" [(visible)]="visible" [position]="position" [style]="{ width: '80vw' }">
+	<div class="grid">
+		<div class="col">
+			<p-fieldset legend="Description">
+				<div class="field grid">
+					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Product Name</label>
+					<div class="col-12 md:col-7">
+						<input pInputText type="text"/>
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Company Brand</label>
+					<div class="col-12 md:col-7">
+						<input pInputText  type="text" />
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Company Name</label>
+					<div class="col-12 md:col-7">
+						<input pInputText  type="text" />
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Short Name</label>
+					<div class="col-12 md:col-7">
+						<input pInputText  type="text" />
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Product Code</label>
+					<div class="col-12 md:col-7">
+						<input pInputText type="text"/>
+					</div>
+				</div>
+				
+
+			</p-fieldset>
+		</div>
+		<div class="col">
+			<p-fieldset legend="Price" style="height: 350px">
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">MRP</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+					</div>
+				</div>
+				
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Customer Price</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+					</div>
+				</div>
+				
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Merchant Price</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" style="width: 100%;"></p-inputNumber>
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Unit Qty</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" style="width: 100%;"></p-inputNumber>
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="customerName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Unit</label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text"/>
+					</div>
+				</div>
+				
+			</p-fieldset>
+		</div>
+		<div class="col">
+			<p-fieldset legend="GST">
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">HSNC</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+					</div>
+				</div>
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">CGST</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+					</div>
+				</div>
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">SGST</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+					</div>
+				</div>
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Available Qty</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+					</div>
+				</div>
+			</p-fieldset>
+		</div>
+	</div>
+	
+	<div class="flex justify-content-end gap-3">
+		<p-button label = "Add"></p-button>
+		<p-button label = "Clear"></p-button>
+	</div>
+</p-dialog>

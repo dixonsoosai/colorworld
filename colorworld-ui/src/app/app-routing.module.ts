@@ -1,30 +1,22 @@
+import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { ProductsComponent } from './products/products.component';
-import { CustomersComponent } from './customers/customers.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { TaxInvoiceComponent } from './billing/tax-invoice/tax-invoice.component';
-import { InvoiceHistoryComponent } from './billing/invoice-history/invoice-history.component';
-import { AccountsComponent } from './billing/accounts/accounts.component';
+import { AppLayoutComponent } from "./layout/app.layout.component";
 
-const routes: Routes = [
-    { path: 'home', component: HomeComponent, 
-      children: [
-        { path: 'dashboard', component: DashboardComponent},
-        { path: 'tax-invoice', component: TaxInvoiceComponent},
-        { path: 'invoice-history', component: InvoiceHistoryComponent},
-        { path: 'accounts', component: AccountsComponent},
-        { path: 'accounts-history', component: InvoiceHistoryComponent},
-        { path: 'products', component: ProductsComponent},
-        { path: 'customers', component: CustomersComponent},
-      ]
-  },
-    
-  ];
-  
-  @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+@NgModule({
+    imports: [
+        RouterModule.forRoot([
+            {
+                path: '', component: AppLayoutComponent,
+                children: [
+                    { path: 'home', loadChildren: () => import('./demo/components/uikit/uikit.module').then(m => m.UIkitModule) },
+                    { path: 'utilities', loadChildren: () => import('./demo/components/utilities/utilities.module').then(m => m.UtilitiesModule) },
+                    { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
+                ]
+            },
+            { path: '**', redirectTo: '/notfound' },
+        ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })
+    ],
     exports: [RouterModule]
-  })
-  export class AppRoutingModule { }
+})
+export class AppRoutingModule {
+}
