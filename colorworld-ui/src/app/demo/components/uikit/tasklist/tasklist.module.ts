@@ -15,26 +15,23 @@ import { SliderModule } from 'primeng/slider';
 import { RatingModule } from 'primeng/rating';
 import { TaskListRoutingModule } from './tasklist-routing.module';
 import { TasklistComponent } from './tasklist.component';
+import { CardModule } from 'primeng/card';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
 @NgModule({
   declarations: [TasklistComponent],
   imports: [
-    CommonModule,
+    	CommonModule,
 		TaskListRoutingModule,
 		FormsModule,
 		TableModule,
 		RatingModule,
 		ButtonModule,
-		SliderModule,
-		InputTextModule,
-		ToggleButtonModule,
 		RippleModule,
-		MultiSelectModule,
-		DropdownModule,
-		ProgressBarModule,
-    TabViewModule,
-		ToastModule
+		CardModule,
+		ToastModule,
+		ConfirmDialogModule,
   ]
 })
 export class TasklistModule { }

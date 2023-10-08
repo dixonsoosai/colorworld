@@ -19,14 +19,13 @@ import { DialogModule } from 'primeng/dialog';
 		FormsModule,
 		ProductRoutingModule,
 		InputNumberModule,
-		CascadeSelectModule,
-		MultiSelectModule,
 		InputTextModule,
 		CardModule,
 		ToastModule,
 		ConfirmDialogModule,
 		FieldsetModule,
-		DialogModule
+		DialogModule,
+		MultiSelectModule
 	],
 	declarations: [ProductComponent]
 })

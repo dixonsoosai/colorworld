@@ -1,0 +1,199 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-card header = "Sales/Purchase History">
+    <div class="flex mb-4">
+        <div class="flex gap-3">
+            <button pButton label="Clear" pRipple class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+            <button pButton label="Download" pRipple class="p-button-outlined" icon="pi pi-file-excel" (click)="exportExcel(dt1)" pTooltip="XLSX" tooltipPosition="bottom"></button>
+            <button pButton label="Add Bill" pRipple class="p-button-outlined" icon="pi pi-file-excel" (click)="addBill()" pTooltip="Add Bill" tooltipPosition="bottom"></button>
+        </div>
+        <span class="p-input-icon-left ml-auto">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" placeholder="Search keyword" />
+        </span>
+    </div>
+    
+    <p-table #dt1 [value]="purchaseDetails" [tableStyle]="{ 'min-width': '50rem' }"
+        [paginator]="true"
+        [rows]="10"
+        [loading]="loading"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        >
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th>
+                    <div class="flex align-items-center">
+                    Invoice
+                    <p-columnFilter type="text" field="arbillno" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    <div class="flex align-items-center">
+                    Purchase Date
+                    <p-columnFilter type="date" field="ardate" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    <div class="flex align-items-center">
+                    Company Name
+                    <p-columnFilter type="text" field="arname" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    <div class="flex align-items-center">
+                    Net Amount
+                    <p-columnFilter type="numeric" field="name" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    <div class="flex align-items-center">
+                    CGST
+                    <p-columnFilter type="numeric" field="name" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    <div class="flex align-items-center">
+                    SGST
+                    <p-columnFilter type="numeric" field="name" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+                <th>
+                    <div class="flex align-items-center">
+                    Total Amount
+                    <p-columnFilter type="numeric" field="name" display="menu"></p-columnFilter>
+                    </div>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData>
+            <tr>
+                <td>{{rowData.arbillno}}</td>
+                <td>{{rowData.ardate | date: 'yyyy-MM-dd'}}</td>
+                <td>{{rowData.arname}}</td>
+                <td>{{rowData.arnamt}}</td>
+                <td>{{rowData.arcgst}}</td>
+                <td>{{rowData.arsgst}}</td>
+                <td>{{rowData.artamt}}</td>
+        </ng-template>
+        <ng-template pTemplate="paginatorleft">
+            <p-button type="button" icon="pi pi-filter-slash" styleClass="p-button-text" (click)="clear(dt1)"></p-button>
+        </ng-template>
+        <ng-template pTemplate="paginatorright">
+            <p-button type="button" icon="pi pi-file-excel" styleClass="p-button-text" (click)="exportExcel(dt1)"></p-button>
+        </ng-template>
+        <ng-template pTemplate="emptymessage" let-columns>
+            <tr>
+              <td colspan="7">No records found</td>
+            </tr>
+          </ng-template>
+    </p-table>
+</p-card>
+
+<p-dialog header="Add/Edit Bills" [(visible)]="visible" [position]="position" [style]="{ width: '80vw' }">
+	<div class="grid">
+		<div class="col">
+			<p-fieldset legend="Bill Details">
+				<div class="field grid">
+					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Invoice Number</label>
+					<div class="col-12 md:col-7">
+						<input pInputText type="text"/>
+					</div>
+				</div>
+
+                <div class="field grid">
+					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Invoice Date</label>
+					<div class="col-12 md:col-7">
+						<p-calendar dateFormat="dd-mm-yy"  [appendTo]="'body'" [showButtonBar]="true"></p-calendar>
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Company Name</label>
+					<div class="col-12 md:col-7">
+						<input pInputText  type="text" />
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Company GST</label>
+					<div class="col-12 md:col-7">
+						<input pInputText  type="text" />
+					</div>
+				</div>				
+			</p-fieldset>
+		</div>
+
+		<div class="col">
+			<p-fieldset legend="Bill Amount" style="height: 350px">
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Net Amount</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+					</div>
+				</div>
+				
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">CGST</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+					</div>
+				</div>
+				
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">SGST</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" style="width: 100%;"></p-inputNumber>
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Total Amount</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" style="width: 100%;"></p-inputNumber>
+					</div>
+				</div>
+				
+			</p-fieldset>
+		</div>
+
+        <div class="col">
+			<p-fieldset legend="Bank Details" style="height: 350px">
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Cheque Number</label>
+					<div class="col-12 md:col-9">
+						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+					</div>
+				</div>
+				
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Cheque Date</label>
+					<div class="col-12 md:col-9"> 
+						<p-calendar [appendTo]="'body'" dateFormat="dd-mm-yy" [showButtonBar]="true"></p-calendar>
+					</div>
+				</div>
+				
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Bank Name</label>
+					<div class="col-12 md:col-9">
+						<input pInputText  type="text" />
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Comments</label>
+					<div class="col-12 md:col-9">
+						<input pInputText  type="text" />
+					</div>
+				</div>
+				
+			</p-fieldset>
+		</div>
+	</div>
+	
+	<div class="flex justify-content-end gap-3">
+		<p-button label = "Add"></p-button>
+		<p-button label = "Clear"></p-button>
+	</div>
+</p-dialog>

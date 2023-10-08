@@ -1,36 +1,45 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Customer, Representative } from 'src/app/demo/api/customer';
-import { CustomerService } from 'src/app/demo/service/customer.service';
-import { Product } from 'src/app/demo/api/product';
-import { ProductService } from 'src/app/demo/service/product.service';
-import { Table } from 'primeng/table';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MessageService, ConfirmationService } from 'primeng/api';
+import { Table } from 'primeng/table';
+import { PurchaseService } from 'src/app/demo/service/purchase.service';
 import * as FileSaver from 'file-saver';
-
-interface expandedRows {
-    [key: string]: boolean;
-}
+import { DialogService } from 'primeng/dynamicdialog';
 
 @Component({
-  templateUrl: './tasklist.component.html',
-  styleUrls: ['./tasklist.component.scss'],
-  providers: [MessageService, ConfirmationService]
+    templateUrl: './purchase.component.html',
+    providers: [MessageService, ConfirmationService, DialogService]
 })
-export class TasklistComponent {
+export class PurchaseComponent implements OnInit {
 
-    invoiceDetails;
+    purchaseDetails;
     loading = false;
     filteredData;
     position = "top";
     visible = false;
 
-    constructor(private customerService: CustomerService, private productService: ProductService) { }
+    @ViewChild('dt1') dt: Table;
 
-    ngOnInit() {
-  
+    constructor(private purchaseService: PurchaseService) {
+
+    }
+    ngOnInit(): void {
+        this.fetchAll();
     }
 
-  
+    fetchAll() {
+        this.loading = true;
+        this.purchaseService.fetchAll().subscribe(
+            response => {
+                response.data.forEach(item => item.ardate = new Date(item.ardate.substring(0,10)));
+                this.purchaseDetails = response.data;
+                this.loading = false;
+            },
+            error => {
+
+            }
+        );
+    }
+
     clear(table: Table) {
         table.clear();
     }
@@ -42,7 +51,7 @@ export class TasklistComponent {
     exportExcel(dataTable: Table) {
         let filteredData = [];
         if(dataTable.filteredValue == null) {
-            filteredData = this.invoiceDetails;
+            filteredData = this.purchaseDetails;
         }
         import('xlsx').then((xlsx) => {
             const worksheet = xlsx.utils.json_to_sheet(filteredData);
@@ -60,6 +69,8 @@ export class TasklistComponent {
         });
         FileSaver.saveAs(data, fileName + new Date().getTime() + EXCEL_EXTENSION);
     }
-    
-    
+
+    addBill() {
+        this.visible = true;
+    }
 }
