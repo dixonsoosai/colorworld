@@ -32,6 +32,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 		CardModule,
 		ToastModule,
 		ConfirmDialogModule,
+		InputTextModule
   ]
 })
 export class TasklistModule { }

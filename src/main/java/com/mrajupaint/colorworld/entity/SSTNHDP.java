@@ -10,7 +10,6 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "SSTNHDP")
-@IdClass(SSTNHDP_KEY.class)
 public class SSTNHDP
 {
 	@Id
@@ -34,7 +33,5 @@ public class SSTNHDP
 	private double tncsrv;
 	@Column
 	private double tnrtna;
-	@Id
-	@Column
-	private String tnblty;
+
 }

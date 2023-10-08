@@ -13,7 +13,7 @@ export class InvoiceService {
   constructor(private httpClient: HttpClient) { }
 
   fetchAll(): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}sale-purchase/bills`);
+    return this.httpClient.get(`${this.baseUrl}tax-invoice/bills`);
   }
 
 }

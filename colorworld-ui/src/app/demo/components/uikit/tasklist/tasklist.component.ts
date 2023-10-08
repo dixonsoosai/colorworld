@@ -6,6 +6,7 @@ import { ProductService } from 'src/app/demo/service/product.service';
 import { Table } from 'primeng/table';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import * as FileSaver from 'file-saver';
+import { InvoiceService } from 'src/app/demo/service/invoice.service';
 
 interface expandedRows {
     [key: string]: boolean;
@@ -24,12 +25,25 @@ export class TasklistComponent {
     position = "top";
     visible = false;
 
-    constructor(private customerService: CustomerService, private productService: ProductService) { }
+    constructor(private invoiceService: InvoiceService,
+        private messageService: MessageService,
+        private confirmationService: ConfirmationService
+        ) { }
 
     ngOnInit() {
-  
+        this.fetchAll();
     }
 
+    fetchAll() {
+        this.loading = true;
+        this.invoiceService.fetchAll().subscribe(response => {
+            this.invoiceDetails = response.data;
+            this.loading = false;
+        }, 
+        error => {
+
+        })
+    }
   
     clear(table: Table) {
         table.clear();

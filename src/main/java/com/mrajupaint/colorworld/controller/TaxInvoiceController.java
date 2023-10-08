@@ -1,0 +1,66 @@
+package com.mrajupaint.colorworld.controller;
+
+import java.util.List;
+
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.mrajupaint.colorworld.common.AppConstants;
+import com.mrajupaint.colorworld.config.LogTime;
+import com.mrajupaint.colorworld.entity.SPRequest;
+import com.mrajupaint.colorworld.entity.SSTNHDP;
+import com.mrajupaint.colorworld.exception.ColorWorldException;
+import com.mrajupaint.colorworld.model.ServiceResponse;
+import com.mrajupaint.colorworld.service.InvoiceService;
+
+@RestController
+@CrossOrigin("*")
+@RequestMapping("tax-invoice")
+public class TaxInvoiceController {
+
+	@Autowired
+	InvoiceService invoiceService;
+	
+	@LogTime
+	@GetMapping("bills")
+	public ResponseEntity<ServiceResponse<List<SSTNHDP>>> bills() {
+		var response = new ServiceResponse<List<SSTNHDP>>();
+		response.setCode(HttpStatus.OK.value());
+		response.setErrorMessage(Strings.EMPTY);
+		response.setStatus(AppConstants.SUCCESS);
+		response.setData(invoiceService.getAllBills());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@LogTime
+	@GetMapping("bill")
+	public ResponseEntity<ServiceResponse<List<SSTNHDP>>> bill(SPRequest request) {
+		var response = new ServiceResponse<List<SSTNHDP>>();
+		response.setCode(HttpStatus.OK.value());
+		response.setErrorMessage(Strings.EMPTY);
+		response.setStatus(AppConstants.SUCCESS);
+		//response.setData(accRegService.getBills(request));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@LogTime
+	@DeleteMapping("bill")
+	public ResponseEntity<ServiceResponse<String>> bill(@RequestParam String billnum) throws ColorWorldException {
+		var response = new ServiceResponse<String>();
+		response.setCode(HttpStatus.OK.value());
+		response.setErrorMessage(Strings.EMPTY);
+		response.setStatus(AppConstants.SUCCESS);
+		//response.setData(accRegService.deleteBillByBillNo(billnum));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	
+}
