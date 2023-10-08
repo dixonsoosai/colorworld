@@ -1,37 +1,37 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MyWorkItemsComponent } from './myworkitems.component';
-import { MyWorkItemsRoutingModule } from './myworkitems-routing.module';
+import { TaxInvoiceComponent } from './tax-invoice.component';
+import { TaxInvoiceRoutingModule } from './tax-invoice-routing.module';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToggleButtonModule } from 'primeng/togglebutton';
 import { RippleModule } from 'primeng/ripple';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { DropdownModule } from 'primeng/dropdown';
-import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
-import { SliderModule } from 'primeng/slider';
-import { RatingModule } from 'primeng/rating';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { CardModule } from 'primeng/card';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { FieldsetModule } from 'primeng/fieldset';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
 	imports: [
 		CommonModule,
-		MyWorkItemsRoutingModule,
+		TaxInvoiceRoutingModule,
 		FormsModule,
 		TableModule,
-		RatingModule,
 		ButtonModule,
-		SliderModule,
 		InputTextModule,
-		ToggleButtonModule,
 		RippleModule,
+		ToastModule,
+		ConfirmDialogModule,
+		CardModule,
 		MultiSelectModule,
-		DropdownModule,
-		ProgressBarModule,
-		ToastModule
+		TabMenuModule,
+		FieldsetModule,
+		InputNumberModule
 	],
-	declarations: [MyWorkItemsComponent]
+	declarations: [TaxInvoiceComponent]
 })
 export class MyWorkItemsModule { }

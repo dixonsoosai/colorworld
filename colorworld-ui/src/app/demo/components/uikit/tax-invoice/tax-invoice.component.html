@@ -1,0 +1,259 @@
+<p-toast></p-toast>
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-card>
+	<p-tabMenu [model]="items" [activeItem]="activeItem" (activeItemChange)="onActiveItemChange($event)"></p-tabMenu>
+
+	<div id="products" *ngIf="this.activeItem.label == 'Products'">
+		<div class="flex justify-content-between mt-4">
+			<div class="field grid">
+				<label htmlFor="name3" class="col-12 mb-2 md:col-2 md:mb-0">Search</label>
+				<div class="col-12 md:col-10">
+					<span class="p-input-icon-left">
+						<i class="pi pi-search"></i>
+						<input type="text" pInputText (keyup)="filter($event)" />
+					</span>
+				</div>
+			</div>
+			<div class="flex justify-content-between gap-3">
+				<p-multiSelect [options]="units" [(ngModel)]="filteredUnits" optionLabel="name"
+					defaultLabel="Select a Unit">
+				</p-multiSelect>
+			</div>
+
+		</div>
+		<div class="flex flex-wrap gap-4" id="productView">
+			<div *ngFor="let product of productList" style="width:32%;height:100%" class="my-2">
+				<p-card header="{{product.pnscnm}}">
+					<p class="card-text">{{product.pncmpy}}</p>
+					<div class="flex row justify-content-between">
+						<span>Product Code</span>
+						<b>{{product.pnpdcd}}</b>
+					</div>
+					<div class="flex row justify-content-between">
+						<span>Product Name</span>
+						<b>{{product.pnscnm}}</b>
+					</div>
+					<div class="row flex justify-content-between">
+						<span>Quantity</span>
+						<b>{{product.pnuqty}}</b>
+					</div>
+					<div class="row flex justify-content-between">
+						<span>Price</span>
+						<b>{{product.pnmrp}}</b>
+					</div>
+					<div class="row flex justify-content-between">
+						<span>Unit</span>
+						<b>{{product.pnunit}}</b>
+					</div>
+					<div class="mt-4 flex justify-content-end gap-3">
+						<p-button label="Add to Cart" styleClass="p-button-outlined" (click)="addToCart(product)"></p-button>
+					</div>
+				</p-card>
+			</div>
+		</div>
+	</div>
+
+	<div id="tax-invoice" *ngIf="this.activeItem.label == 'Invoice'">
+		<div class="mt-4">
+			<p-fieldset legend="Company Details" [toggleable]="true">
+				<div class="grid">
+					<div class="col">
+						<div class="field grid">
+							<label htmlFor="customerName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Customer Name</label>
+							<div class="col-12 md:col-9">
+								<input pInputText type="text"  [(ngModel)]="customerDetails.jpname"/>
+							</div>
+						</div>		
+					</div>
+					<div class="col">
+						<div class="field grid">
+							<label htmlFor="gst" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">GST</label>
+							<div class="col-12 md:col-9">
+								<input pInputText type="text" [(ngModel)]="customerDetails.jppgst"/>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="field grid">
+							<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Mobile</label>
+							<div class="col-12 md:col-9">
+								<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" [(ngModel)]="customerDetails.jpmobno"></p-inputNumber>
+							</div>
+						</div>
+					</div>
+					<div class="col">
+						<div class="field grid">
+							<label htmlFor="balance" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Balance</label>
+							<div class="col-12 md:col-9">
+								<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" [(ngModel)]="customerDetails.jpbaln"></p-inputNumber>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="field grid">
+					<label htmlFor="address" class="col-12 mb-2 md:col-1 md:mb-0 font-bold">Address</label>
+					<div class="col-12 md:col-10">
+						<textarea rows="2" cols="120" pInputTextarea [autoResize]="true" [(ngModel)]="customerDetails.jpadd"></textarea>
+					</div>
+				</div>
+			</p-fieldset>
+		</div>
+
+		<div class="mt-4">
+			<p-fieldset legend="Tax Invoice">
+				<div class="flex justify-content-between">
+					<div class="field grid">
+						<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Invoice Number</label>
+						<div class="col-12 md:col-7">
+							<input pInputText type="text"  [(ngModel)]="customerDetails.jpname"/>
+						</div>
+					</div>
+					<div class="field grid">
+						<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Invoice Date</label>
+						<div class="col-12 md:col-7">
+							<input pInputText type="text"  [(ngModel)]="customerDetails.jpname"/>
+						</div>
+					</div>
+				</div>
+				<p-table [value]="selectedProducts" dataKey="pnhsnc" editMode="row" [tableStyle]="{ 'min-width': '50rem' }">
+				<ng-template pTemplate="header">
+					<tr>
+						<th style="width:10%"></th>
+						<th style="width:10%">Challan</th>
+						<th style="width:25%">Product</th>
+						<th style="width:15%">HSNC</th>
+						<th style="width:10%">Quantity</th>
+						<th style="width:10%">Unit</th>
+						<th style="width:10%">Price</th>
+						<th style="width:10%">CGST (%)</th>
+						<th style="width:10%">CGST</th>
+						<th style="width:10%">SGST (%)</th>
+						<th style="width:10%">SGST</th>
+						<th style="width:10%">Final Price</th>
+						<th style="width:10%"></th>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="emptymessage" let-columns>
+					<tr>
+						<td [attr.colspan]="13" class="text-center">
+							No records found
+						</td>
+					</tr>
+				</ng-template>
+				<ng-template pTemplate="body" let-cproduct let-editing="editing" let-index="rowIndex">
+					<tr [pEditableRow]="cproduct" [pReorderableRow]="index">
+						<td><span class="pi pi-bars" pReorderableRowHandle></span></td>
+						<td [pEditableColumn]="cproduct.pnchallan" pEditableColumnField="pnchallan">
+							<p-cellEditor [pEditableColumn]="cproduct.pnchallan" pEditableColumnField="pnchallan">
+								<ng-template pTemplate="input">
+									<input pInputText type="text" [(ngModel)]="cproduct.pnchallan">
+								</ng-template>
+								<ng-template pTemplate="output">
+									{{cproduct.pnchallan || ''}}
+								</ng-template>
+							</p-cellEditor>
+						</td>
+						<td [pEditableColumn]="cproduct.pnscnm" pEditableColumnField="pnscnm">
+							<p-cellEditor>
+								<ng-template pTemplate="input">
+									<input pInputText type="text" [(ngModel)]="cproduct.pnscnm">
+								</ng-template>
+								<ng-template pTemplate="output">
+									{{cproduct.pnscnm}}
+								</ng-template>
+							</p-cellEditor>
+						</td>
+						<td [pEditableColumn]="cproduct.pnhsnc" pEditableColumnField="pnhsnc">
+							<p-cellEditor>
+								<ng-template pTemplate="input">
+									<input pInputText type="text" [(ngModel)]="cproduct.pnhsnc">
+								</ng-template>
+								<ng-template pTemplate="output">
+									{{cproduct.pnhsnc}}
+								</ng-template>
+							</p-cellEditor>
+						</td>
+						<td [pEditableColumn]="cproduct.pnuqty" pEditableColumnField="pnuqty">
+							<p-cellEditor>
+								<ng-template pTemplate="input">
+									<input pInputText type="text" [(ngModel)]="cproduct.pnuqty">
+								</ng-template>
+								<ng-template pTemplate="output">
+									{{cproduct.pnuqty}}
+								</ng-template>
+							</p-cellEditor>
+						</td>
+						<td [pEditableColumn]="cproduct.pnunit" pEditableColumnField="pnunit">
+							<p-cellEditor>
+								<ng-template pTemplate="input">
+									<input pInputText type="text" [(ngModel)]="cproduct.pnunit">
+								</ng-template>
+								<ng-template pTemplate="output">
+									{{cproduct.pnunit}}
+								</ng-template>
+							</p-cellEditor>
+						</td>
+						<td [pEditableColumn]="cproduct.pnnamt" pEditableColumnField="pnnamt">
+							<p-cellEditor>
+								<ng-template pTemplate="input">
+									<input pInputText type="text" [(ngModel)]="cproduct.pnnamt">
+								</ng-template>
+								<ng-template pTemplate="output">
+									{{cproduct.pnnamt}}
+								</ng-template>
+							</p-cellEditor>
+						</td>
+						<td [pEditableColumn]="cproduct.pncgsp" pEditableColumnField="pncgsp">
+							<p-cellEditor>
+								<ng-template pTemplate="input">
+									<input pInputText type="text" [(ngModel)]="cproduct.pncgsp">
+								</ng-template>
+								<ng-template pTemplate="output">
+									{{cproduct.pncgsp}}
+								</ng-template>
+							</p-cellEditor>
+						</td>
+						<td [pEditableColumn]="cproduct.pncgst" pEditableColumnField="pncgst">
+							<p-cellEditor>
+								<ng-template pTemplate="input">
+									<input pInputText type="text" [(ngModel)]="cproduct.pncgst">
+								</ng-template>
+								<ng-template pTemplate="output">
+									{{cproduct.pncgst}}
+								</ng-template>
+							</p-cellEditor>
+						</td>
+						<td [pEditableColumn]="cproduct.pnsgsp" pEditableColumnField="pnsgsp">
+							<p-cellEditor>
+								<ng-template pTemplate="input">
+									<input pInputText type="text" [(ngModel)]="cproduct.pnsgsp">
+								</ng-template>
+								<ng-template pTemplate="output">
+									{{cproduct.pnsgsp}}
+								</ng-template>
+							</p-cellEditor>
+						</td>
+						<td [pEditableColumn]="cproduct.pnsgst" pEditableColumnField="pnsgst">
+							<p-cellEditor>
+								<ng-template pTemplate="input">
+									<input pInputText type="text" [(ngModel)]="cproduct.pnsgst">
+								</ng-template>
+								<ng-template pTemplate="output">
+									{{cproduct.pnsgst}}
+								</ng-template>
+							</p-cellEditor>
+						</td>
+						<td [pEditableColumn]="cproduct.pntamt" pEditableColumnField="pntamt">{{cproduct.pntamt}}</td>
+						<td>
+							<div class="flex align-items-center justify-content-center gap-2">
+							</div>
+						</td>
+					</tr>
+				</ng-template>
+			</p-table>
+				
+			</p-fieldset>
+		</div>
+	</div>
+
+</p-card>

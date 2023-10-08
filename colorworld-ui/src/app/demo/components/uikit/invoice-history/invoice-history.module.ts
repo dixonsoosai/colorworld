@@ -2,31 +2,23 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
-import { TabViewModule } from 'primeng/tabview';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-import { ToggleButtonModule } from 'primeng/togglebutton';
 import { RippleModule } from 'primeng/ripple';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { DropdownModule } from 'primeng/dropdown';
-import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
-import { SliderModule } from 'primeng/slider';
-import { RatingModule } from 'primeng/rating';
-import { TaskListRoutingModule } from './tasklist-routing.module';
-import { TasklistComponent } from './tasklist.component';
+import { InvoiceHistoryRoutingModule } from './invoice-history-routing.module';
+import { InvoiceHistoryComponent } from './invoice-history.component';
 import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 
 @NgModule({
-  declarations: [TasklistComponent],
+  declarations: [InvoiceHistoryComponent],
   imports: [
     	CommonModule,
-		TaskListRoutingModule,
+		InvoiceHistoryRoutingModule,
 		FormsModule,
 		TableModule,
-		RatingModule,
 		ButtonModule,
 		RippleModule,
 		CardModule,
@@ -35,4 +27,4 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 		InputTextModule
   ]
 })
-export class TasklistModule { }
+export class InvoiceHistoryModule { }

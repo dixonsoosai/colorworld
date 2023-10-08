@@ -13,13 +13,20 @@ export interface Product {
 }
 
 export class ProductItem {
-	pnscnm: string;
-	pnhsnc: number;
-	pncgst: number;
-	pnsgst: number;
-	pnuqty: number;
-	pnunit: string;
-	pnmrp: number;
+	pnscnm?: string;
+	pnchallan?: string;
+	pnpdcd?: string;
+	pnhsnc?: number;
+	pncgsp?: number;
+	pnsgsp?: number;
+	pnuqty?: number;
+	pnunit?: string;
+	pntqty?: number;
+	pnprice?: number;
+	pnnamt?: number;
+	pncgst?: number;
+	pnsgst?: number;
+	pntamt?: number;
 }
 
 export class InvoiceItem {

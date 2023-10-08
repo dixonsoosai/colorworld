@@ -1,23 +1,16 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Customer, Representative } from 'src/app/demo/api/customer';
-import { CustomerService } from 'src/app/demo/service/customer.service';
-import { Product } from 'src/app/demo/api/product';
-import { ProductService } from 'src/app/demo/service/product.service';
 import { Table } from 'primeng/table';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import * as FileSaver from 'file-saver';
 import { InvoiceService } from 'src/app/demo/service/invoice.service';
 
-interface expandedRows {
-    [key: string]: boolean;
-}
 
 @Component({
-  templateUrl: './tasklist.component.html',
-  styleUrls: ['./tasklist.component.scss'],
+  templateUrl: './invoice-history.component.html',
+  styleUrls: ['./invoice-history.component.scss'],
   providers: [MessageService, ConfirmationService]
 })
-export class TasklistComponent {
+export class InvoiceHistoryComponent {
 
     invoiceDetails;
     loading = false;

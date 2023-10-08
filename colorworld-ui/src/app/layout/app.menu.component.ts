@@ -17,16 +17,16 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Billing',
                 items: [
-                    { label: 'Tax Invoice', icon: 'pi pi-fw pi-box', routerLink: ['/home/myworkitems'] },
-                    { label: 'Invoice History', icon: 'pi pi-fw pi-list', routerLink: ['/home/tasklist'] },
-                    { label: 'Sales/Purchase', icon: 'pi pi-fw pi-search', routerLink: ['/home/table'] },
+                    { label: 'Tax Invoice', icon: 'pi pi-fw pi-file', routerLink: ['/home/tax-invoice'] },
+                    { label: 'Invoice History', icon: 'pi pi-fw pi-history', routerLink: ['/home/invoice-history'] },
+                    { label: 'Sales/Purchase', icon: 'pi pi-fw pi-chart-line', routerLink: ['/home/purchase'] },
                 ]
             },
             {
                 label: 'Miscellaneous',
                 items: [
-                    { label: 'Products', icon: 'pi pi-fw pi-sliders-h', routerLink: ['/home/formlayout'] },
-                    { label: 'Customers', icon: 'pi pi-fw pi-check-square', routerLink: ['/home/input'] },
+                    { label: 'Products', icon: 'pi pi-fw pi-cart-plus', routerLink: ['/home/products'] },
+                    { label: 'Customers', icon: 'pi pi-fw pi-users', routerLink: ['/home/customer'] },
                 ]
             },
             {

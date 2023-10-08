@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { ProductComponent } from './product.component';
 import { ProductRoutingModule } from './product-routing.module';
 import { InputNumberModule } from "primeng/inputnumber";
-import { CascadeSelectModule } from "primeng/cascadeselect";
 import { MultiSelectModule } from "primeng/multiselect";
 import { InputTextModule } from "primeng/inputtext";
 import { CardModule } from 'primeng/card';
