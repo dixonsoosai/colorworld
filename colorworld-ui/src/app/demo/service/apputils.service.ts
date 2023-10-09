@@ -30,3 +30,16 @@ export const infoToastr = (detail:string) => {
 		detail: detail
 	};
 };
+
+export const productUnits = [
+	{ name: 'Kg', code: 'kg' },
+	{ name: 'gm', code: 'gm' },
+	{ name: 'L', code: 'l' },
+	{ name: 'ml', code: 'ml' },
+	{ name: 'Nos', code: 'Nos'}
+];
+
+export const invoiceTab = [
+	{ label: 'Products', icon: 'pi pi-fw pi-shopping-cart' },
+	{ label: 'Invoice', icon: 'pi pi-fw pi-calendar' },
+];

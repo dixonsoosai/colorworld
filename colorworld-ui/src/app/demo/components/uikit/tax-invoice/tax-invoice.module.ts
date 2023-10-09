@@ -14,6 +14,8 @@ import { CardModule } from 'primeng/card';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { FieldsetModule } from 'primeng/fieldset';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
 
 @NgModule({
 	imports: [
@@ -30,7 +32,9 @@ import { InputNumberModule } from 'primeng/inputnumber';
 		MultiSelectModule,
 		TabMenuModule,
 		FieldsetModule,
-		InputNumberModule
+		InputNumberModule,
+		DialogModule,
+		DropdownModule
 	],
 	declarations: [TaxInvoiceComponent]
 })
