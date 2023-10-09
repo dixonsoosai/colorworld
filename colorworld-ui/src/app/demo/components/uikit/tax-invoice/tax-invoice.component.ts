@@ -202,7 +202,37 @@ export class TaxInvoiceComponent implements OnInit {
         this.gstSummary.set("Total", totalGst);
     }
 
-    changeCellContent() {
-        
+    onChange(newValue: any, row: InvoiceItem, column: string) {
+        if(newValue == 0) {
+            return;
+        }
+        switch(column) {
+            case "tqty":
+            case "pnprice":
+                row.pnnamt = row.pntqty * row.pnprice;
+                break; 
+            case "namt":
+                row.pnprice = parseFloat((row.pnnamt / row.pntqty).toFixed(2));
+                break;
+            case "cgst":
+                row.pnsgst = row.pncgst;
+                break;
+            case "sgst":
+                row.pncgst = row.pnsgst;
+                break;
+            case "pntamt":
+                row.pnnamt = parseFloat((row.pntamt /(1 + (row.pncgst/100) + (row.pnsgst/100))).toFixed(2));
+                row.pncgsta = parseFloat((row.pnnamt * row.pncgst/100).toFixed(2));
+                row.pnsgsta = parseFloat((row.pnnamt * row.pnsgst/100).toFixed(2));
+                row.pnnamt = parseFloat((row.pntamt - row.pncgsta - row.pnsgsta).toFixed(2));
+                row.pnprice = parseFloat((row.pnnamt / row.pntqty).toFixed(2));
+                this.computeBillSummary();  
+                return;
+        }
+        row.pncgsta = parseFloat((row.pnnamt * row.pncgst/100).toFixed(2));
+        row.pnsgsta = parseFloat((row.pnnamt * row.pnsgst/100).toFixed(2));
+        row.pntamt = row.pnnamt + row.pncgsta + row.pnsgsta;
+        this.computeBillSummary();            
     }
+
 }
