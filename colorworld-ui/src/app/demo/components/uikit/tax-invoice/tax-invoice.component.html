@@ -319,12 +319,16 @@
 									<td class="text-right">{{billSummary.bstsgst | number : '1.2-2'}}</td>
 								</tr>
 								<tr>
-									<td>Rounded Off</td>
-									<td class="text-right">0.00</td>
-								</tr>
-								<tr>
 									<td>Total Amount</td>
 									<td class="text-right">{{billSummary.bstamt | number : '1.2-2'}}</td>
+								</tr>
+								<tr>
+									<td>Rounded Off</td>
+									<td class="text-right">{{billSummary.bsroff | number : '1.2-2'}}</td>
+								</tr>
+								<tr>
+									<td>Final Amount</td>
+									<td class="text-right">{{billSummary.bsfamt | number : '1.2-2'}}</td>
 								</tr>
 							</tbody>
 						</table>

@@ -41,6 +41,8 @@ export class BillSummary {
     bstcgst:number = 0;
     bstsgst:number = 0;
     bstamt: number = 0;
+	bsroff: number = 0;
+	bsfamt: number = 0;
 }
 
 export class GSTSummary {

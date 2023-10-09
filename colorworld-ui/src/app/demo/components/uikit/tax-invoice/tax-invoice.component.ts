@@ -129,7 +129,7 @@ export class TaxInvoiceComponent implements OnInit {
                     element.pnnamt = element.pntqty * element.pnprice;
                     element.pncgsta = element.pnnamt* element.pncgst / 100;
                     element.pnsgsta = element.pnnamt* element.pnsgst / 100;
-                    element.pntamt = element.pnnamt + element.pncgst + element.pnsgst;
+                    element.pntamt = element.pnnamt + element.pncgsta + element.pnsgsta;
                     checkFlag = true;
                     this.messageService.add(successToastr("Product added to Invoice"));
                     this.computeBillSummary();
@@ -155,14 +155,8 @@ export class TaxInvoiceComponent implements OnInit {
         
         productItem.pntqty = 1;
         productItem.pnnamt = productItem.pntqty * productItem.pnprice;
-        productItem.pnnamt.toFixed(2);
-        
         productItem.pncgsta = productItem.pnnamt * productItem.pncgst / 100;
-        productItem.pncgsta.toFixed(2);
-        
         productItem.pnsgsta = productItem.pnnamt * productItem.pnsgst / 100;
-        productItem.pnsgsta.toFixed(2);
-        
         productItem.pntamt = productItem.pnnamt + productItem.pncgsta + productItem.pnsgsta;
         this.selectedProducts.push(productItem);
         this.computeBillSummary();
@@ -175,7 +169,9 @@ export class TaxInvoiceComponent implements OnInit {
             this.billSummary.bsnamt += element.pnnamt;
             this.billSummary.bstcgst += element.pncgsta;
             this.billSummary.bstsgst += element.pnsgsta;
-            this.billSummary.bstamt += element.pntamt;
+            this.billSummary.bstamt += element.pntamt;  
+            this.billSummary.bsfamt = Math.round(this.billSummary.bstamt);
+            this.billSummary.bsroff = this.billSummary.bsfamt - this.billSummary.bstamt;
         });
         this.computeGSTSummary();
     }
@@ -204,6 +200,9 @@ export class TaxInvoiceComponent implements OnInit {
         totalGst.gntsgst += this.billSummary.bstsgst;
         totalGst.gntamt += this.billSummary.bstamt;
         this.gstSummary.set("Total", totalGst);
-        console.log(this.gstSummary);
+    }
+
+    changeCellContent() {
+        
     }
 }
