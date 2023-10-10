@@ -46,7 +46,7 @@
 						<b>{{product.pnunit}}</b>
 					</div>
 					<div class="mt-4 flex justify-content-end gap-3">
-						<p-button label="Add to Cart" styleClass="p-button-outlined"
+						<p-button label="Add to Cart" styleClass="p-button-outlined" icon="pi pi-shopping-cart"
 							(click)="addToCart(product)"></p-button>
 					</div>
 				</p-card>
@@ -79,8 +79,7 @@
 						<div class="field grid">
 							<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Mobile</label>
 							<div class="col-12 md:col-9">
-								<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-									[(ngModel)]="customerDetails.jpmobno"></p-inputNumber>
+								<input pInputText type="number" [(ngModel)]="customerDetails.jpmobno">
 							</div>
 						</div>
 					</div>
@@ -88,8 +87,7 @@
 						<div class="field grid">
 							<label htmlFor="balance" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Balance</label>
 							<div class="col-12 md:col-9">
-								<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-									[(ngModel)]="customerDetails.jpbaln"></p-inputNumber>
+								<input pInputText type="number" [(ngModel)]="customerDetails.jpbaln">
 							</div>
 						</div>
 					</div>
@@ -111,14 +109,14 @@
 						<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Invoice
 							Number</label>
 						<div class="col-12 md:col-7">
-							<input pInputText type="text" [(ngModel)]="customerDetails.jpname" />
+							<input pInputText type="text" />
 						</div>
 					</div>
 					<div class="field grid">
 						<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Invoice
 							Date</label>
 						<div class="col-12 md:col-7">
-							<input pInputText type="text" [(ngModel)]="customerDetails.jpname" />
+							<input pInputText type="text" />
 						</div>
 					</div>
 				</div>
@@ -188,10 +186,9 @@
 							<td [pEditableColumn]="cproduct.pntqty" pEditableColumnField="pntqty">
 								<p-cellEditor>
 									<ng-template pTemplate="input">
-										<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-											[(ngModel)]="cproduct.pntqty"
+										<input pInputText type="number" [(ngModel)]="cproduct.pntqty"
 											(ngModelChange)="onChange($event, cproduct, 'pnprice')">
-										</p-inputNumber>
+										
 									</ng-template>
 									<ng-template pTemplate="output">
 										{{cproduct.pntqty}}
@@ -201,8 +198,7 @@
 							<td [pEditableColumn]="cproduct.pnuqty" pEditableColumnField="pnuqty">
 								<p-cellEditor>
 									<ng-template pTemplate="input">
-										<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-											[(ngModel)]="cproduct.pnuqty"></p-inputNumber>
+										<input pInputText type="number" [(ngModel)]="cproduct.pnuqty">
 									</ng-template>
 									<ng-template pTemplate="output">
 										{{cproduct.pnuqty}}
@@ -219,84 +215,78 @@
 									</ng-template>
 								</p-cellEditor>
 							</td>
-							<td [pEditableColumn]="cproduct.pnprice" pEditableColumnField="pnprice">
+							<td class="text-right" [pEditableColumn]="cproduct.pnprice" pEditableColumnField="pnprice">
 								<p-cellEditor>
 									<ng-template pTemplate="input">
-										<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-											[(ngModel)]="cproduct.pnprice"
+										<input pInputText type="number" [(ngModel)]="cproduct.pnprice"
 											(ngModelChange)="onChange($event, cproduct, 'pnprice')">
-										</p-inputNumber>
+										
 									</ng-template>
 									<ng-template pTemplate="output">
 										{{cproduct.pnprice}}
 									</ng-template>
 								</p-cellEditor>
 							</td>
-							<td [pEditableColumn]="cproduct.pnnamt" pEditableColumnField="pnnamt">
+							<td class="text-right" [pEditableColumn]="cproduct.pnnamt" pEditableColumnField="pnnamt">
 								<p-cellEditor>
 									<ng-template pTemplate="input">
-										<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-											[(ngModel)]="cproduct.pnnamt"
+										<input pInputText type="number" [(ngModel)]="cproduct.pnnamt"
 											(ngModelChange)="onChange($event, cproduct, 'namt')">
-										</p-inputNumber>
+										
 									</ng-template>
 									<ng-template pTemplate="output">
 										{{cproduct.pnnamt}}
 									</ng-template>
 								</p-cellEditor>
 							</td>
-							<td [pEditableColumn]="cproduct.pncgst" pEditableColumnField="pncgst">
+							<td class="text-right" [pEditableColumn]="cproduct.pncgst" pEditableColumnField="pncgst">
 								<p-cellEditor>
 									<ng-template pTemplate="input">
-										<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-											[(ngModel)]="cproduct.pncgst"
+										<input pInputText type="number" [(ngModel)]="cproduct.pncgst"
 											(ngModelChange)="onChange($event, cproduct, 'cgst')">
-										</p-inputNumber>
+										
 									</ng-template>
 									<ng-template pTemplate="output">
 										{{cproduct.pncgst}}
 									</ng-template>
 								</p-cellEditor>
 							</td>
-							<td>{{cproduct.pncgsta}}</td>
-							<td [pEditableColumn]="cproduct.pnsgst" pEditableColumnField="pnsgst">
+							<td class="text-right">{{cproduct.pncgsta}}</td>
+							<td class="text-right" [pEditableColumn]="cproduct.pnsgst" pEditableColumnField="pnsgst">
 								<p-cellEditor>
 									<ng-template pTemplate="input">
-										<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-											[(ngModel)]="cproduct.pnsgst"
+										<input pInputText type="number" [(ngModel)]="cproduct.pnsgst"
 											(ngModelChange)="onChange($event, cproduct, 'sgst')">
-										</p-inputNumber>
+										
 									</ng-template>
 									<ng-template pTemplate="output">
 										{{cproduct.pnsgst}}
 									</ng-template>
 								</p-cellEditor>
 							</td>
-							<td>
+							<td class="text-right">
 								{{cproduct.pnsgsta}}
 							</td>
-							<td [pEditableColumn]="cproduct.pntamt" pEditableColumnField="pntamt">
+							<td class="text-right" [pEditableColumn]="cproduct.pntamt" pEditableColumnField="pntamt">
 								<p-cellEditor>
 									<ng-template pTemplate="input">
-										<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-											[(ngModel)]="cproduct.pntamt"
+										<input pInputText type="number" [(ngModel)]="cproduct.pntamt"
 											(ngModelChange)="onChange($event, cproduct, 'pntamt')">
-										</p-inputNumber>
+										
 									</ng-template>
 									<ng-template pTemplate="output">
 										{{cproduct.pntamt}}
 									</ng-template>
 								</p-cellEditor>
 							</td>
-							<td>
-								<div class="flex align-items-center justify-content-center gap-2">
-								</div>
+							<td class="text-left">
+								<i class="pi pi-times" pTooltip="Delete" tooltipPosition="bottom"></i>
 							</td>
 						</tr>
 					</ng-template>
 					<ng-template pTemplate="paginatorleft">
-						<p-button type="button" icon="pi pi-plus-circle" styleClass="p-button-text"
-							(click)="visible = true" pTooltip="Add Product" tooltipPosition="bottom"></p-button>
+						<i class="pi pi-plus-circle" style="font-size: 1.5rem;cursor: pointer;"
+							(click)="visible = true" pTooltip="Add Product" tooltipPosition="bottom"></i>
 					</ng-template>
 				</p-table>
 
@@ -355,6 +345,9 @@
 						</div>
 					</div>
 				</p-card>
+				<div class="flex justify-content-start mt-4">
+					<p-button label="Generate Bill"></p-button>
+				</div>
 			</p-fieldset>
 		</div>
 	</div>
@@ -362,12 +355,12 @@
 </p-card>
 
 
-<p-dialog header="Add New Product" [(visible)]="visible" [position]="position" [style]="{ width: '80vw' }">
+<p-dialog header="Add New Product" [(visible)]="visible" [position]="'top'" [style]="{ width: '80vw' }">
 	<div class="grid">
 		<div class="col">
 			<p-fieldset legend="Description">
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
+					<label htmlFor="pnscnm" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
 						Product Name<span class="text-danger">&nbsp;*</span>
 					</label>
 					<div class="col-12 md:col-9">
@@ -375,17 +368,16 @@
 					</div>
 				</div>
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
+					<label htmlFor="pnuqty" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
 						Unit Qty<span class="text-danger">&nbsp;*</span>
 					</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-							[(ngModel)]="newProduct.pnuqty"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="newProduct.pnuqty">
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
+					<label htmlFor="units" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
 						Unit<span class="text-danger">&nbsp;*</span>
 					</label>
 					<div class="col-12 md:col-9">
@@ -393,12 +385,11 @@
 					</div>
 				</div>
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
+					<label htmlFor="pnmcpr" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
 						Product Price<span class="text-danger">&nbsp;*</span>
 					</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-							[(ngModel)]="newProduct.pnmcpr"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="newProduct.pnmcpr">
 					</div>
 				</div>
 			</p-fieldset>
@@ -406,7 +397,7 @@
 		<div class="col">
 			<p-fieldset legend="GST">
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
+					<label htmlFor="pnhsnc" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
 						HSNC<span class="text-danger">&nbsp;*</span>
 					</label>
 					<div class="col-12 md:col-9">
@@ -414,21 +405,19 @@
 					</div>
 				</div>
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
+					<label htmlFor="pncgst" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
 						CGST<span class="text-danger">&nbsp;*</span>
 					</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-							[(ngModel)]="newProduct.pncgst"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="newProduct.pncgst">
 					</div>
 				</div>
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
+					<label htmlFor="pnsgst" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
 						SGST<span class="text-danger">&nbsp;*</span>
 					</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"
-							[(ngModel)]="newProduct.pnsgst"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="newProduct.pnsgst">
 					</div>
 				</div>
 			</p-fieldset>

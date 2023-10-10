@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { Products } from 'src/app/demo/domain/products';
+import { ProductItem } from 'src/app/demo/domain/product';
 import { ProductsService } from 'src/app/demo/service/products.service';
 import * as $ from 'jquery';
 import { DialogService } from 'primeng/dynamicdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { errorToastr, successToastr } from 'src/app/demo/service/apputils.service';
+import { errorToastr, productUnits, successToastr } from 'src/app/demo/service/apputils.service';
 
 @Component({
     templateUrl: './product.component.html',
@@ -14,21 +14,14 @@ import { errorToastr, successToastr } from 'src/app/demo/service/apputils.servic
 export class ProductComponent {
 
     isLoading = false;
-    products!: Products;
-    productList!: Products[];
+    product: ProductItem = new ProductItem();
+    productList!: ProductItem[];
     searchText !: string;
-    units = [
-        { name: 'Kg', code: 'kg' },
-        { name: 'gm', code: 'gm' },
-        { name: 'L', code: 'l' },
-        { name: 'ml', code: 'ml' },
-        { name: 'Nos', code: 'Nos'}
-    ];
+    units = productUnits;
     filteredUnits  = [];
 
     visible: boolean = false;
-    position: string = 'top';
-
+    
     constructor(
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
@@ -70,14 +63,14 @@ export class ProductComponent {
         });
     }
 
-    delete(productCode: string) {
+    delete(product: ProductItem) {
         this.confirmationService.confirm({
-            message: 'Are you sure that you want to delete?',
+            message: `Are you sure that you want to delete this product? <br>Product Name: ${product.pnscnm} <br> Product Code: ${product.pnpdcd}`,
             header: 'Confirmation',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 this.isLoading = false;
-                this.productService.deleteProductByCode(productCode).subscribe({
+                this.productService.deleteProductByCode(product.pnpdcd).subscribe({
                     next: response => {
                         if (response.code === 200) {
                             this.messageService.add(successToastr("Product deleted successfully"));
@@ -96,16 +89,20 @@ export class ProductComponent {
 
     
 
-    view(product: any) {
-        console.log(product);
+    view(product: ProductItem) {
+        this.product = product;
         this.show();
     }
 
     show() {
         this.visible = true;
     }
-    //Filter 
-    
+
+    clear() {
+        this.product = new ProductItem();
+        this.visible = false;
+    }
+    //Filter
     filter(event) {
         let filteredProduct = $(event.srcElement).val().toLowerCase();
         $("#productView div").filter(function () {
@@ -131,6 +128,79 @@ export class ProductComponent {
                         break;
                     }
                 }
+            }
+        });
+    }
+
+    save() {
+        //Validation
+        let errorFlag = false;
+        if(this.product.pncolor == "") {
+            this.messageService.add(errorToastr("Product Name cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pncmpd == "") {
+            this.messageService.add(errorToastr("Product Brand cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pncmpy == "") {
+            this.messageService.add(errorToastr("Company Name cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pnscnm == "") {
+            this.messageService.add(errorToastr("Short Name cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pnpdcd == "") {
+            this.messageService.add(errorToastr("Product Code cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pnmrp == 0) {
+            this.messageService.add(errorToastr("MRP cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pnmcpr == 0) {
+            this.messageService.add(errorToastr("Merchant Price cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pncuspr == 0) {
+            this.messageService.add(errorToastr("Customer Price cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pnuqty == 0) {
+            this.messageService.add(errorToastr("Unit quantity cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pnunit == "") {
+            this.messageService.add(errorToastr("Unit cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pnhsnc == 0) {
+            this.messageService.add(errorToastr("HSN Code cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pncgst == 0) {
+            this.messageService.add(errorToastr("CGST cannot be blank"));
+            errorFlag  = true;
+        }
+        if(this.product.pnsgst == 0) {
+            this.messageService.add(errorToastr("SGST cannot be blank"));
+            errorFlag  = true;
+        }
+        if(errorFlag) {
+            return;
+        }
+        this.product.pnavail ="Y";
+        this.product.pngstpr = this.product.pncuspr;
+        this.productService.addProduct(this.product).subscribe({
+            next: response => {
+                if(response.code == 200) {
+                    this.messageService.add(successToastr("Product added successfully"));
+                }
+            },
+            error: error => {
+                this.messageService.add(errorToastr("Error while saving product"));
+                console.error(error);
             }
         });
     }

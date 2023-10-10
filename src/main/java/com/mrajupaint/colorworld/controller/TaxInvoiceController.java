@@ -2,6 +2,8 @@ package com.mrajupaint.colorworld.controller;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +28,8 @@ import com.mrajupaint.colorworld.service.InvoiceService;
 @RequestMapping("tax-invoice")
 public class TaxInvoiceController {
 
+	private static final Logger LOGGER = LogManager.getLogger(TaxInvoiceController.class);
+	
 	@Autowired
 	InvoiceService invoiceService;
 	
@@ -55,10 +59,17 @@ public class TaxInvoiceController {
 	@DeleteMapping("bill")
 	public ResponseEntity<ServiceResponse<String>> bill(@RequestParam String billnum) throws ColorWorldException {
 		var response = new ServiceResponse<String>();
-		response.setCode(HttpStatus.OK.value());
-		response.setErrorMessage(Strings.EMPTY);
-		response.setStatus(AppConstants.SUCCESS);
-		//response.setData(accRegService.deleteBillByBillNo(billnum));
+		try {
+			response.setCode(HttpStatus.OK.value());
+			response.setErrorMessage(Strings.EMPTY);
+			response.setStatus(AppConstants.SUCCESS);
+			response.setData(invoiceService.deleteBillByInvoice(Integer.parseInt(billnum)));
+		} catch (Exception e) {
+			LOGGER.error("Error while deleting Invoice {}", e);
+			response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			response.setStatus(AppConstants.FAILED);
+			response.setErrorMessage(e.getMessage());
+		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

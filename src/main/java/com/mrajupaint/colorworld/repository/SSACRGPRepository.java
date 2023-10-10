@@ -29,4 +29,6 @@ public interface SSACRGPRepository extends JpaRepository<SSACRGP, SSACRGP_KEY> {
 
 	List<SSACRGP> findByArnameAndArdateBetween(String companyName, Timestamp startDate, Timestamp endDate);
 
+	int deleteByArbillnoAndArname(String billNo, String companyName);
+
 }

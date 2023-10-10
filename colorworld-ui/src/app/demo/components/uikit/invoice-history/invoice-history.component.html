@@ -19,6 +19,7 @@
         [showCurrentPageReport]="true"
         [rowsPerPageOptions]="[10, 25, 50]"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [globalFilterFields]="['tnbillno', 'tntime', 'tnname','tnpgst','tntotal','tngdtl']"
         >
         <ng-template pTemplate="header" let-columns>
             <tr>
@@ -43,7 +44,7 @@
 				<th>
                     <div class="flex align-items-center">
                     Company GST
-                    <p-columnFilter type="text" field="tnname" display="menu"></p-columnFilter>
+                    <p-columnFilter type="text" field="tnpgst" display="menu"></p-columnFilter>
                     </div>
                 </th>
                 <th>
@@ -58,6 +59,7 @@
                     <p-columnFilter type="numeric" field="tngdtl" display="menu"></p-columnFilter>
                     </div>
                 </th>
+                <th>Action</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData>
@@ -66,14 +68,24 @@
                 <td>{{rowData.tntime | date: 'yyyy-MM-dd'}}</td>
                 <td>{{rowData.tnname}}</td>
                 <td>{{rowData.tnpgst}}</td>
-                <td>{{rowData.tntotal}}</td>
-                <td>{{rowData.tngdtl}}</td>
+                <td class="text-right">{{rowData.tntotal | number : '1.2-2'}}</td>
+                <td class="text-right">{{rowData.tngdtl | number : '1.2-2'}}</td>
+                <td>
+                    <div class="flex gap-3">
+                        <i class="pi pi-eye" style="font-size: 1.5rem;cursor: pointer;" pTooltip="View" 
+                            tooltipPosition="bottom" (click)="view(rowData)"></i>
+                        <i class="pi pi-trash" style="font-size: 1.5rem;cursor: pointer;" pTooltip="Delete" 
+                            tooltipPosition="bottom" (click)="delete(rowData)"></i>
+                    </div>
+                </td>
         </ng-template>
         <ng-template pTemplate="paginatorleft">
-            <p-button type="button" icon="pi pi-filter-slash" styleClass="p-button-text" (click)="clear(dt1)"></p-button>
+            <i class="pi pi-filter-slash" style="font-size: 1.5rem;cursor: pointer;" pTooltip="Clear Filter" 
+            tooltipPosition="bottom" (click)="clear(dt1)"></i>
         </ng-template>
         <ng-template pTemplate="paginatorright">
-            <p-button type="button" icon="pi pi-file-excel" styleClass="p-button-text" (click)="exportExcel(dt1)"></p-button>
+            <i class="pi pi-file-excel" style="font-size: 2rem;cursor: pointer;" pTooltip="XLSX" 
+            tooltipPosition="bottom" (click)="exportExcel(dt1)"></i>
         </ng-template>
         <ng-template pTemplate="emptymessage" let-columns>
             <tr>

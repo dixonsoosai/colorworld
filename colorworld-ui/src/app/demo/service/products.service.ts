@@ -29,10 +29,6 @@ export class ProductsService {
   }
 
   deleteProductByCode(productCode: string): Observable<any> {
-    let queryParams = new HttpParams({
-      fromObject: {
-        "productCode" : productCode
-      }});
-      return this.httpClient.delete(this.baseUrl + "products", {params: queryParams});
+    return this.httpClient.delete(this.baseUrl + "product", {params: {"productCode" : productCode}});
   }
 }

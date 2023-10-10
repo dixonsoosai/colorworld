@@ -55,42 +55,42 @@
 
 
 
-<p-dialog header="Add/Edit Product" [(visible)]="visible" [position]="position" [style]="{ width: '80vw' }">
+<p-dialog header="Add/Edit Product" [(visible)]="visible" [position]="'top'" [style]="{ width: '80vw' }">
 	<div class="grid">
 		<div class="col">
 			<p-fieldset legend="Description">
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Product Name</label>
+					<label htmlFor="pncolor" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Product Name</label>
 					<div class="col-12 md:col-7">
-						<input pInputText type="text"/>
+						<input pInputText type="text" [(ngModel)]="product.pncolor"/>
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Company Brand</label>
+					<label htmlFor="pncmpd" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Company Brand</label>
 					<div class="col-12 md:col-7">
-						<input pInputText  type="text" />
+						<input pInputText  type="text" [(ngModel)]="product.pncmpd"/>
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Company Name</label>
+					<label htmlFor="pncmpy" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Company Name</label>
 					<div class="col-12 md:col-7">
-						<input pInputText  type="text" />
+						<input pInputText  type="text" [(ngModel)]="product.pncmpy"/>
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Short Name</label>
+					<label htmlFor="pnscnm" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Short Name</label>
 					<div class="col-12 md:col-7">
-						<input pInputText  type="text" />
+						<input pInputText  type="text" [(ngModel)]="product.pnscnm"/>
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Product Code</label>
+					<label htmlFor="pnpdcd" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Product Code</label>
 					<div class="col-12 md:col-7">
-						<input pInputText type="text"/>
+						<input pInputText type="text" [(ngModel)]="product.pnpdcd"/>
 					</div>
 				</div>
 				
@@ -98,39 +98,39 @@
 			</p-fieldset>
 		</div>
 		<div class="col">
-			<p-fieldset legend="Price" style="height: 350px">
+			<p-fieldset legend="Price">
 				<div class="field grid">
 					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">MRP</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="product.pnmrp">
 					</div>
 				</div>
 				
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Customer Price</label>
+					<label htmlFor="pncuspr" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Customer Price</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="product.pncuspr">
 					</div>
 				</div>
 				
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Merchant Price</label>
+					<label htmlFor="pnmcpr" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Merchant Price</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" style="width: 100%;"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="product.pnmcpr">
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Unit Qty</label>
+					<label htmlFor="pnuqty" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Unit Qty</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" style="width: 100%;"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="product.pnuqty">
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Unit</label>
+					<label htmlFor="pnunit" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Unit</label>
 					<div class="col-12 md:col-9">
-						<input pInputText type="text"/>
+						<input pInputText type="text" [(ngModel)]="product.pnunit"/>
 					</div>
 				</div>
 				
@@ -139,27 +139,27 @@
 		<div class="col">
 			<p-fieldset legend="GST">
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">HSNC</label>
+					<label htmlFor="pnhsnc" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">HSNC</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="product.pnhsnc">
 					</div>
 				</div>
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">CGST</label>
+					<label htmlFor="pncgst" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">CGST</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="product.pncgst">
 					</div>
 				</div>
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">SGST</label>
+					<label htmlFor="pnsgst" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">SGST</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="product.pnsgst">
 					</div>
 				</div>
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Available Qty</label>
+					<label htmlFor="pniostk" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Available Qty</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)]="product.pniostk">
 					</div>
 				</div>
 			</p-fieldset>
@@ -167,7 +167,7 @@
 	</div>
 	
 	<div class="flex justify-content-end gap-3">
-		<p-button label = "Add"></p-button>
-		<p-button label = "Clear"></p-button>
+		<p-button label = "Save" (click)="save()"></p-button>
+		<p-button label = "Clear" (click)="clear()"></p-button>
 	</div>
 </p-dialog>

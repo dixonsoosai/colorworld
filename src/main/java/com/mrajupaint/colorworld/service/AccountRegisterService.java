@@ -22,6 +22,7 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.mrajupaint.colorworld.common.AppConstants;
 import com.mrajupaint.colorworld.common.AppUtils;
@@ -117,9 +118,10 @@ public class AccountRegisterService {
 		return response;
 	}
 	
-	public String deleteBillByBillNo(String billNo) throws ColorWorldException{
-		int count = sSACRGPRepository.deleteByArbillno(billNo);
-		if(count >= 1) {
+	@Transactional(rollbackFor = Exception.class)
+	public String deleteBillByBillNo(String billNo, String companyName) throws ColorWorldException{
+		int count = sSACRGPRepository.deleteByArbillnoAndArname(billNo, companyName);
+		if(count > 1) {
 			throw new ColorWorldException("Exception while deleting bill");
 		}
 		return "Bill deleted successfully";

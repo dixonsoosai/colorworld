@@ -70,12 +70,12 @@ public class AccountRegisterController {
 	
 	@LogTime
 	@DeleteMapping("bill")
-	public ResponseEntity<ServiceResponse<String>> bill(@RequestParam String billnum) throws ColorWorldException {
+	public ResponseEntity<ServiceResponse<String>> bill(@RequestParam String billnum, @RequestParam String companyName) throws ColorWorldException {
 		var response = new ServiceResponse<String>();
 		response.setCode(HttpStatus.OK.value());
 		response.setErrorMessage(Strings.EMPTY);
 		response.setStatus(AppConstants.SUCCESS);
-		response.setData(accRegService.deleteBillByBillNo(billnum));
+		response.setData(accRegService.deleteBillByBillNo(billnum, companyName));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

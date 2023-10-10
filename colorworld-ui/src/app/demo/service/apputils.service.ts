@@ -43,3 +43,12 @@ export const invoiceTab = [
 	{ label: 'Products', icon: 'pi pi-fw pi-shopping-cart' },
 	{ label: 'Invoice', icon: 'pi pi-fw pi-calendar' },
 ];
+
+export const getCurrentDate = () => {
+	const date = new Date();
+	return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;
+}
+
+export const getISOCurrentDate = () => {
+	return new Date().toISOString();
+}

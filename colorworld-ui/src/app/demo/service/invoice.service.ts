@@ -16,4 +16,11 @@ export class InvoiceService {
     return this.httpClient.get(`${this.baseUrl}tax-invoice/bills`);
   }
 
+  delete(billnum): Observable<any> {
+    return this.httpClient.delete(`${this.baseUrl}tax-invoice/bill`, {
+      params: {
+        "billnum" : billnum
+      }
+    });
+  }
 }

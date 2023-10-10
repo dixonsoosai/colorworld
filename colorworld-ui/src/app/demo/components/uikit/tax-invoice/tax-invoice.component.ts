@@ -4,7 +4,9 @@ import { ProductsService } from 'src/app/demo/service/products.service';
 import * as $ from "jquery";
 import { Customer } from 'src/app/demo/domain/customer';
 import { BillSummary, GSTSummary, InvoiceItem, ProductItem } from 'src/app/demo/domain/product';
-import { errorToastr, successToastr, productUnits, invoiceTab } from 'src/app/demo/service/apputils.service';
+import { errorToastr, successToastr, productUnits, invoiceTab, getCurrentDate } from 'src/app/demo/service/apputils.service';
+import { CustomersService } from 'src/app/demo/service/customers.service';
+import { InvoiceService } from 'src/app/demo/service/invoice.service';
 
 @Component({
     templateUrl: './tax-invoice.component.html',
@@ -31,12 +33,13 @@ export class TaxInvoiceComponent implements OnInit {
     filteredUnits:any  = {};
 
     visible: boolean = false;
-    position: string = 'top';
-
+    
     constructor(
         private messageService: MessageService,
         private confirmationService: ConfirmationService, 
-        private productService: ProductsService) { }
+        private productService: ProductsService,
+        private customerService: CustomersService,
+        private invoiceService: InvoiceService) { }
 
     ngOnInit() {
         this.items = invoiceTab;
@@ -177,7 +180,7 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     computeGSTSummary() {
-        this.gstSummary = new Map<string, GSTSummary>();
+        this.gstSummary.clear();
         this.selectedProducts.forEach(element => { 
             let gst;
             if(this.gstSummary.has(element.pncgst.toString())) {
@@ -235,4 +238,53 @@ export class TaxInvoiceComponent implements OnInit {
         this.computeBillSummary();            
     }
 
+    generateBill() {
+        //Validate Header
+        let isValidHeader = this.validateCompanyDetails();
+        if(!isValidHeader) {
+            return;
+        }
+
+        //Posting
+        //Add New Customer
+        //Clear Bill
+        this.clearBill();
+    }
+
+    validateCompanyDetails():boolean {
+        let validFlag = true;
+        if(this.customerDetails.jpname == "") {
+            this.messageService.add(errorToastr("Company Name cannot be blank"));
+            validFlag = true;
+        }
+
+        if(this.customerDetails.jppgst == "") {
+            this.messageService.add(errorToastr("Company GST cannot be blank"));
+            validFlag = true;
+        }
+
+        return validFlag;
+    }
+
+    clearBill() {
+        this.customerDetails = new Customer();
+        this.selectedProducts = [];
+        this.gstSummary.clear();
+        this.billSummary = new BillSummary();
+    }
+    
+    saveCustomer() {
+        this.customerDetails.jpbaln = -1 * this.billSummary.bsfamt;
+        this.customerDetails.jpdate = getCurrentDate();
+        this.customerDetails.jpmobno = this.customerDetails.jpmobno == '0' ? '' : this.customerDetails.jpmobno;
+    }
+
+    posting() {
+        //Generate Header
+        
+        //Generate Body
+        
+        //Generate Summary
+
+    }
 }

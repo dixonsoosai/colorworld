@@ -3,7 +3,7 @@
 <p-card header = "Sales/Purchase History">
     <div class="flex mb-4">
         <div class="flex gap-3">
-            <button pButton label="Clear" pRipple class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+            <button pButton label="Clear" pRipple class="p-button-outlined" icon="pi pi-filter-slash" (click)="clearFilter(dt1)" pTooltip="Clear Filter" tooltipPosition="bottom"></button>
             <button pButton label="Download" pRipple class="p-button-outlined" icon="pi pi-file-excel" (click)="exportExcel(dt1)" pTooltip="XLSX" tooltipPosition="bottom"></button>
             <button pButton label="Add Bill" pRipple class="p-button-outlined" icon="pi pi-file-excel" (click)="addBill()" pTooltip="Add Bill" tooltipPosition="bottom"></button>
         </div>
@@ -20,6 +20,7 @@
         [showCurrentPageReport]="true"
         [rowsPerPageOptions]="[10, 25, 50]"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+        [globalFilterFields]="['arbillno', 'ardate', 'arname','artamt']"
         >
         <ng-template pTemplate="header" let-columns>
             <tr>
@@ -44,27 +45,28 @@
                 <th>
                     <div class="flex align-items-center">
                     Net Amount
-                    <p-columnFilter type="numeric" field="name" display="menu"></p-columnFilter>
+                    <p-columnFilter type="numeric" field="arnamt" display="menu"></p-columnFilter>
                     </div>
                 </th>
                 <th>
                     <div class="flex align-items-center">
                     CGST
-                    <p-columnFilter type="numeric" field="name" display="menu"></p-columnFilter>
+                    <p-columnFilter type="numeric" field="arcgst" display="menu"></p-columnFilter>
                     </div>
                 </th>
                 <th>
                     <div class="flex align-items-center">
                     SGST
-                    <p-columnFilter type="numeric" field="name" display="menu"></p-columnFilter>
+                    <p-columnFilter type="numeric" field="arsgst" display="menu"></p-columnFilter>
                     </div>
                 </th>
                 <th>
                     <div class="flex align-items-center">
                     Total Amount
-                    <p-columnFilter type="numeric" field="name" display="menu"></p-columnFilter>
+                    <p-columnFilter type="numeric" field="artamt" display="menu"></p-columnFilter>
                     </div>
                 </th>
+                <th>Action</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-rowData>
@@ -72,86 +74,109 @@
                 <td>{{rowData.arbillno}}</td>
                 <td>{{rowData.ardate | date: 'yyyy-MM-dd'}}</td>
                 <td>{{rowData.arname}}</td>
-                <td>{{rowData.arnamt}}</td>
-                <td>{{rowData.arcgst}}</td>
-                <td>{{rowData.arsgst}}</td>
-                <td>{{rowData.artamt}}</td>
+                <td class="text-right">{{rowData.arnamt | number : '1.2-2'}}</td>
+                <td class="text-right">{{rowData.arcgst | number : '1.2-2'}}</td>
+                <td class="text-right">{{rowData.arsgst | number : '1.2-2'}}</td>
+                <td class="text-right">{{rowData.artamt | number : '1.2-2'}}</td>
+                <td>
+                    <div class="flex gap-3">
+                        <i class="pi pi-eye" style="font-size: 1.5rem;cursor: pointer;" pTooltip="View" 
+                            tooltipPosition="bottom" (click)="view(rowData)"></i>
+                        <i class="pi pi-trash" style="font-size: 1.5rem;cursor: pointer;" pTooltip="Delete" 
+                            tooltipPosition="bottom" (click)="delete(rowData)"></i>
+                    </div>
+                </td>
         </ng-template>
         <ng-template pTemplate="paginatorleft">
-            <p-button type="button" icon="pi pi-filter-slash" styleClass="p-button-text" (click)="clear(dt1)"></p-button>
+            <i class="pi pi-filter-slash" style="font-size: 1.5rem;" (click)="clearFilter(dt1)" pTooltip="Clear Filter" tooltipPosition="bottom"></i>
         </ng-template>
         <ng-template pTemplate="paginatorright">
-            <p-button type="button" icon="pi pi-file-excel" styleClass="p-button-text" (click)="exportExcel(dt1)"></p-button>
+            <i class="pi pi-file-excel" style="font-size: 2rem;" (click)="exportExcel(dt1)" pTooltip="XLSX" tooltipPosition="bottom"></i>
         </ng-template>
         <ng-template pTemplate="emptymessage" let-columns>
             <tr>
-              <td colspan="7">No records found</td>
+              <td colspan="8">No records found</td>
             </tr>
           </ng-template>
     </p-table>
 </p-card>
 
-<p-dialog header="Add/Edit Bills" [(visible)]="visible" [position]="position" [style]="{ width: '80vw' }">
+<p-dialog header="Add/Edit Bills" [(visible)]="visible" [position]="'top'" [style]="{ width: '80vw' }">
 	<div class="grid">
 		<div class="col">
 			<p-fieldset legend="Bill Details">
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Invoice Number</label>
+					<label htmlFor="arbillno" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">
+                        Invoice Number
+                    </label>
 					<div class="col-12 md:col-7">
-						<input pInputText type="text"/>
+						<input pInputText type="text" [(ngModel)] ="purchaseBill.arbillno"/>
 					</div>
 				</div>
 
                 <div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Invoice Date</label>
+					<label htmlFor="ardate" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">
+                        Invoice Date<span class="text-danger">&nbsp;*</span>
+                    </label>
 					<div class="col-12 md:col-7">
-						<p-calendar dateFormat="dd-mm-yy"  [appendTo]="'body'" [showButtonBar]="true"></p-calendar>
+						<p-calendar dateFormat="yy-mm-dd"  [appendTo]="'body'" [showButtonBar]="true" 
+                        [(ngModel)] ="purchaseBill.ardate"></p-calendar>
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Company Name</label>
+					<label htmlFor="arname" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">
+                        Company Name *
+                    </label>
 					<div class="col-12 md:col-7">
-						<input pInputText  type="text" />
+						<input pInputText  type="text" [(ngModel)] ="purchaseBill.arname"/>
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Company GST</label>
+					<label htmlFor="argstno" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">
+                        Company GST
+                    </label>
 					<div class="col-12 md:col-7">
-						<input pInputText  type="text" />
+						<input pInputText  type="text" [(ngModel)] ="purchaseBill.argstno"/>
 					</div>
 				</div>				
 			</p-fieldset>
 		</div>
 
 		<div class="col">
-			<p-fieldset legend="Bill Amount" style="height: 350px">
+			<p-fieldset legend="Bill Amount">
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Net Amount</label>
+					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
+                        Net Amount *
+                    </label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)] ="purchaseBill.arnamt" (ngModelChange)="calculate('arnamt')">
 					</div>
 				</div>
 				
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">CGST</label>
+					<label htmlFor="arcgst" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
+                        CGST <span class="text-danger">&nbsp;*</span>
+                    </label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)] ="purchaseBill.arcgst" (ngModelChange)="calculate('arcgst')">
 					</div>
 				</div>
 				
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">SGST</label>
+					<label htmlFor="arsgst" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
+                        SGST <span class="text-danger">&nbsp;*</span>
+                    </label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" style="width: 100%;"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)] ="purchaseBill.arsgst" (ngModelChange)="calculate('arsgst')">
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Total Amount</label>
+					<label htmlFor="artamt" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Total Amount *</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" style="width: 100%;"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)] ="purchaseBill.artamt" (ngModelChange)="calculate('artamt')">
 					</div>
 				</div>
 				
@@ -159,32 +184,40 @@
 		</div>
 
         <div class="col">
-			<p-fieldset legend="Bank Details" style="height: 350px">
+			<p-fieldset legend="Bank Details">
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Cheque Number</label>
+					<label htmlFor="archqno" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Cheque Number</label>
 					<div class="col-12 md:col-9">
-						<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false"></p-inputNumber>
+						<input pInputText type="number" [(ngModel)] ="purchaseBill.archqno" />
 					</div>
 				</div>
 				
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Cheque Date</label>
+					<label htmlFor="archqdte" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Cheque Date</label>
 					<div class="col-12 md:col-9"> 
-						<p-calendar [appendTo]="'body'" dateFormat="dd-mm-yy" [showButtonBar]="true"></p-calendar>
+						<p-calendar [appendTo]="'body'" dateFormat="yy-mm-dd" [showButtonBar]="true"
+                        [(ngModel)] ="purchaseBill.archqdte"></p-calendar>
 					</div>
 				</div>
 				
-				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Bank Name</label>
+                <div class="field grid">
+					<label htmlFor="archqamt" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Cheque Amount</label>
 					<div class="col-12 md:col-9">
-						<input pInputText  type="text" />
+						<input pInputText type="number" [(ngModel)] ="purchaseBill.archqamt" />
 					</div>
 				</div>
 
 				<div class="field grid">
-					<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Comments</label>
+					<label htmlFor="arbname" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Bank Name</label>
 					<div class="col-12 md:col-9">
-						<input pInputText  type="text" />
+						<input pInputText type="text" [(ngModel)] ="purchaseBill.arbname"/>
+					</div>
+				</div>
+
+				<div class="field grid">
+					<label htmlFor="artext" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Comments</label>
+					<div class="col-12 md:col-9">
+						<input pInputText type="text" [(ngModel)] ="purchaseBill.artext"/>
 					</div>
 				</div>
 				
@@ -193,7 +226,7 @@
 	</div>
 	
 	<div class="flex justify-content-end gap-3">
-		<p-button label = "Add"></p-button>
-		<p-button label = "Clear"></p-button>
+		<p-button label = "Save" (click)="save()"></p-button>
+		<p-button label = "Clear" (click)="clear()"></p-button>
 	</div>
 </p-dialog>

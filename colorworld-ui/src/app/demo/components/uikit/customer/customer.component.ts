@@ -65,10 +65,10 @@ export class CustomerComponent implements OnInit {
                         this.messageService.add(errorToastr(response.errMessage));
                     }
                 },
-                    error => {
-                        console.error(error);
-                        this.messageService.add(errorToastr(error.error.message));
-                    });
+            error => {
+                console.error(error);
+                this.messageService.add(errorToastr(error.error.message));
+            });
 
             }
         });

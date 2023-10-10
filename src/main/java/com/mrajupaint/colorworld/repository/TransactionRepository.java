@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,6 +82,20 @@ public class TransactionRepository {
 			transaction.setTncamt(rs.getInt("tncamt"));
 			return transaction;
 		});
+	}
+	
+	@Transactional(rollbackFor = Exception.class)
+	public boolean deleteInvoice(int billnum) throws Exception {
+		try {
+			String sql = """
+					DELETE FROM colorworld.sstnjnp WHERE tnbillno = %s
+					""".formatted(billnum);
+			jdbcTemplate.update(sql);
+		} catch (DataAccessException e) {
+			LOGGER.error("Exception while deleting invoice {}", e);
+			throw new Exception(e.getMessage());
+		}
+		return true;
 	}
 		
 	

@@ -20,4 +20,6 @@ public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, SSTNHDP_KEY> {
 	Optional<Integer> getBillNo(@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate);
 
 	SSTNHDP getByTnbillno(int billnum);
+
+	int deleteByTnbillno(int billnum);
 }

@@ -10,6 +10,7 @@ import { InvoiceHistoryRoutingModule } from './invoice-history-routing.module';
 import { InvoiceHistoryComponent } from './invoice-history.component';
 import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { TooltipModule } from 'primeng/tooltip';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 		CardModule,
 		ToastModule,
 		ConfirmDialogModule,
-		InputTextModule
+		InputTextModule,
+		TooltipModule
   ]
 })
 export class InvoiceHistoryModule { }

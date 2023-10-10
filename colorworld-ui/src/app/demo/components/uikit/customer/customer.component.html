@@ -50,13 +50,13 @@
 			<div class="field grid">
 				<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Mobile</label>
 				<div class="col-12 md:col-9">
-					<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" [(ngModel)]="customerDetails.jpmobno"></p-inputNumber>
+					<input pInputText type="number" [(ngModel)]="customerDetails.jpmobno">
 				</div>
 			</div>
 			<div class="field grid">
 				<label htmlFor="balance" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Balance</label>
 				<div class="col-12 md:col-9">
-					<p-inputNumber mode="decimal" inputId="withoutgrouping" [useGrouping]="false" [(ngModel)]="customerDetails.jpbaln"></p-inputNumber>
+					<input pInputText type="number" [(ngModel)]="customerDetails.jpbaln">
 				</div>
 			</div>
 			<div class="field grid">
