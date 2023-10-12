@@ -16,8 +16,7 @@ public class AppUtils {
 	
 	public static int getFinancialYear(Timestamp inputDate) {
 		LocalDateTime date = inputDate.toLocalDateTime();
-		int month = date.getMonthValue();
-		return month >=1 && month <=3 ? date.getYear() - 1 : date.getYear();
+		return date.getMonthValue() <=3 ? date.getYear() - 1 : date.getYear();
 	}
 	
 	public static Timestamp getStartFYear(Timestamp inputDate) {

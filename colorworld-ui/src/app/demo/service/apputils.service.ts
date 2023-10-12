@@ -52,3 +52,7 @@ export const getCurrentDate = () => {
 export const getISOCurrentDate = () => {
 	return new Date().toISOString();
 }
+
+export const getISODate = (date: Date) => {
+	return date.toISOString();
+}

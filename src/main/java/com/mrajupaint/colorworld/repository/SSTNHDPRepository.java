@@ -22,4 +22,5 @@ public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, SSTNHDP_KEY> {
 	SSTNHDP getByTnbillno(int billnum);
 
 	int deleteByTnbillno(int billnum);
+
 }

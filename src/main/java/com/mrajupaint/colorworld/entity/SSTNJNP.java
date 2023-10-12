@@ -19,12 +19,6 @@ public class SSTNJNP
 	@Column
 	private String tnchallan;
 	@Column
-	private String tncmpy;
-	@Column
-	private String tncmpd;
-	@Column
-	private String tncolor;
-	@Column
 	private String tnscnnm;
 	@Column
 	private double tnprice;

@@ -16,10 +16,12 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
 	imports: [
 		CommonModule,
+		CalendarModule,
 		TaxInvoiceRoutingModule,
 		FormsModule,
 		TableModule,
@@ -38,4 +40,4 @@ import { DropdownModule } from 'primeng/dropdown';
 	],
 	declarations: [TaxInvoiceComponent]
 })
-export class MyWorkItemsModule { }
+export class TaxInvoiceModule { }

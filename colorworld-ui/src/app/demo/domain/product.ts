@@ -20,20 +20,21 @@ export class ProductItem {
 }
 
 export class InvoiceItem {
-    pnchallan:string = '';
-	pnscnm: string = '';
-	pnpdcd: string = '';
-	pnhsnc: number = 0;
-	pncgst: number = 0;
-	pnsgst: number = 0;
-	pnuqty: number = 0;
-	pnunit: string = '';
-	pntqty: number = 0;
-	pnprice: number = 0;
-	pnnamt: number = 0;
-	pncgsta: number = 0;
-	pnsgsta: number = 0;
-	pntamt: number = 0;
+    tnbillno: number = 0;
+    tnchallan:string = '';
+	tnscnm: string = '';
+	tnpdcd: string = '';
+	tnhsnc: number = 0;
+	tncgst: number = 0;
+	tnsgst: number = 0;
+	tnuqty: number = 0;
+	tnunit: string = '';
+	tntqty: number = 0;
+	tnprice: number = 0;
+	tnnamt: number = 0;
+	tncamt: number = 0;
+	tnsamt: number = 0;
+	tntamt: number = 0;
 }
 
 export class BillSummary {
@@ -47,7 +48,7 @@ export class BillSummary {
 
 export class GSTSummary {
 	gngstp : string = "";
-	gnnamt: number = 0;
+	gntxable: number = 0;
 	gntcgst : number = 0;
 	gntsgst : number = 0;
 	gntamt : number = 0;

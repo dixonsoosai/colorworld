@@ -72,8 +72,11 @@
                 <td class="text-right">{{rowData.tngdtl | number : '1.2-2'}}</td>
                 <td>
                     <div class="flex gap-3">
-                        <i class="pi pi-eye" style="font-size: 1.5rem;cursor: pointer;" pTooltip="View" 
-                            tooltipPosition="bottom" (click)="view(rowData)"></i>
+                        <a [routerLink]="['/home/view-invoice/' + rowData.tnbillno]">
+                            <i class="pi pi-eye" style="font-size: 1.5rem;cursor: pointer;" pTooltip="View" 
+                                tooltipPosition="bottom">
+                            </i>
+                        </a>
                         <i class="pi pi-trash" style="font-size: 1.5rem;cursor: pointer;" pTooltip="Delete" 
                             tooltipPosition="bottom" (click)="delete(rowData)"></i>
                     </div>

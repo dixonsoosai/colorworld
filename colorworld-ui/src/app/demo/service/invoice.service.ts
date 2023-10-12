@@ -16,6 +16,14 @@ export class InvoiceService {
     return this.httpClient.get(`${this.baseUrl}tax-invoice/bills`);
   }
 
+  fetch(invoice: string): Observable<any> {
+    return this.httpClient.get(`${this.baseUrl}tax-invoice/bill`);
+  }
+
+  generate(taxinvoice): Observable<any> {
+    return this.httpClient.post(`${this.baseUrl}posting/generateBill`, taxinvoice);
+  }
+
   delete(billnum): Observable<any> {
     return this.httpClient.delete(`${this.baseUrl}tax-invoice/bill`, {
       params: {
@@ -23,4 +31,9 @@ export class InvoiceService {
       }
     });
   }
+
+  newInvoice(date): Observable<any> {
+    return this.httpClient.get(`${this.baseUrl}tax-invoice/refreshBilNum/`, {params: {"billDate" : date}});
+  }
+
 }

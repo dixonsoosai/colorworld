@@ -86,7 +86,6 @@ public class PDFService {
 	public void generatePDF(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			//TODO: Replace line
 			File file = new File("C:\\Users\\Tiaa user\\Documents\\colorworld\\src\\main\\resources\\templates\\invoice_template.html");
 					//ResourceUtils.getFile("classpath:templates/invoice_template1.html");
 			
@@ -101,8 +100,6 @@ public class PDFService {
 	}
 	
 	private void downloadContent(String content, String outputFile) {
-		//Download HTML file also
-		//TODO: Delete line
 		try {
 			new File("C:\\Logs\\sample.html").delete();
 			Files.writeString(Path.of("C:\\Logs\\sample.html"), content, StandardOpenOption.CREATE_NEW);

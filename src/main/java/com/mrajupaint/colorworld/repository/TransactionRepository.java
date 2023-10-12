@@ -34,19 +34,16 @@ public class TransactionRepository {
 		}
 	    sql = """
 	    		INSERT INTO colorworld.sstnjnp(
-        		tnbillno, tnchallan, tncmpy, tncmpd, 
-        		tncolor, tnscnnm, tnprice, tntxable, tnsamt, tncamt, tntamt, tntqty, 
+        		tnbillno, tnchallan, tnscnnm, 
+        		tnprice, tntxable, tnsamt, tncamt, tntamt, tntqty, 
         		tnuqty, tnunit, tnpdcd, tnhsnc, tncgst, tnsgst)
-        		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         		""";
         List<Object[]> batchArgs = new ArrayList<>();
         
         for (var entity : entities) {
             Object[] args = {entity.getTnbillno(), 
             		entity.getTnchallan(),
-            		entity.getTncmpy(),
-            		entity.getTncmpd(),
-            		entity.getTncolor(),
             		entity.getTnscnnm(),
             		entity.getTnprice(),
             		entity.getTntxable(),

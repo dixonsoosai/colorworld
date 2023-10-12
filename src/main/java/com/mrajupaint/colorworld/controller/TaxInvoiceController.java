@@ -1,5 +1,6 @@
 package com.mrajupaint.colorworld.controller;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -41,6 +42,17 @@ public class TaxInvoiceController {
 		response.setErrorMessage(Strings.EMPTY);
 		response.setStatus(AppConstants.SUCCESS);
 		response.setData(invoiceService.getAllBills());
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@LogTime
+	@GetMapping("refreshBilNum")
+	public ResponseEntity<ServiceResponse<Integer>> refreshBilNum(@RequestParam Timestamp billDate) {
+		var response = new ServiceResponse<Integer>();
+		response.setCode(HttpStatus.OK.value());
+		response.setErrorMessage(Strings.EMPTY);
+		response.setStatus(AppConstants.SUCCESS);
+		response.setData(invoiceService.refreshBillNum(billDate));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

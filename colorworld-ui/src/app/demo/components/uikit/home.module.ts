@@ -7,7 +7,6 @@ import { HomeRoutingModule } from './home-routing.module';
 		CommonModule,
 		HomeRoutingModule
 	],
-	declarations: [
-	]
+	declarations: []
 })
 export class HomeModule { }

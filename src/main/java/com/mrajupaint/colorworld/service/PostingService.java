@@ -73,11 +73,10 @@ public class PostingService {
 		}
 		
 		pdfService.generatePDF(taxInvoice);
-		/*
 		transactionRepository.addTransaction(taxInvoice.getDetails());
 		sSTNHDPRepository.save(taxInvoice.getHeader());
 		sSGNJNPRepository.saveAll(taxInvoice.getGst());
-		*/
+		
 		return new ServiceResponse<>(200, AppConstants.SUCCESS, 
 				"Bill generated successfully",null);
 	}

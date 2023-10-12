@@ -1,13 +1,17 @@
 package com.mrajupaint.colorworld.service;
 
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.mrajupaint.colorworld.common.AppUtils;
 import com.mrajupaint.colorworld.entity.SSTNHDP;
 import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
 import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
@@ -29,6 +33,19 @@ public class InvoiceService {
 	
 	public List<SSTNHDP> getAllBills() {
 		return headerRepository.findAll(); 
+	}
+
+	public int refreshBillNum(Timestamp invoiceDate) {
+		Timestamp startDate = AppUtils.getStartFYear(invoiceDate);
+		Timestamp endDate = AppUtils.getEndFYear(invoiceDate);
+		Optional<Integer> billnum = headerRepository.getBillNo(startDate, endDate);
+		if(billnum.isEmpty()) {
+			return Integer.parseInt(startDate.toLocalDateTime()
+					.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "001");
+		}
+		else {
+			return billnum.get();
+		}
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
