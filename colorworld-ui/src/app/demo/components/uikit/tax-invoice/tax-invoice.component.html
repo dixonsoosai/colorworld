@@ -63,7 +63,9 @@
 							<label htmlFor="customerName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Customer
 								Name</label>
 							<div class="col-12 md:col-9">
-								<input pInputText type="text" [(ngModel)]="customerDetails.jpname" />
+								<p-autoComplete [(ngModel)]="customerDetails.jpname" [suggestions]="filteredCustomers" 
+									(completeMethod)="searchSuggestion($event)" (onSelect)="populateDetails()"> 
+								</p-autoComplete>
 							</div>
 						</div>
 					</div>
@@ -164,13 +166,13 @@
 									</ng-template>
 								</p-cellEditor>
 							</td>
-							<td [pEditableColumn]="cproduct.tnscnm" pEditableColumnField="tnscnm">
+							<td [pEditableColumn]="cproduct.tnscnnm" pEditableColumnField="tnscnnm">
 								<p-cellEditor>
 									<ng-template pTemplate="input">
-										<input pInputText type="text" [(ngModel)]="cproduct.tnscnm">
+										<input pInputText type="text" [(ngModel)]="cproduct.tnscnnm">
 									</ng-template>
 									<ng-template pTemplate="output">
-										{{cproduct.tnscnm}}
+										{{cproduct.tnscnnm}}
 									</ng-template>
 								</p-cellEditor>
 							</td>
@@ -228,15 +230,15 @@
 									</ng-template>
 								</p-cellEditor>
 							</td>
-							<td class="text-right" [pEditableColumn]="cproduct.tnnamt" pEditableColumnField="tnnamt">
+							<td class="text-right" [pEditableColumn]="cproduct.tntxable" pEditableColumnField="tntxable">
 								<p-cellEditor>
 									<ng-template pTemplate="input">
-										<input pInputText type="number" [(ngModel)]="cproduct.tnnamt"
+										<input pInputText type="number" [(ngModel)]="cproduct.tntxable"
 											(ngModelChange)="onChange($event, cproduct, 'namt')">
 										
 									</ng-template>
 									<ng-template pTemplate="output">
-										{{cproduct.tnnamt}}
+										{{cproduct.tntxable}}
 									</ng-template>
 								</p-cellEditor>
 							</td>

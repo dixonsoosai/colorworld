@@ -18,9 +18,11 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ResourceUtils;
 
 import com.itextpdf.html2pdf.ConverterProperties;
 import com.itextpdf.html2pdf.HtmlConverter;
@@ -75,31 +77,31 @@ public class PDFService {
 		}
 	}
 	
-	public void generatePDF(int billnum) {
+	public byte[] generatePDF(int billnum) {
 		var invoice = new TaxInvoice();
 		invoice.setHeader(headerRepository.getByTnbillno(billnum));
 		invoice.setGst(gstRepository.getByGnbill(billnum));
 		invoice.setDetails(transactionRepository.getTransaction(billnum));
-		generatePDF(invoice);
+		return generatePDF(invoice);
 	}
 	
-	public void generatePDF(TaxInvoice taxInvoice) {
+	public byte[] generatePDF(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			File file = new File("C:\\Users\\Tiaa user\\Documents\\colorworld\\src\\main\\resources\\templates\\invoice_template.html");
-					//ResourceUtils.getFile("classpath:templates/invoice_template1.html");
+			File file = ResourceUtils.getFile("classpath:templates/invoice_template.html");
 			
 			String finalContent = editContent(file, placeholder);
 			String outputFile = taxInvoiceDirectory + 
 					taxInvoice.getHeader().getTnbillno() +  "_Tax Invoice.pdf";
-			downloadContent(finalContent, outputFile);
+			return downloadContent(finalContent, outputFile);
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("Exception while generating PDF: {}", e.getMessage(), e);
+			return null;
 		}
 	}
 	
-	private void downloadContent(String content, String outputFile) {
+	private byte[] downloadContent(String content, String outputFile) {
 		try {
 			new File("C:\\Logs\\sample.html").delete();
 			Files.writeString(Path.of("C:\\Logs\\sample.html"), content, StandardOpenOption.CREATE_NEW);
@@ -114,9 +116,12 @@ public class PDFService {
 			doc.setMargins(10, 10, 10, 10);
 			doc.relayout();
 			doc.close();
+			File temp = new File(outputFile);
+			return Files.readAllBytes(Path.of(temp.getAbsolutePath()));
 		}
 		catch (Exception e) {
 			LOGGER.error("Exception while converting: {}", e.getMessage(), e);
+			return null;
 		}
 	}
 
@@ -266,11 +271,9 @@ public class PDFService {
 		
 		//Read Signature File
 		//TODO: Replace line
-		String filePath = "C:\\Users\\Tiaa user\\Documents\\colorworld\\src\\main\\resources\\templates\\sign.jpeg";
-			//ResourceUtils.getFile("classpath:templates/sign.jpeg");		
 		try {
-            File signFile = new File(filePath);
-            String ext = filePath.substring(filePath.indexOf(".") + 1);
+            File signFile = ResourceUtils.getFile("classpath:templates/sign.jpeg");
+            String ext = FileUtils.getFileExtension(signFile);
             try(FileInputStream fileInputStream = new FileInputStream(signFile)) {
 	            byte[] imageData = new byte[(int) signFile.length()];
 	            fileInputStream.read(imageData);

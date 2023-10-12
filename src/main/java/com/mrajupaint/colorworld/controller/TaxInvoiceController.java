@@ -22,6 +22,7 @@ import com.mrajupaint.colorworld.entity.SPRequest;
 import com.mrajupaint.colorworld.entity.SSTNHDP;
 import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.ServiceResponse;
+import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.service.InvoiceService;
 
 @RestController
@@ -47,12 +48,12 @@ public class TaxInvoiceController {
 	
 	@LogTime
 	@GetMapping("refreshBilNum")
-	public ResponseEntity<ServiceResponse<Integer>> refreshBilNum(@RequestParam Timestamp billDate) {
+	public ResponseEntity<ServiceResponse<Integer>> refreshBilNum(@RequestParam String billDate) {
 		var response = new ServiceResponse<Integer>();
 		response.setCode(HttpStatus.OK.value());
 		response.setErrorMessage(Strings.EMPTY);
 		response.setStatus(AppConstants.SUCCESS);
-		response.setData(invoiceService.refreshBillNum(billDate));
+		response.setData(invoiceService.refreshBillNum(Timestamp.valueOf(billDate)));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
@@ -85,5 +86,15 @@ public class TaxInvoiceController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+	@LogTime
+	@GetMapping("billDetails")
+	public ResponseEntity<ServiceResponse<TaxInvoice>> billDetails(@RequestParam String billnum) {
+		var response = new ServiceResponse<TaxInvoice>();
+		response.setCode(HttpStatus.OK.value());
+		response.setErrorMessage(Strings.EMPTY);
+		response.setStatus(AppConstants.SUCCESS);
+		response.setData(invoiceService.getBillDetails(billnum));
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 	
 }

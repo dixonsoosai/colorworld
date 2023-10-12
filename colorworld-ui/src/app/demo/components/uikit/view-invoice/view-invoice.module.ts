@@ -17,10 +17,12 @@ import { DropdownModule } from 'primeng/dropdown';
 import { ViewInvoiceComponent } from './view-invoice.component';
 import { ViewInvoiceRoutingModule } from './view-invoice.routing.module';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
 	imports: [
 		CommonModule,
+		CalendarModule,
 		ViewInvoiceRoutingModule,
 		FormsModule,
 		TableModule,

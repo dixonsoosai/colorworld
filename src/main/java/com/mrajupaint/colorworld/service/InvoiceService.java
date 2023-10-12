@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mrajupaint.colorworld.common.AppUtils;
 import com.mrajupaint.colorworld.entity.SSTNHDP;
+import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
 import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
 import com.mrajupaint.colorworld.repository.TransactionRepository;
@@ -63,5 +64,13 @@ public class InvoiceService {
 		transactionRepository.deleteInvoice(billnum);
 		LOGGER.info("Delete from SSTNJNP");
 		return "Bill deleted successfully";
+	}
+
+	public TaxInvoice getBillDetails(String billnum) {
+		TaxInvoice taxInvoice = new TaxInvoice();
+		taxInvoice.setHeader(headerRepository.getByTnbillno(Integer.parseInt(billnum)));
+		taxInvoice.setGst(gstRepository.getByGnbill(Integer.parseInt(billnum)));
+		taxInvoice.setDetails(transactionRepository.getTransaction(Integer.parseInt(billnum)));
+		return taxInvoice;
 	}
 }

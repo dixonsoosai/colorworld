@@ -76,7 +76,21 @@ public class TransactionRepository {
 		return jdbcTemplate.query(sql, (rs, rowNum) -> {
 			SSTNJNP transaction = new SSTNJNP();
 			transaction.setTnbillno(rs.getInt("tnbillno"));
-			transaction.setTncamt(rs.getInt("tncamt"));
+			transaction.setTnchallan(rs.getString("tnchallan"));
+			transaction.setTnscnnm(rs.getString("tnscnnm"));
+			transaction.setTnprice(rs.getDouble("tnprice"));
+			transaction.setTntxable(rs.getDouble("tntxable"));
+			transaction.setTnsamt(rs.getDouble("tnsamt"));
+			transaction.setTncamt(rs.getDouble("tncamt"));
+			transaction.setTntamt(rs.getDouble("tntamt"));
+			transaction.setTntqty(rs.getDouble("tntqty"));
+			transaction.setTnuqty(rs.getDouble("tnuqty"));
+			transaction.setTnunit(rs.getString("tnunit"));
+			transaction.setTnpdcd(rs.getString("tnpdcd"));
+			transaction.setTnhsnc(rs.getInt("tnhsnc"));
+			transaction.setTncgst(rs.getDouble("tncgst"));
+			transaction.setTnsgst(rs.getDouble("tnsgst"));
+			
 			return transaction;
 		});
 	}

@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class InvoiceService {
-
+  
   private baseUrl = environment.baseUrl;
 
   constructor(private httpClient: HttpClient) { }
@@ -19,6 +19,11 @@ export class InvoiceService {
   fetch(invoice: string): Observable<any> {
     return this.httpClient.get(`${this.baseUrl}tax-invoice/bill`);
   }
+
+  fetchBillDetails(invoice: string) {
+    return this.httpClient.get(`${this.baseUrl}tax-invoice/billDetails`, {params: {"billnum" : invoice}});
+  }
+
 
   generate(taxinvoice): Observable<any> {
     return this.httpClient.post(`${this.baseUrl}posting/generateBill`, taxinvoice);
@@ -33,7 +38,7 @@ export class InvoiceService {
   }
 
   newInvoice(date): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}tax-invoice/refreshBilNum/`, {params: {"billDate" : date}});
+    return this.httpClient.get(`${this.baseUrl}tax-invoice/refreshBilNum`, {params: {"billDate" : date}});
   }
 
 }

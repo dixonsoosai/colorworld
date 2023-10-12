@@ -22,7 +22,7 @@ export class ProductItem {
 export class InvoiceItem {
     tnbillno: number = 0;
     tnchallan:string = '';
-	tnscnm: string = '';
+	tnscnnm: string = '';
 	tnpdcd: string = '';
 	tnhsnc: number = 0;
 	tncgst: number = 0;
@@ -31,7 +31,7 @@ export class InvoiceItem {
 	tnunit: string = '';
 	tntqty: number = 0;
 	tnprice: number = 0;
-	tnnamt: number = 0;
+	tntxable: number = 0;
 	tncamt: number = 0;
 	tnsamt: number = 0;
 	tntamt: number = 0;

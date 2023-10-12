@@ -38,10 +38,11 @@ public class PostingService {
 	PDFService pdfService;
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
-	public ServiceResponse<Object> postBill(TaxInvoice taxInvoice) throws ColorWorldException {
+	public ServiceResponse<byte[]> postBill(TaxInvoice taxInvoice) throws ColorWorldException {
 		
 		//Header should be present
 		if(checkNull(taxInvoice.getHeader(), taxInvoice.getDetails(), taxInvoice.getGst())) {
+			LOGGER.error("Invalid GST format");
 			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);
 		}
 		
@@ -50,6 +51,7 @@ public class PostingService {
 		 * Details should contain at-least 1 entries
 		 */
 		if(taxInvoice.getGst().size() < 2 || taxInvoice.getDetails().isEmpty()) {
+			LOGGER.error("Invalid GST format");
 			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);	
 		}
 		
@@ -60,6 +62,7 @@ public class PostingService {
 			//Header Validation
 			var response = validateHeader(taxInvoice.getHeader(), billNum);
 			if(!response.equals("****")) {
+				LOGGER.error(response);
 				return new ServiceResponse<>(501, AppConstants.FAILED, 
 						response, null);
 			}
@@ -67,18 +70,19 @@ public class PostingService {
 			//GST Validation
 			response = validateGST(taxInvoice, billNum);
 			if(!response.equals("****")) {
+				LOGGER.error(response);
 				return new ServiceResponse<>(501, AppConstants.FAILED, 
 						response, null);
 			}
 		}
 		
-		pdfService.generatePDF(taxInvoice);
+		byte[] buffer = pdfService.generatePDF(taxInvoice);
 		transactionRepository.addTransaction(taxInvoice.getDetails());
 		sSTNHDPRepository.save(taxInvoice.getHeader());
 		sSGNJNPRepository.saveAll(taxInvoice.getGst());
 		
 		return new ServiceResponse<>(200, AppConstants.SUCCESS, 
-				"Bill generated successfully",null);
+				"Bill generated successfully", buffer);
 	}
 
 	private boolean checkNull(Object ...items) {
@@ -141,7 +145,7 @@ public class PostingService {
 			return "Invalid GST Transaction";
 		}
 		
-		if((totalTamt != totalCGST + totalSGST) || (tAmt != cAmt + sAmt)) {
+		if((totalTamt != totalTaxable + totalCGST + totalSGST) || (tAmt != taxable + cAmt + sAmt)) {
 			return "Invalid GST Total";
 		}
 		

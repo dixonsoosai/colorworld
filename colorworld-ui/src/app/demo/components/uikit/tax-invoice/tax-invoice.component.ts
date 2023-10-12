@@ -4,12 +4,13 @@ import { ProductsService } from 'src/app/demo/service/products.service';
 import * as $ from "jquery";
 import { Customer } from 'src/app/demo/domain/customer';
 import { BillSummary, GSTSummary, InvoiceItem, ProductItem } from 'src/app/demo/domain/product';
-import { errorToastr, successToastr, productUnits, invoiceTab, getCurrentDate, getISOCurrentDate, getISODate } from 'src/app/demo/service/apputils.service';
+import { errorToastr, successToastr, productUnits, invoiceTab, getCurrentDate, getISOCurrentDate, getISODate, getISODate2 } from 'src/app/demo/service/apputils.service';
 import { CustomersService } from 'src/app/demo/service/customers.service';
 import { InvoiceService } from 'src/app/demo/service/invoice.service';
 import { SSTNHDP } from 'src/app/demo/domain/sstnhdp';
 import { SSTNJNP } from 'src/app/demo/domain/sstnjnp';
 import { SSGNJNP } from 'src/app/demo/domain/ssgnjnp';
+import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 
 @Component({
     templateUrl: './tax-invoice.component.html',
@@ -24,6 +25,10 @@ export class TaxInvoiceComponent implements OnInit {
     activeItem: MenuItem | undefined;
 
     productList = [];
+    customerList: Customer[] = [];
+    filteredCustomers: any[];
+    customerSuggestions: string[];
+
     customerDetails: Customer = new Customer();
     selectedProducts: InvoiceItem[] = [];
     newProduct: ProductItem = new ProductItem();
@@ -51,6 +56,7 @@ export class TaxInvoiceComponent implements OnInit {
         this.invoiceDate = new Date();
         this.fetchAll();
         this.generateNewInvoiceNum();
+        this.fetchCustomerList();
         this.dummy();
     }
 
@@ -62,10 +68,39 @@ export class TaxInvoiceComponent implements OnInit {
         this.newProduct.pncgst = 9;
         this.newProduct.pnsgst = 9;
         this.newProduct.pnuqty = 4;
+        this.newProduct.pnunit = "kg";
         this.newProduct.pnmcpr = 400;
-        this.customerDetails.jpname = "Sample";
         this.customerDetails.jppgst = "DUFPS0618A";
+        //this.addProduct();
     }
+
+    fetchCustomerList() {
+        this.customerService.fetchAll().subscribe({
+            next:response => {
+                this.customerList = response.data;
+            }
+        });
+    }
+    searchSuggestion(event: AutoCompleteCompleteEvent) {
+        let filtered: string[] = [];
+        let query = event.query;
+        for (let i = 0; i < this.customerList.length; i++) {
+            let customer = this.customerList[i];
+            if (customer.jpname.toLowerCase().indexOf(query.toLowerCase()) == 0 || query.trim() == "") {
+                filtered.push(customer.jpname);
+            }
+        }
+        this.filteredCustomers = filtered;
+    }
+
+    populateDetails() {
+        let temp:Customer [] = this.customerList.filter(customer => customer.jpname == this.customerDetails.jpname);
+        if(temp.length > 0){
+            this.customerDetails = temp[0];
+        }
+    }
+
+
     fetchAll() {
         this.isLoading = false;
         this.productService.fetchAllProducts().subscribe({
@@ -140,10 +175,10 @@ export class TaxInvoiceComponent implements OnInit {
             this.selectedProducts.forEach(element => {
                 if (element.tnpdcd.trim() === product.pnpdcd.trim()) {
                     element.tntqty += 1;
-                    element.tnnamt = element.tntqty * element.tnprice;
-                    element.tncamt = element.tnnamt * element.tncgst / 100;
-                    element.tnsamt = element.tnnamt * element.tnsgst / 100;
-                    element.tntamt = element.tnnamt + element.tncamt + element.tnsamt;
+                    element.tntxable = element.tntqty * element.tnprice;
+                    element.tncamt = element.tntxable * element.tncgst / 100;
+                    element.tnsamt = element.tntxable * element.tnsgst / 100;
+                    element.tntamt = element.tntxable + element.tncamt + element.tnsamt;
                     checkFlag = true;
                     this.messageService.add(successToastr("Product added to Invoice"));
                     this.computeBillSummary();
@@ -156,7 +191,7 @@ export class TaxInvoiceComponent implements OnInit {
 
         let productItem: InvoiceItem = new InvoiceItem();
         productItem.tnbillno = this.invoiceNumber;
-        productItem.tnscnm = product.pnscnm;
+        productItem.tnscnnm = product.pnscnm;
         productItem.tnchallan = '';
         productItem.tnhsnc = product.pnhsnc;
         productItem.tnpdcd = product.pnpdcd;
@@ -169,10 +204,10 @@ export class TaxInvoiceComponent implements OnInit {
         productItem.tnsgst = product.pnsgst;
 
         productItem.tntqty = 1;
-        productItem.tnnamt = productItem.tntqty * productItem.tnprice;
-        productItem.tncamt = productItem.tnnamt * productItem.tncgst / 100;
-        productItem.tnsamt = productItem.tnnamt * productItem.tnsgst / 100;
-        productItem.tntamt = productItem.tnnamt + productItem.tncamt + productItem.tnsamt;
+        productItem.tntxable = productItem.tntqty * productItem.tnprice;
+        productItem.tncamt = productItem.tntxable * productItem.tncgst / 100;
+        productItem.tnsamt = productItem.tntxable * productItem.tnsgst / 100;
+        productItem.tntamt = productItem.tntxable + productItem.tncamt + productItem.tnsamt;
         this.selectedProducts.push(productItem);
         this.computeBillSummary();
         this.messageService.add(successToastr("Product added to Invoice"));
@@ -182,7 +217,7 @@ export class TaxInvoiceComponent implements OnInit {
         if(this.invoiceDate == null) {
             this.invoiceDate = new Date();
         }
-        this.invoiceService.newInvoice(getISODate(this.invoiceDate)).subscribe({
+        this.invoiceService.newInvoice(getISODate2(this.invoiceDate)).subscribe({
             next: response => {
                 if(response.code === 200) {
                     this.invoiceNumber = response.data;
@@ -201,7 +236,7 @@ export class TaxInvoiceComponent implements OnInit {
     computeBillSummary() {
         this.billSummary = new BillSummary();
         this.selectedProducts.forEach(element => {
-            this.billSummary.bsnamt += element.tnnamt;
+            this.billSummary.bsnamt += element.tntxable;
             this.billSummary.bstcgst += element.tncamt;
             this.billSummary.bstsgst += element.tnsamt;
             this.billSummary.bstamt += element.tntamt;
@@ -223,7 +258,7 @@ export class TaxInvoiceComponent implements OnInit {
                 gst.gngstp = element.tncgst.toString();
             }
             gst.gnbill = this.invoiceNumber;
-            gst.gntxable += element.tnnamt;
+            gst.gntxable += element.tntxable;
             gst.gncamt += element.tncamt;
             gst.gnsamt += element.tnsamt;
             gst.gntamt += element.tntamt;
@@ -246,10 +281,10 @@ export class TaxInvoiceComponent implements OnInit {
         switch (column) {
             case "tqty":
             case "tnprice":
-                row.tnnamt = row.tntqty * row.tnprice;
+                row.tntxable = row.tntqty * row.tnprice;
                 break;
             case "namt":
-                row.tnprice = parseFloat((row.tnnamt / row.tntqty).toFixed(2));
+                row.tnprice = parseFloat((row.tntxable / row.tntqty).toFixed(2));
                 break;
             case "cgst":
                 row.tnsgst = row.tncgst;
@@ -258,17 +293,17 @@ export class TaxInvoiceComponent implements OnInit {
                 row.tncgst = row.tnsgst;
                 break;
             case "tntamt":
-                row.tnnamt = parseFloat((row.tntamt / (1 + (row.tncgst / 100) + (row.tnsgst / 100))).toFixed(2));
-                row.tncamt = parseFloat((row.tnnamt * row.tncgst / 100).toFixed(2));
-                row.tnsamt = parseFloat((row.tnnamt * row.tnsgst / 100).toFixed(2));
-                row.tnnamt = parseFloat((row.tntamt - row.tncamt - row.tnsamt).toFixed(2));
-                row.tnprice = parseFloat((row.tnnamt / row.tntqty).toFixed(2));
+                row.tntxable = parseFloat((row.tntamt / (1 + (row.tncgst / 100) + (row.tnsgst / 100))).toFixed(2));
+                row.tncamt = parseFloat((row.tntxable * row.tncgst / 100).toFixed(2));
+                row.tnsamt = parseFloat((row.tntxable * row.tnsgst / 100).toFixed(2));
+                row.tntxable = parseFloat((row.tntamt - row.tncamt - row.tnsamt).toFixed(2));
+                row.tnprice = parseFloat((row.tntxable / row.tntqty).toFixed(2));
                 this.computeBillSummary();
                 return;
         }
-        row.tncamt = parseFloat((row.tnnamt * row.tncgst / 100).toFixed(2));
-        row.tnsamt = parseFloat((row.tnnamt * row.tnsgst / 100).toFixed(2));
-        row.tntamt = row.tnnamt + row.tncamt + row.tnsamt;
+        row.tncamt = parseFloat((row.tntxable * row.tncgst / 100).toFixed(2));
+        row.tnsamt = parseFloat((row.tntxable * row.tnsgst / 100).toFixed(2));
+        row.tntamt = row.tntxable + row.tncamt + row.tnsamt;
         this.computeBillSummary();
     }
 
@@ -327,8 +362,7 @@ export class TaxInvoiceComponent implements OnInit {
         header.tncsrv = 0;
         header.tnprbn = 0;
         header.tnrtna = 0;
-        header.tntotal = this.billSummary.bsnamt;
-        header.tngdtl = this.billSummary.bsfamt;
+        header.tntotal = header.tngdtl = this.billSummary.bsfamt;
      
         //Generate Summary
         let billData = {
@@ -339,13 +373,21 @@ export class TaxInvoiceComponent implements OnInit {
         console.log(billData);
         this.invoiceService.generate(billData).subscribe({
             next: response => {
-                if(response.code == 200) {
+                    console.log(response);
+                    const url = window.URL.createObjectURL(response);
+                    // Create an anchor element to trigger the download
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+              
+                    // Trigger the download
+                    document.body.appendChild(a);
+                    a.click();
+              
+                    // Clean up
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
                     this.messageService.add(successToastr("Invoice generated successfully"));
-                }
-                else {
-                    this.messageService.add(errorToastr("Error while generating Invoice"));
-                    console.error(response);
-                }
             },
             error: error => {
                 this.messageService.add(errorToastr("Error while generating Invoice"));

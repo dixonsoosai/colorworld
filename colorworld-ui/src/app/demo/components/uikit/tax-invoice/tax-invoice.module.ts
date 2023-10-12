@@ -17,7 +17,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
-
+import {AutoCompleteModule} from 'primeng/autocomplete';
 @NgModule({
 	imports: [
 		CommonModule,
@@ -36,7 +36,8 @@ import { CalendarModule } from 'primeng/calendar';
 		FieldsetModule,
 		InputNumberModule,
 		DialogModule,
-		DropdownModule
+		DropdownModule,
+		AutoCompleteModule
 	],
 	declarations: [TaxInvoiceComponent]
 })

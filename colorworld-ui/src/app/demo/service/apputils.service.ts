@@ -56,3 +56,7 @@ export const getISOCurrentDate = () => {
 export const getISODate = (date: Date) => {
 	return date.toISOString();
 }
+
+export const getISODate2 = (date: Date) => {
+	return date.toISOString().replace("T", " ").replace("Z", "");
+}
