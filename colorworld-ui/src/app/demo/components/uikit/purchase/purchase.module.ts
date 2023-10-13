@@ -19,22 +19,22 @@ import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
 	imports: [
-		CommonModule,
-		PurchaseRoutingModule,
-		FormsModule,
-		TableModule,
 		ButtonModule,
-		InputTextModule,
-		RippleModule,
-		FieldsetModule,
-		TooltipModule,
+		CalendarModule,
 		CardModule,
-		ToastModule,
-		InputNumberModule,
+		CommonModule,
 		ConfirmDialogModule,
 		DialogModule,
+		FieldsetModule,
+		FormsModule,
+		InputNumberModule,
+		InputTextModule,
+		PurchaseRoutingModule,
+		RippleModule,
+		TableModule,
 		ToastModule,
-		CalendarModule
+		ToastModule,
+		TooltipModule,
 	],
 	declarations: [PurchaseComponent]
 })

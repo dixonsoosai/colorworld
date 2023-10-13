@@ -21,24 +21,24 @@ import { CalendarModule } from 'primeng/calendar';
 
 @NgModule({
 	imports: [
-		CommonModule,
-		CalendarModule,
-		ViewInvoiceRoutingModule,
-		FormsModule,
-		TableModule,
 		ButtonModule,
-		InputTextModule,
-		RippleModule,
-		ToastModule,
-		ConfirmDialogModule,
+		CalendarModule,
 		CardModule,
-		MultiSelectModule,
-		TabMenuModule,
-		FieldsetModule,
-		InputNumberModule,
+		CommonModule,
+		ConfirmDialogModule,
 		DialogModule,
+		DropdownModule,
+		FieldsetModule,
+		FormsModule,
+		InputNumberModule,
+		InputTextModule,
+		MultiSelectModule,
+		RippleModule,
+		TabMenuModule,
+		TableModule,
+		ToastModule,
+		ViewInvoiceRoutingModule,
         InputTextareaModule,
-		DropdownModule
 	],
 	declarations: [ViewInvoiceComponent]
 })

@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MessageService, ConfirmationService } from 'primeng/api';
+import { MessageService, ConfirmationService, FilterService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { PurchaseService } from 'src/app/demo/service/purchase.service';
 import * as FileSaver from 'file-saver';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PurchaseBill } from 'src/app/demo/domain/purchase';
-import { errorToastr, successToastr } from 'src/app/demo/service/apputils.service';
+import { errorToastr, getLastDay, successToastr } from 'src/app/demo/service/apputils.service';
 
 @Component({
     templateUrl: './purchase.component.html',
@@ -18,12 +18,15 @@ export class PurchaseComponent implements OnInit {
     filteredData;
     visible = false;
     purchaseBill : PurchaseBill = new PurchaseBill(); 
+    filterDate;
 
     @ViewChild('dt1') dt: Table;
 
-    constructor(private purchaseService: PurchaseService,
+    constructor(
+        private purchaseService: PurchaseService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
+        private filterService: FilterService
         ) {
 
     }
@@ -31,6 +34,14 @@ export class PurchaseComponent implements OnInit {
         this.fetchAll();
     }
 
+    
+    filterPurchase() {
+        let startDate = new Date(this.filterDate);
+        let endDate = getLastDay(startDate);
+        const dateRange = [startDate, endDate];
+        this.dt.filter(startDate, 'ardate', 'gte');
+        //this.dt.filter(endDate, 'ardate', 'lte');
+    }
     fetchAll() {
         this.loading = true;
         this.purchaseService.fetchAll().subscribe({

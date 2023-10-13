@@ -14,16 +14,16 @@ import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
 	imports: [
-		CommonModule,
-		FormsModule,
-		CustomerRoutingModule,
-		InputTextareaModule,
-		InputTextModule,
-		InputNumberModule,
 		ButtonModule,
-		ToastModule,
-		ConfirmDialogModule,
 		CardModule,
+		CommonModule,
+		ConfirmDialogModule,
+		CustomerRoutingModule,
+		FormsModule,
+		InputNumberModule,
+		InputTextModule,
+		InputTextareaModule,
+		ToastModule,
 		TooltipModule
 	],
 	declarations: [CustomerComponent]

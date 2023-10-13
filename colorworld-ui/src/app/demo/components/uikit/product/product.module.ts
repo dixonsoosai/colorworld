@@ -14,17 +14,17 @@ import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
 	imports: [
+		CardModule,
 		CommonModule,
+		ConfirmDialogModule,
+		DialogModule,
+		FieldsetModule,
 		FormsModule,
-		ProductRoutingModule,
 		InputNumberModule,
 		InputTextModule,
-		CardModule,
-		ToastModule,
-		ConfirmDialogModule,
-		FieldsetModule,
-		DialogModule,
-		MultiSelectModule
+		MultiSelectModule,
+		ProductRoutingModule,
+		ToastModule
 	],
 	declarations: [ProductComponent]
 })

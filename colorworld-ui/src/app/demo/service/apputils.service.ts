@@ -60,3 +60,14 @@ export const getISODate = (date: Date) => {
 export const getISODate2 = (date: Date) => {
 	return date.toISOString().replace("T", " ").replace("Z", "");
 }
+
+export const getLastDay = (date: Date) => {
+
+	let currentMonth = date.getMonth();
+	let currentYear = date.getFullYear();
+
+	currentYear = currentMonth + 1 === 12 ? currentYear + 1: currentYear;
+	currentMonth = currentMonth + 1 === 12 ? 0: currentMonth + 1;
+	return new Date(currentYear, currentMonth, date.getDate() - 1);
+
+}

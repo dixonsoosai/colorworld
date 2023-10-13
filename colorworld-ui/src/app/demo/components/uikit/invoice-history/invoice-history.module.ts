@@ -16,17 +16,17 @@ import { TooltipModule } from 'primeng/tooltip';
 @NgModule({
   declarations: [InvoiceHistoryComponent],
   imports: [
-    	CommonModule,
-		InvoiceHistoryRoutingModule,
-		FormsModule,
-		TableModule,
-		ButtonModule,
-		RippleModule,
-		CardModule,
-		ToastModule,
-		ConfirmDialogModule,
-		InputTextModule,
-		TooltipModule
+	ButtonModule,
+	CardModule,
+	CommonModule,
+	ConfirmDialogModule,
+	FormsModule,
+	InputTextModule,
+	InvoiceHistoryRoutingModule,
+	RippleModule,
+	TableModule,
+	ToastModule,
+	TooltipModule,
   ]
 })
 export class InvoiceHistoryModule { }

@@ -20,24 +20,24 @@ import { CalendarModule } from 'primeng/calendar';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 @NgModule({
 	imports: [
-		CommonModule,
-		CalendarModule,
-		TaxInvoiceRoutingModule,
-		FormsModule,
-		TableModule,
+		AutoCompleteModule,
 		ButtonModule,
-		InputTextModule,
-		RippleModule,
-		ToastModule,
-		ConfirmDialogModule,
+		CalendarModule,
 		CardModule,
-		MultiSelectModule,
-		TabMenuModule,
-		FieldsetModule,
-		InputNumberModule,
+		CommonModule,
+		ConfirmDialogModule,
 		DialogModule,
 		DropdownModule,
-		AutoCompleteModule
+		FieldsetModule,
+		FormsModule,
+		InputNumberModule,
+		InputTextModule,
+		MultiSelectModule,
+		RippleModule,
+		TabMenuModule,
+		TableModule,
+		TaxInvoiceRoutingModule,
+		ToastModule,
 	],
 	declarations: [TaxInvoiceComponent]
 })
