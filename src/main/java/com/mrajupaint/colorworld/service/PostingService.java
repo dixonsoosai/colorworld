@@ -37,6 +37,42 @@ public class PostingService {
 	@Autowired
 	PDFService pdfService;
 	
+	public ServiceResponse<byte[]> downloadBill(TaxInvoice taxInvoice) {
+		//Header should be present
+		if(checkNull(taxInvoice.getHeader(), taxInvoice.getDetails(), taxInvoice.getGst())) {
+			LOGGER.error("Invalid GST format");
+			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);
+		}
+		
+		/*
+		 * GST should contain at-least 2 entries and
+		 * Details should contain at-least 1 entries
+		 */
+		if(taxInvoice.getGst().size() < 2 || taxInvoice.getDetails().isEmpty()) {
+			LOGGER.error("Invalid GST format");
+			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);	
+		}
+		//Header Validation
+		int billNum = taxInvoice.getHeader().getTnbillno();
+		var response = validateHeader(taxInvoice.getHeader(), billNum);
+		if(!response.equals("****")) {
+			LOGGER.error(response);
+			return new ServiceResponse<>(501, AppConstants.FAILED, 
+					response, null);
+		}
+		
+		//GST Validation
+		response = validateGST(taxInvoice, billNum);
+		if(!response.equals("****")) {
+			LOGGER.error(response);
+			return new ServiceResponse<>(501, AppConstants.FAILED, 
+					response, null);
+		}
+		byte[] buffer = pdfService.generatePDF(taxInvoice);
+		return new ServiceResponse<>(200, AppConstants.SUCCESS,"Bill generated successfully", buffer);
+	}
+	
+	
 	@Transactional(rollbackFor = ColorWorldException.class)
 	public ServiceResponse<byte[]> postBill(TaxInvoice taxInvoice) throws ColorWorldException {
 		

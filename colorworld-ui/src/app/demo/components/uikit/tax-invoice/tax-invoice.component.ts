@@ -323,12 +323,12 @@ export class TaxInvoiceComponent implements OnInit {
         let validFlag = true;
         if (this.customerDetails.jpname == "") {
             this.messageService.add(errorToastr("Company Name cannot be blank"));
-            validFlag = true;
+            validFlag = false;
         }
 
         if (this.customerDetails.jppgst == "") {
             this.messageService.add(errorToastr("Company GST cannot be blank"));
-            validFlag = true;
+            validFlag = false;
         }
 
         return validFlag;

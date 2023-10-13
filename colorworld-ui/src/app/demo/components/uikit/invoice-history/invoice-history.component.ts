@@ -75,6 +75,10 @@ export class InvoiceHistoryComponent {
         
     }
 
+    download(data: SSTNHDP) {
+
+    }
+    
     delete(data: SSTNHDP) {
         this.confirmationService.confirm({
             message: `Are you sure that you want to delete Invoice: ${data.tnbillno}?` ,

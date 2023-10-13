@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import java.text.NumberFormat;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -103,8 +102,8 @@ public class PDFService {
 	
 	private byte[] downloadContent(String content, String outputFile) {
 		try {
-			new File("C:\\Logs\\sample.html").delete();
-			Files.writeString(Path.of("C:\\Logs\\sample.html"), content, StandardOpenOption.CREATE_NEW);
+			new File("C:\\Tax Invoice\\sample.html").delete();
+			Files.writeString(Path.of("C:\\Tax Invoice\\sample.html"), content, StandardOpenOption.CREATE_NEW);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -150,9 +149,7 @@ public class PDFService {
 	}
 
 	private String formatNum(double num) {
-		NumberFormat df = NumberFormat.getInstance();
-		df.setMaximumFractionDigits(2);
-		return df.format(num);
+		return String.format("%.2f", num);
 	}
 	
 	private Map<String, String> createPlaceholder(TaxInvoice taxInvoice) {
@@ -181,8 +178,8 @@ public class PDFService {
 		replaceKeyword.put("@TotalCGST", formatNum(totalGst.get(0).getGncamt()));
 		replaceKeyword.put("@TotalSGST", formatNum(totalGst.get(0).getGnsamt()));
 		replaceKeyword.put("@RoundingOff", 
-				formatNum(totalGst.get(0).getGntamt()));
-		replaceKeyword.put("@TotalAmount", formatNum(totalGst.get(0).getGntxable()));
+				formatNum(totalGst.get(0).getGntamt() - Math.round(totalGst.get(0).getGntamt())));
+		replaceKeyword.put("@TotalAmount", formatNum(totalGst.get(0).getGntamt()));
 						
 		StringBuilder billBody= new StringBuilder();
 		StringBuilder gstBody = new StringBuilder();
@@ -248,7 +245,7 @@ public class PDFService {
 			billBody.append(line);
 		}
 		
-		for(int i = billList.size(); i<= 75 ; i++) {
+		for(int i = billList.size(); i<= 17; i++) {
 			var line = """
 					<tr style=\"height: 27.2px;\">
 					     <td></td>
