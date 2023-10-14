@@ -197,6 +197,11 @@ public class PostingService {
 		}
 		if(billTaxable != totalTaxable || billCAmt != totalCGST || 
 				billSAmt != totalSGST || header.getTntotal() != billTAmt) {
+			LOGGER.info("Bill Details: Body  GST");
+			LOGGER.info("Taxable: {} {}", billTaxable, totalTaxable);
+			LOGGER.info("CGST: {} {}", billCAmt, totalCGST);
+			LOGGER.info("SGST: {} {}", billSAmt, totalSGST);
+			LOGGER.info("Total: {} {}", header.getTntotal(), billTAmt);
 			return "Invalid Billing Entries";
 		}
 		

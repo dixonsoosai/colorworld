@@ -86,7 +86,7 @@ export class ViewInvoiceComponent {
       gst: [...this.gstSummary.values()]
     };
 
-    this.invoiceService.download(billData).subscribe({
+    this.invoiceService.generate(billData).subscribe({
         next:response => {
             let htmlContent = response;
             const newWindow = window.open('', '_blank');

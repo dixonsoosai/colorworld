@@ -1,11 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MessageService, ConfirmationService, FilterService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { PurchaseService } from 'src/app/demo/service/purchase.service';
 import * as FileSaver from 'file-saver';
 import { DialogService } from 'primeng/dynamicdialog';
 import { PurchaseBill } from 'src/app/demo/domain/purchase';
 import { errorToastr, getLastDay, successToastr } from 'src/app/demo/service/apputils.service';
+import { Customer } from 'src/app/demo/domain/customer';
+import { CustomersService } from 'src/app/demo/service/customers.service';
+import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 
 @Component({
     templateUrl: './purchase.component.html',
@@ -20,21 +23,51 @@ export class PurchaseComponent implements OnInit {
     purchaseBill : PurchaseBill = new PurchaseBill(); 
     filterDate;
 
+    customerList: Customer[] = [];
+    filteredCustomers: any[];
+    customerSuggestions: string[];
+
     @ViewChild('dt1') dt: Table;
 
     constructor(
         private purchaseService: PurchaseService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
-        private filterService: FilterService
+        private customerService: CustomersService
         ) {
 
     }
     ngOnInit(): void {
         this.fetchAll();
+        this.fetchCustomerList();
     }
 
-    
+    fetchCustomerList() {
+        this.customerService.fetchAll().subscribe({
+            next:response => {
+                this.customerList = response.data;
+            }
+        });
+    }
+    searchSuggestion(event: AutoCompleteCompleteEvent) {
+        let filtered: string[] = [];
+        let query = event.query;
+        for (let i = 0; i < this.customerList.length; i++) {
+            let customer = this.customerList[i];
+            if (customer.jpname.toLowerCase().indexOf(query.toLowerCase()) == 0 || query.trim() == "") {
+                filtered.push(customer.jpname);
+            }
+        }
+        this.filteredCustomers = filtered;
+    }
+
+    populateDetails() {
+        let temp:Customer [] = this.customerList.filter(customer => customer.jpname == this.purchaseBill.arname);
+        if(temp.length > 0){
+            this.purchaseBill.argstno =  temp[0].jppgst;
+        }
+    }
+
     filterPurchase() {
         let startDate = new Date(this.filterDate);
         let endDate = getLastDay(startDate);

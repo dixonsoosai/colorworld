@@ -143,7 +143,7 @@
 							<th style="width:10%">SGST (%)</th>
 							<th style="width:10%">SGST</th>
 							<th style="width:10%">Total Amount</th>
-							<th style="width:10%"></th>
+							<th style="width:10%">Action</th>
 						</tr>
 					</ng-template>
 					<ng-template pTemplate="emptymessage" let-columns>
@@ -283,7 +283,12 @@
 								</p-cellEditor>
 							</td>
 							<td class="text-left">
-								<i class="pi pi-times" pTooltip="Delete" tooltipPosition="bottom"></i>
+								<div class="flex gap-3">						
+									<i class="pi pi-copy" style="cursor: pointer;"
+										pTooltip="Copy" tooltipPosition="bottom" (click)="copy(cproduct)"></i>
+									<i class="pi pi-times" style="cursor: pointer;"
+										pTooltip="Delete" tooltipPosition="bottom" (click)="delete(index)"></i>
+								</div>
 							</td>
 						</tr>
 					</ng-template>

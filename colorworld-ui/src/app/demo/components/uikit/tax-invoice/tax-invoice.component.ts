@@ -3,12 +3,11 @@ import { MessageService, ConfirmationService, MenuItem } from 'primeng/api';
 import { ProductsService } from 'src/app/demo/service/products.service';
 import * as $ from "jquery";
 import { Customer } from 'src/app/demo/domain/customer';
-import { BillSummary, GSTSummary, InvoiceItem, ProductItem } from 'src/app/demo/domain/product';
-import { errorToastr, successToastr, productUnits, invoiceTab, getCurrentDate, getISOCurrentDate, getISODate, getISODate2 } from 'src/app/demo/service/apputils.service';
+import { BillSummary, InvoiceItem, ProductItem } from 'src/app/demo/domain/product';
+import { errorToastr, successToastr, productUnits, invoiceTab, getCurrentDate, getISODate, getISODate2 } from 'src/app/demo/service/apputils.service';
 import { CustomersService } from 'src/app/demo/service/customers.service';
 import { InvoiceService } from 'src/app/demo/service/invoice.service';
 import { SSTNHDP } from 'src/app/demo/domain/sstnhdp';
-import { SSTNJNP } from 'src/app/demo/domain/sstnjnp';
 import { SSGNJNP } from 'src/app/demo/domain/ssgnjnp';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 
@@ -214,6 +213,7 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     generateNewInvoiceNum() {
+        //Spinner
         if(this.invoiceDate == null) {
             this.invoiceDate = new Date();
         }
@@ -351,7 +351,6 @@ export class TaxInvoiceComponent implements OnInit {
 
     posting() {
         //Generate Header
- 
         let header = new SSTNHDP();
         header.tnbillno = this.invoiceNumber;
         header.tnname = this.customerDetails.jpname;
@@ -362,7 +361,7 @@ export class TaxInvoiceComponent implements OnInit {
         header.tncsrv = 0;
         header.tnprbn = 0;
         header.tnrtna = 0;
-        header.tntotal = header.tngdtl = this.billSummary.bsfamt;
+        header.tntotal = header.tngdtl = this.billSummary.bstamt;
      
         //Generate Summary
         let billData = {
@@ -370,7 +369,6 @@ export class TaxInvoiceComponent implements OnInit {
             details: this.selectedProducts,
             gst: [...this.gstSummary.values()]
         }
-        console.log(billData);
         this.invoiceService.generate(billData).subscribe({
             next: response => {
                 let htmlContent = response;
@@ -385,5 +383,13 @@ export class TaxInvoiceComponent implements OnInit {
             },
             complete: () => {}
         });
+    }
+
+    copy(product: InvoiceItem) {
+        this.selectedProducts.push(product);
+    }
+
+    delete(rowIndex: number) {
+        this.selectedProducts.splice(rowIndex,1);
     }
 }

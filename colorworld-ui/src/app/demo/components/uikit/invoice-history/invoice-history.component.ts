@@ -5,8 +5,6 @@ import * as FileSaver from 'file-saver';
 import { InvoiceService } from 'src/app/demo/service/invoice.service';
 import { SSTNHDP } from 'src/app/demo/domain/sstnhdp';
 import { errorToastr, successToastr } from 'src/app/demo/service/apputils.service';
-import { ActivatedRoute } from '@angular/router';
-
 
 @Component({
   templateUrl: './invoice-history.component.html',

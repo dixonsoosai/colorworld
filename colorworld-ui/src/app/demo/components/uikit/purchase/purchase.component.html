@@ -130,7 +130,9 @@
                         Company Name *
                     </label>
 					<div class="col-12 md:col-7">
-						<input pInputText  type="text" [(ngModel)] ="purchaseBill.arname"/>
+                        <p-autoComplete [(ngModel)]="purchaseBill.arname" [suggestions]="filteredCustomers" 
+                            (completeMethod)="searchSuggestion($event)" (onSelect)="populateDetails()"> 
+                        </p-autoComplete>
 					</div>
 				</div>
 

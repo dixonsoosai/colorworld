@@ -15,10 +15,12 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 
 @NgModule({
 	imports: [
+		AutoCompleteModule,
 		ButtonModule,
 		CalendarModule,
 		CardModule,
