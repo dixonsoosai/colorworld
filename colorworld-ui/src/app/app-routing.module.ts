@@ -10,6 +10,7 @@ import { AppLayoutComponent } from "./layout/app.layout.component";
                 children: [
                     { path: 'home', loadChildren: () => import('./demo/components/uikit/home.module').then(m => m.HomeModule) },
                     { path: 'documentation', loadChildren: () => import('./demo/components/documentation/documentation.module').then(m => m.DocumentationModule) },
+                    { path: '', redirectTo: '/home/tax-invoice', pathMatch: 'full'}
                 ]
             },
             { path: '**', redirectTo: '/notfound' },

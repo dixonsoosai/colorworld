@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
         { path: 'tax-invoice', data: { breadcrumb: 'Tax Invoice' }, loadChildren: () => import('./tax-invoice/tax-invoice.module').then(m => m.TaxInvoiceModule) },
         { path: 'invoice-history', data: { breadcrumb: 'Invoice History' }, loadChildren: () => import('./invoice-history/invoice-history.module').then(m => m.InvoiceHistoryModule) },
         { path: 'view-invoice/:bill', data: { breadcrumb: 'View Invoice' }, loadChildren: () => import('./view-invoice/view-invoice.module').then(m => m.ViewInvoiceModule) },
-        { path: '**', redirectTo: '/tax-invoice' }
+        { path: '**', redirectTo: '/home/tax-invoice', pathMatch: 'full' },
     ])],
     exports: [RouterModule]
 })
