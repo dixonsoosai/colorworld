@@ -53,16 +53,16 @@ export class TaxInvoiceComponent implements OnInit {
 
     ngOnInit() {
         this.items = invoiceTab;
+        this.activeItem = this.items[0];
         this.invoiceDate = new Date();
         this.fetchAll();
         this.generateNewInvoiceNum();
         this.fetchCustomerList();
-        this.dummy();
     }
 
     dummy() {
-        this.activeItem = this.items[1];
         this.visible = true;
+        this.activeItem = this.items[1];     
         this.newProduct.pnscnm = "Sample";
         this.newProduct.pnhsnc = 3004;
         this.newProduct.pncgst = 9;
