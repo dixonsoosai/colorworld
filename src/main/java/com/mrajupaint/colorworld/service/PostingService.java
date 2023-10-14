@@ -37,7 +37,7 @@ public class PostingService {
 	@Autowired
 	PDFService pdfService;
 	
-	public ServiceResponse<byte[]> downloadBill(TaxInvoice taxInvoice) {
+	public ServiceResponse<String> downloadBill(TaxInvoice taxInvoice) {
 		//Header should be present
 		if(checkNull(taxInvoice.getHeader(), taxInvoice.getDetails(), taxInvoice.getGst())) {
 			LOGGER.error("Invalid GST format");
@@ -68,13 +68,13 @@ public class PostingService {
 			return new ServiceResponse<>(501, AppConstants.FAILED, 
 					response, null);
 		}
-		byte[] buffer = pdfService.generatePDF(taxInvoice);
+		String buffer = pdfService.generateInvoice(taxInvoice);
 		return new ServiceResponse<>(200, AppConstants.SUCCESS,"Bill generated successfully", buffer);
 	}
 	
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
-	public ServiceResponse<byte[]> postBill(TaxInvoice taxInvoice) throws ColorWorldException {
+	public ServiceResponse<String> postBill(TaxInvoice taxInvoice) throws ColorWorldException {
 		
 		//Header should be present
 		if(checkNull(taxInvoice.getHeader(), taxInvoice.getDetails(), taxInvoice.getGst())) {
@@ -112,7 +112,7 @@ public class PostingService {
 			}
 		}
 		
-		byte[] buffer = pdfService.generatePDF(taxInvoice);
+		String buffer = pdfService.generateInvoice(taxInvoice);
 		transactionRepository.addTransaction(taxInvoice.getDetails());
 		sSTNHDPRepository.save(taxInvoice.getHeader());
 		sSGNJNPRepository.saveAll(taxInvoice.getGst());

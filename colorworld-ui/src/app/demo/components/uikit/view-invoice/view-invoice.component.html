@@ -85,12 +85,11 @@
 							<th style="width:10%">SGST (%)</th>
 							<th style="width:10%">SGST</th>
 							<th style="width:10%">Total Amount</th>
-							<th style="width:10%"></th>
 						</tr>
 					</ng-template>
 					<ng-template pTemplate="emptymessage" let-columns>
 						<tr>
-							<td [attr.colspan]="15" class="text-center">
+							<td [attr.colspan]="14" class="text-center">
 								No records found
 							</td>
 						</tr>
@@ -224,14 +223,7 @@
 									</ng-template>
 								</p-cellEditor>
 							</td>
-							<td class="text-left">
-								<i class="pi pi-times" pTooltip="Delete" tooltipPosition="bottom"></i>
-							</td>
 						</tr>
-					</ng-template>
-					<ng-template pTemplate="paginatorleft">
-						<i class="pi pi-plus-circle" style="font-size: 1.5rem;cursor: pointer;"
-							(click)="visible = true" pTooltip="Add Product" tooltipPosition="bottom"></i>
 					</ng-template>
 				</p-table>
 
@@ -291,7 +283,7 @@
                 </div>
             </p-card>
             <div class="flex justify-content-start mt-4">
-                <p-button label="Generate Bill"></p-button>
+                <p-button label="Download Bill" (click) = download()></p-button>
             </div>
         </p-fieldset>
     </div>

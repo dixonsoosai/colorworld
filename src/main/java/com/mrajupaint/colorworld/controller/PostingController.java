@@ -32,30 +32,30 @@ public class PostingController {
 	
 	@LogTime
 	@PostMapping("generateBill")
-	public ResponseEntity<byte[]> generateBill(@RequestBody TaxInvoice taxInvoice) throws ColorWorldException {
+	public ResponseEntity<String> generateBill(@RequestBody TaxInvoice taxInvoice) throws ColorWorldException {
 		 	HttpHeaders headers = new HttpHeaders();
-	        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-	        headers.add("Content-Disposition", "attachment; filename=\"Tax Invoice.pdf\"");
-	        return new ResponseEntity<byte[]>(postingService.postBill(taxInvoice).getData(), headers,HttpStatus.OK);
+	        headers.setContentType(MediaType.TEXT_HTML);
+	        headers.add("Content-Disposition", "attachment; filename=\"Tax Invoice.html\"");
+	        return new ResponseEntity<>(postingService.postBill(taxInvoice).getData(), headers,HttpStatus.OK);
 	}
 	
 	@LogTime
 	@PostMapping("downloadBill")
-	public ResponseEntity<byte[]> downloadBill(@RequestBody TaxInvoice taxInvoice) throws ColorWorldException {
+	public ResponseEntity<String> downloadBill(@RequestBody TaxInvoice taxInvoice) throws ColorWorldException {
 		 	HttpHeaders headers = new HttpHeaders();
-	        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-	        headers.add("Content-Disposition", "attachment; filename=\"Tax Invoice.pdf\"");
-	        return new ResponseEntity<byte[]>(postingService.downloadBill(taxInvoice).getData(), headers,HttpStatus.OK);
+	        headers.setContentType(MediaType.TEXT_HTML);
+	        headers.add("Content-Disposition", "attachment; filename=\"Tax Invoice.html\"");
+	        return new ResponseEntity<>(postingService.downloadBill(taxInvoice).getData(), headers,HttpStatus.OK);
 	}
 	
 	@LogTime
 	@GetMapping("downloadBillNum")
-	public ResponseEntity<byte[]> downloadBillNum(@RequestParam String billnum) throws ColorWorldException {
+	public ResponseEntity<String> downloadBillNum(@RequestParam String billnum) throws ColorWorldException {
 		 	var taxInvoice = invoiceService.getBillDetails(billnum);
 		 	HttpHeaders headers = new HttpHeaders();
-	        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-	        headers.add("Content-Disposition", "attachment; filename=\"Tax Invoice.pdf\"");
-	        return new ResponseEntity<byte[]>(postingService.downloadBill(taxInvoice).getData(), headers,HttpStatus.OK);
+	        headers.setContentType(MediaType.TEXT_HTML);
+	        headers.add("Content-Disposition", "attachment; filename=\"Tax Invoice.html\"");
+	        return new ResponseEntity<>(postingService.downloadBill(taxInvoice).getData(), headers,HttpStatus.OK);
 	}
 	
 }

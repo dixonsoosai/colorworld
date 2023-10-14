@@ -76,23 +76,24 @@ public class PDFService {
 		}
 	}
 	
-	public byte[] generatePDF(int billnum) {
+	public String generateInvoice(int billnum) {
 		var invoice = new TaxInvoice();
 		invoice.setHeader(headerRepository.getByTnbillno(billnum));
 		invoice.setGst(gstRepository.getByGnbill(billnum));
 		invoice.setDetails(transactionRepository.getTransaction(billnum));
-		return generatePDF(invoice);
+		return generateInvoice(invoice);
 	}
 	
-	public byte[] generatePDF(TaxInvoice taxInvoice) {
+	public String generateInvoice(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
 			File file = ResourceUtils.getFile("classpath:templates/invoice_template.html");
 			
 			String finalContent = editContent(file, placeholder);
-			String outputFile = taxInvoiceDirectory + 
-					taxInvoice.getHeader().getTnbillno() +  "_Tax Invoice.pdf";
-			return downloadContent(finalContent, outputFile);
+			String outputFilename = taxInvoiceDirectory + 
+					taxInvoice.getHeader().getTnbillno() +  
+					"_" + taxInvoice.getHeader().getTnname() + "_Tax Invoice";
+			return downloadContent(finalContent, outputFilename);
 			
 		} catch (Exception e) {
 			LOGGER.error("Exception while generating PDF: {}", e.getMessage(), e);
@@ -100,13 +101,21 @@ public class PDFService {
 		}
 	}
 	
-	private byte[] downloadContent(String content, String outputFile) {
+	private String downloadContent(String content, String outputFile) {
 		try {
-			new File("C:\\Tax Invoice\\sample.html").delete();
-			Files.writeString(Path.of("C:\\Tax Invoice\\sample.html"), content, StandardOpenOption.CREATE_NEW);
+			String htmlFile = outputFile + ".html";
+			String pdfFile = outputFile + ".pdf";
+			Path filePath = Path.of(htmlFile);
+			new File(htmlFile).delete();
+			Files.writeString(filePath, content, StandardOpenOption.CREATE_NEW);
+			return content;
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Exception while writing to HTML file: {}", e.getMessage(), e);
+			return null;
 		}
+	}
+	
+	private byte[] convertHTMLtoPDF(String content, String outputFile) {
 		try(OutputStream fileOutputStream = new FileOutputStream(outputFile)) {
 			ConverterProperties converterProperties = new ConverterProperties();
 			converterProperties.setImmediateFlush(false);
@@ -119,11 +128,10 @@ public class PDFService {
 			return Files.readAllBytes(Path.of(temp.getAbsolutePath()));
 		}
 		catch (Exception e) {
-			LOGGER.error("Exception while converting: {}", e.getMessage(), e);
+			LOGGER.error("Exception while converting HTML to PDF: {}", e.getMessage(), e);
 			return null;
 		}
 	}
-
 	private String editContent(File file, Map<String, String> placeholder) {
 		String finalContent = "";
 		try(FileReader fr = new FileReader(file)) {
@@ -231,7 +239,7 @@ public class PDFService {
 				""";
 			line = String.format(line, 
 					bill.getTnchallan(),
-					formatNum(bill.getTntqty()) + " X " + bill.getTnuqty() + " " +  
+					bill.getTntqty() + " X " + bill.getTnuqty() + " " +  
 					bill.getTnunit(),
 					bill.getTnscnnm(),
 					bill.getTnhsnc(),
@@ -267,7 +275,6 @@ public class PDFService {
 		replaceKeyword.put("@GSTBody", gstBody.toString());
 		
 		//Read Signature File
-		//TODO: Replace line
 		try {
             File signFile = ResourceUtils.getFile("classpath:templates/sign.jpeg");
             String ext = FileUtils.getFileExtension(signFile);

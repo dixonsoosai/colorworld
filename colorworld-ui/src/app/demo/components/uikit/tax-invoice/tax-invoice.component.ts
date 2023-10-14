@@ -373,21 +373,11 @@ export class TaxInvoiceComponent implements OnInit {
         console.log(billData);
         this.invoiceService.generate(billData).subscribe({
             next: response => {
-                    console.log(response);
-                    const url = window.URL.createObjectURL(response);
-                    // Create an anchor element to trigger the download
-                    const a = document.createElement('a');
-                    a.style.display = 'none';
-                    a.href = url;
-              
-                    // Trigger the download
-                    document.body.appendChild(a);
-                    a.click();
-              
-                    // Clean up
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                    this.messageService.add(successToastr("Invoice generated successfully"));
+                let htmlContent = response;
+                const newWindow = window.open('', '_blank');
+                newWindow.document.write(htmlContent);
+                newWindow.document.close();
+                this.messageService.add(successToastr("Invoice generated successfully"));
             },
             error: error => {
                 this.messageService.add(errorToastr("Error while generating Invoice"));

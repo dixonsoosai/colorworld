@@ -26,7 +26,14 @@ export class InvoiceService {
 
 
   generate(taxinvoice): Observable<any> {
-    return this.httpClient.post(`${this.baseUrl}posting/generateBill`, taxinvoice);
+    return this.httpClient.post(`${this.baseUrl}posting/generateBill`, taxinvoice, {responseType: 'text'});
+  }
+
+  download(taxinvoice): Observable<any> {
+    return this.httpClient.post(`${this.baseUrl}posting/downloadBill`, taxinvoice, {responseType: 'text'});
+  }
+  downloadByBill(billnum: number): Observable<any> {
+    return this.httpClient.get(`${this.baseUrl}posting/downloadBillNum`, {responseType: 'text', params:{"billnum" : billnum}});
   }
 
   delete(billnum): Observable<any> {

@@ -70,13 +70,20 @@ export class InvoiceHistoryComponent {
         });
         FileSaver.saveAs(data, fileName + new Date().getTime() + EXCEL_EXTENSION);
     }
-    
-    view(data: SSTNHDP) {
-        
-    }
 
     download(data: SSTNHDP) {
-
+        this.invoiceService.downloadByBill(data.tnbillno).subscribe({
+            next:response => {
+                let htmlContent = response;
+                const newWindow = window.open('Tax Invoice', '_blank');
+                newWindow.document.write(htmlContent);
+                newWindow.document.close();
+            },
+            error : error => {
+                this.messageService.add(errorToastr("Error generating Invoice"));
+                console.error(error);
+            }
+        });
     }
     
     delete(data: SSTNHDP) {
