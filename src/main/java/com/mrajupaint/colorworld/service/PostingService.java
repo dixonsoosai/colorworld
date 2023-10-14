@@ -40,7 +40,7 @@ public class PostingService {
 	public ServiceResponse<String> downloadBill(TaxInvoice taxInvoice) {
 		//Header should be present
 		if(checkNull(taxInvoice.getHeader(), taxInvoice.getDetails(), taxInvoice.getGst())) {
-			LOGGER.error("Invalid GST format");
+			LOGGER.error("Invalid GST format, GST Detail is null");
 			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);
 		}
 		
@@ -49,7 +49,7 @@ public class PostingService {
 		 * Details should contain at-least 1 entries
 		 */
 		if(taxInvoice.getGst().size() < 2 || taxInvoice.getDetails().isEmpty()) {
-			LOGGER.error("Invalid GST format");
+			LOGGER.error("Invalid GST format, GST Detail missing gst entries");
 			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);	
 		}
 		//Header Validation
@@ -57,16 +57,14 @@ public class PostingService {
 		var response = validateHeader(taxInvoice.getHeader(), billNum);
 		if(!response.equals("****")) {
 			LOGGER.error(response);
-			return new ServiceResponse<>(501, AppConstants.FAILED, 
-					response, null);
+			return new ServiceResponse<>(501, AppConstants.FAILED, response, null);
 		}
 		
 		//GST Validation
 		response = validateGST(taxInvoice, billNum);
 		if(!response.equals("****")) {
 			LOGGER.error(response);
-			return new ServiceResponse<>(501, AppConstants.FAILED, 
-					response, null);
+			return new ServiceResponse<>(501, AppConstants.FAILED, response, null);
 		}
 		String buffer = pdfService.generateInvoice(taxInvoice);
 		return new ServiceResponse<>(200, AppConstants.SUCCESS,"Bill generated successfully", buffer);
@@ -133,18 +131,20 @@ public class PostingService {
 	private String validateHeader(SSTNHDP sstnhdp, int billNum) {
 	
 		if(AppUtils.isBlank(sstnhdp.getTnname()) || AppUtils.isBlank(sstnhdp.getTnpgst())) {
-			return "Invalid Header";
+			return "Invalid Header, Company Name or Company GST not entered";
 		}
 		if(sstnhdp.getTntotal() + sstnhdp.getTnprbn() != sstnhdp.getTngdtl()) {
+			LOGGER.error("Total + Prev Balance = Grand Total");
+			LOGGER.error("{} + {} = {}" , sstnhdp.getTntotal(), sstnhdp.getTntotal(), 
+					sstnhdp.getTngdtl());
 			return "Invalid Header Total";
 		}
 		if(sstnhdp.getTncsrv() != 0) {
 			if(sstnhdp.getTncsrv() - sstnhdp.getTngdtl() != sstnhdp.getTnrtna()) {
+				LOGGER.error("Cash Received - Grand Total = Return Amount");
+				LOGGER.error("{} - {} = {}" ,sstnhdp.getTncsrv(), sstnhdp.getTngdtl(), 
+						sstnhdp.getTnrtna());
 				return "Calculation mismatch in Cash Received";
-			}
-			//Previous Balance
-			if(sstnhdp.getTngdtl() != sstnhdp.getTncsrv() - sstnhdp.getTnrtna()) {
-				return "Invalid Total Cash Transaction";
 			}
 		}
 		sstnhdp.setTnbillno(billNum);
@@ -178,10 +178,19 @@ public class PostingService {
 		
 		if(totalTaxable != taxable || totalCGST != cAmt || totalSGST != sAmt || 
 				totalTamt != tAmt) {
+			LOGGER.error("Total Taxable != Sum of Taxable or Total CGST != Sum of CGST or "
+					+ "Total SGST != Sum of SGST");
+			LOGGER.error("{} != {} or {} != {} or {} != {}",
+					totalTaxable, taxable, totalCGST, cAmt, totalSGST, sAmt, totalTamt, tAmt);
 			return "Invalid GST Transaction";
 		}
 		
 		if((totalTamt != totalTaxable + totalCGST + totalSGST) || (tAmt != taxable + cAmt + sAmt)) {
+			LOGGER.error("Total Amount != Taxable + CGST + SGST or "
+					+ "Sum of Total Amt != Sum of (Taxable + CGST + SGST)");
+			LOGGER.error("{} != {} + {} + {} or {} != {} + {} + {}", 
+					totalTamt, totalTaxable, totalCGST, totalSGST,
+					tAmt, taxable, cAmt, sAmt);
 			return "Invalid GST Total";
 		}
 		

@@ -1,11 +1,10 @@
+import { ActivatedRoute } from '@angular/router';
+import { BillSummary, GSTSummary, InvoiceItem, ProductItem } from 'src/app/demo/domain/product';
 import { Component } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Customer } from 'src/app/demo/domain/customer';
-import { BillSummary, GSTSummary, InvoiceItem, ProductItem } from 'src/app/demo/domain/product';
 import { errorToastr, productUnits } from 'src/app/demo/service/apputils.service';
-import { CustomersService } from 'src/app/demo/service/customers.service';
 import { InvoiceService } from 'src/app/demo/service/invoice.service';
-import { ActivatedRoute } from '@angular/router';
 import { SSTNHDP } from 'src/app/demo/domain/sstnhdp';
 
 @Component({
@@ -38,9 +37,7 @@ export class ViewInvoiceComponent {
   invoiceDate: Date;
   constructor(
       private messageService: MessageService,
-      private confirmationService: ConfirmationService, 
       private route: ActivatedRoute,
-      private customerService: CustomersService,
       private invoiceService: InvoiceService
       ) { }
 
@@ -87,7 +84,12 @@ export class ViewInvoiceComponent {
     };
 
     this.invoiceService.generate(billData).subscribe({
-        next:response => {
+        next:response => {  
+            if(response["code"] != 200) {
+              this.messageService.add(errorToastr("Error while generating Invoice"));
+              console.error(response);
+              return;
+            }
             let htmlContent = response;
             const newWindow = window.open('', '_blank');
             newWindow.document.write(htmlContent);

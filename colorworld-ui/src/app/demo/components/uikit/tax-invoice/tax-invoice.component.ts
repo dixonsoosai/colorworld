@@ -1,15 +1,15 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { MessageService, ConfirmationService, MenuItem } from 'primeng/api';
-import { ProductsService } from 'src/app/demo/service/products.service';
-import * as $ from "jquery";
-import { Customer } from 'src/app/demo/domain/customer';
-import { BillSummary, InvoiceItem, ProductItem } from 'src/app/demo/domain/product';
-import { errorToastr, successToastr, productUnits, invoiceTab, getCurrentDate, getISODate, getISODate2 } from 'src/app/demo/service/apputils.service';
-import { CustomersService } from 'src/app/demo/service/customers.service';
-import { InvoiceService } from 'src/app/demo/service/invoice.service';
-import { SSTNHDP } from 'src/app/demo/domain/sstnhdp';
-import { SSGNJNP } from 'src/app/demo/domain/ssgnjnp';
+import * as $ from 'jquery';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { BillSummary, InvoiceItem, ProductItem } from 'src/app/demo/domain/product';
+import { Component, OnInit } from '@angular/core';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { Customer } from 'src/app/demo/domain/customer';
+import { CustomersService } from 'src/app/demo/service/customers.service';
+import { errorToastr, getCurrentDate, getISODate, getISODate2, invoiceTab, productUnits, successToastr} from 'src/app/demo/service/apputils.service';
+import { InvoiceService } from 'src/app/demo/service/invoice.service';
+import { ProductsService } from 'src/app/demo/service/products.service';
+import { SSGNJNP } from 'src/app/demo/domain/ssgnjnp';
+import { SSTNHDP } from 'src/app/demo/domain/sstnhdp';
 
 @Component({
     templateUrl: './tax-invoice.component.html',
@@ -371,6 +371,11 @@ export class TaxInvoiceComponent implements OnInit {
         }
         this.invoiceService.generate(billData).subscribe({
             next: response => {
+                if(response["code"] != 200) {
+                    this.messageService.add(errorToastr("Error while generating Invoice"));
+                    console.error(response);
+                    return;
+                } 
                 let htmlContent = response;
                 const newWindow = window.open('', '_blank');
                 newWindow.document.write(htmlContent);

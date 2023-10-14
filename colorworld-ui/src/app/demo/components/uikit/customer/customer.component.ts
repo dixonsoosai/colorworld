@@ -1,9 +1,9 @@
+import * as $ from 'jquery';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Customer } from 'src/app/demo/domain/customer';
-import { errorToastr, successToastr } from 'src/app/demo/service/apputils.service';
 import { CustomersService } from 'src/app/demo/service/customers.service';
-import * as $ from "jquery";
+import { errorToastr, successToastr } from 'src/app/demo/service/apputils.service';
 
 @Component({
     templateUrl: './customer.component.html',
