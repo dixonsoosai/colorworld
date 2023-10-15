@@ -109,9 +109,10 @@ public class AppUtils {
         }
  
         Collections.reverse(str);
-        String Rupees = String.join(" ", str).trim();
+        String rupees = String.join(" ", str).trim();
+        rupees = rupees.substring(0,1) + rupees.substring(1).toLowerCase();
         //String paise = (decimal) > 0 ? " And Paise " + words.get(Integer.valueOf((int) (decimal - decimal % 10))) + " " + words.get(Integer.valueOf((int) (decimal % 10))) : "";
-        return "Rupees " + Rupees + " Only";
+        return "Rupees " + rupees + " only";
 	}
 	
 	public static String rephraseBill(int billnum) {

@@ -14,7 +14,7 @@ import com.mrajupaint.colorworld.entity.SSTNHDP_KEY;
 @Repository
 public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, SSTNHDP_KEY> {
 
-	@Query(value = "SELECT max(tnbillno) + 1 as billno FROM colorworld.sstnhdp "
+	@Query(value = "SELECT max(tnbillno) + 1 as billno FROM sstnhdp "
 			+ "where tntime between :startDate and :endDate",
 			nativeQuery = true)
 	Optional<Integer> getBillNo(@Param("startDate") Timestamp startDate, @Param("endDate") Timestamp endDate);

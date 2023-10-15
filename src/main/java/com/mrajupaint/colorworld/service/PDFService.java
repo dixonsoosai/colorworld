@@ -176,9 +176,9 @@ public class PDFService {
 		replaceKeyword.put("@InvoiceNo", 
 				AppUtils.rephraseBill(header.getTnbillno()));
 		replaceKeyword.put("@InvoiceDate", 
-				AppUtils.formatDate(header.getTntime(), "yyyy-MM-dd"));
+				AppUtils.formatDate(header.getTntime(), "dd-MM-yyyy"));
 		replaceKeyword.put("@AmountInWords", 
-				AppUtils.convertToWords((int) header.getTntotal()));
+				AppUtils.convertToWords((int) Math.round(header.getTntotal()) ));
 		List<SSGNJNP> totalGst = gstList.stream()
 				.filter(s -> s.getGngstp().equals("Total"))
 				.toList();
@@ -186,8 +186,8 @@ public class PDFService {
 		replaceKeyword.put("@TotalCGST", formatNum(totalGst.get(0).getGncamt()));
 		replaceKeyword.put("@TotalSGST", formatNum(totalGst.get(0).getGnsamt()));
 		replaceKeyword.put("@RoundingOff", 
-				formatNum(totalGst.get(0).getGntamt() - Math.round(totalGst.get(0).getGntamt())));
-		replaceKeyword.put("@TotalAmount", formatNum(totalGst.get(0).getGntamt()));
+				formatNum(Math.round(totalGst.get(0).getGntamt()) - totalGst.get(0).getGntamt() ));
+		replaceKeyword.put("@TotalAmount", formatNum(Math.round(totalGst.get(0).getGntamt())));
 						
 		StringBuilder billBody= new StringBuilder();
 		StringBuilder gstBody = new StringBuilder();
@@ -239,7 +239,7 @@ public class PDFService {
 				""";
 			line = String.format(line, 
 					bill.getTnchallan(),
-					bill.getTntqty() + " X " + bill.getTnuqty() + " " +  
+					Math.round(bill.getTntqty()) + " X " + Math.round(bill.getTnuqty()) + " " +  
 					bill.getTnunit(),
 					bill.getTnscnnm(),
 					bill.getTnhsnc(),

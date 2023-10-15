@@ -14,7 +14,7 @@ import lombok.Data;
 public class Customer
 {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column
 	private int jpid;
 	
@@ -28,7 +28,7 @@ public class Customer
 	private String jppgst;
 	
 	@Column
-	private double jpbaln;
+	private Double jpbaln;
 	
 	@Column
 	private String jpdate;

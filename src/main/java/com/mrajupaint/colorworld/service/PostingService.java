@@ -133,14 +133,14 @@ public class PostingService {
 		if(AppUtils.isBlank(sstnhdp.getTnname()) || AppUtils.isBlank(sstnhdp.getTnpgst())) {
 			return "Invalid Header, Company Name or Company GST not entered";
 		}
-		if(sstnhdp.getTntotal() + sstnhdp.getTnprbn() != sstnhdp.getTngdtl()) {
+		if(round(sstnhdp.getTntotal() + sstnhdp.getTnprbn()) != round(sstnhdp.getTngdtl())) {
 			LOGGER.error("Total + Prev Balance = Grand Total");
 			LOGGER.error("{} + {} = {}" , sstnhdp.getTntotal(), sstnhdp.getTntotal(), 
 					sstnhdp.getTngdtl());
 			return "Invalid Header Total";
 		}
 		if(sstnhdp.getTncsrv() != 0) {
-			if(sstnhdp.getTncsrv() - sstnhdp.getTngdtl() != sstnhdp.getTnrtna()) {
+			if(round(sstnhdp.getTncsrv() - sstnhdp.getTngdtl()) != round(sstnhdp.getTnrtna())) {
 				LOGGER.error("Cash Received - Grand Total = Return Amount");
 				LOGGER.error("{} - {} = {}" ,sstnhdp.getTncsrv(), sstnhdp.getTngdtl(), 
 						sstnhdp.getTnrtna());
@@ -176,8 +176,8 @@ public class PostingService {
 			gst.setGnbill(billNum);
 		}
 		
-		if(totalTaxable != taxable || totalCGST != cAmt || totalSGST != sAmt || 
-				totalTamt != tAmt) {
+		if(round(totalTaxable) != round(taxable) || round(totalCGST) != round(cAmt) 
+				|| round(totalSGST) != round(sAmt) || round(totalTamt) != round(tAmt)) {
 			LOGGER.error("Total Taxable != Sum of Taxable or Total CGST != Sum of CGST or "
 					+ "Total SGST != Sum of SGST");
 			LOGGER.error("{} != {} or {} != {} or {} != {}",
@@ -185,7 +185,8 @@ public class PostingService {
 			return "Invalid GST Transaction";
 		}
 		
-		if((totalTamt != totalTaxable + totalCGST + totalSGST) || (tAmt != taxable + cAmt + sAmt)) {
+		if((round(totalTamt) != round(totalTaxable + totalCGST + totalSGST)) || 
+				(round(tAmt) != round(taxable + cAmt + sAmt))) {
 			LOGGER.error("Total Amount != Taxable + CGST + SGST or "
 					+ "Sum of Total Amt != Sum of (Taxable + CGST + SGST)");
 			LOGGER.error("{} != {} + {} + {} or {} != {} + {} + {}", 
@@ -204,13 +205,13 @@ public class PostingService {
 			billTAmt += billDetails.getTntamt();
 			billDetails.setTnbillno(billNum);
 		}
-		if(billTaxable != totalTaxable || billCAmt != totalCGST || 
-				billSAmt != totalSGST || header.getTntotal() != billTAmt) {
+		if(round(billTaxable) != round(totalTaxable) || round(billCAmt) != round(totalCGST) || 
+				round(billSAmt) != round(totalSGST) || round(header.getTntotal()) != round(billTAmt)) {
 			LOGGER.info("Bill Details: Body  GST");
 			LOGGER.info("Taxable: {} {}", billTaxable, totalTaxable);
 			LOGGER.info("CGST: {} {}", billCAmt, totalCGST);
 			LOGGER.info("SGST: {} {}", billSAmt, totalSGST);
-			LOGGER.info("Total: {} {}", header.getTntotal(), billTAmt);
+			LOGGER.info("Total: {} {}", round(header.getTntotal()), round(billTAmt));
 			return "Invalid Billing Entries";
 		}
 		
@@ -232,5 +233,9 @@ public class PostingService {
 		else {
 			return Integer.parseInt(String.valueOf(AppUtils.getFinancialYear(billTime)) + "001");
 		} 
+	}
+	
+	public double round(double num) {
+		return Math.round(num * 100.0) / 100.0;
 	}
 }

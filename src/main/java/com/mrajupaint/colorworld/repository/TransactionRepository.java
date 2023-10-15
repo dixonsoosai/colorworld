@@ -26,14 +26,14 @@ public class TransactionRepository {
     public void addTransaction(List<SSTNJNP> entities) throws ColorWorldException {
 		
 		String sql = """
-				DELETE FROM colorworld.sstnjnp WHERE tnbillno = %s
+				DELETE FROM sstnjnp WHERE tnbillno = %s
 				""".formatted(entities.get(0).getTnbillno());
 		int deleteCount = jdbcTemplate.update(sql);
 		if(deleteCount > 0) {
 			LOGGER.info("Deleted Count: {}", deleteCount);
 		}
 	    sql = """
-	    		INSERT INTO colorworld.sstnjnp(
+	    		INSERT INTO sstnjnp(
         		tnbillno, tnchallan, tnscnnm, 
         		tnprice, tntxable, tnsamt, tncamt, tntamt, tntqty, 
         		tnuqty, tnunit, tnpdcd, tnhsnc, tncgst, tnsgst)
@@ -70,7 +70,7 @@ public class TransactionRepository {
 	
 	public List<SSTNJNP> getTransaction(int billnum) {
 		String sql = """
-				SELECT * FROM colorworld.sstnjnp WHERE tnbillno = %d
+				SELECT * FROM sstnjnp WHERE tnbillno = %d
 				""".formatted(billnum);
 		
 		return jdbcTemplate.query(sql, (rs, rowNum) -> {
@@ -99,7 +99,7 @@ public class TransactionRepository {
 	public boolean deleteInvoice(int billnum) throws Exception {
 		try {
 			String sql = """
-					DELETE FROM colorworld.sstnjnp WHERE tnbillno = %s
+					DELETE FROM sstnjnp WHERE tnbillno = %s
 					""".formatted(billnum);
 			jdbcTemplate.update(sql);
 		} catch (DataAccessException e) {
