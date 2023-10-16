@@ -175,6 +175,19 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+			    <artifactId>maven-war-plugin</artifactId>
+			    <configuration>
+				 	<warSourceDirectory>target</warSourceDirectory>
+				 	<warName>mrajupaint</warName>
+				    <webResources>
+				        <resource>
+				            <directory>src/main/webapp</directory>
+				            <filtering>true</filtering>
+				        </resource>
+				    </webResources>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
