@@ -276,7 +276,7 @@ public class PDFService {
 		
 		//Read Signature File
 		try {
-            File signFile = ResourceUtils.getFile("classpath:templates/sign.jpeg");
+            File signFile = ResourceUtils.getFile("classpath:templates/sign.jpg");
             String ext = FileUtils.getFileExtension(signFile);
             try(FileInputStream fileInputStream = new FileInputStream(signFile)) {
 	            byte[] imageData = new byte[(int) signFile.length()];

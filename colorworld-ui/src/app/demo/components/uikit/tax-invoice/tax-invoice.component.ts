@@ -250,12 +250,12 @@ export class TaxInvoiceComponent implements OnInit {
         this.gstSummary.clear();
         this.selectedProducts.forEach(element => {
             let gst;
-            if (this.gstSummary.has(element.tncgst.toString())) {
-                gst = this.gstSummary.get(element.tncgst.toString());
+            if (this.gstSummary.has((element.tncgst + element.tnsgst).toString())) {
+                gst = this.gstSummary.get((element.tncgst + element.tnsgst).toString());
             }
             else {
                 gst = new SSGNJNP();
-                gst.gngstp = element.tncgst.toString();
+                gst.gngstp = (element.tncgst + element.tnsgst).toString();
             }
             gst.gnbill = this.invoiceNumber;
             gst.gntxable += element.tntxable;
