@@ -134,6 +134,11 @@
 				        <resource>
 				            <directory>src/main/webapp</directory>
 				            <filtering>true</filtering>
+				            <excludes>
+				                <exclude>**/*.woff</exclude>
+				                <exclude>**/*.woff2</exclude>
+				                <exclude>**/*.ttf</exclude>
+				            </excludes>
 				        </resource>
 				    </webResources>
 				</configuration>
