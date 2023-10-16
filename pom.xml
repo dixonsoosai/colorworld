@@ -13,7 +13,7 @@
 	<version>1.0.0</version>
 	<packaging>war</packaging>
 	<name>colorworld</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Billing software</description>
 	<properties>
 		<java.version>17</java.version>
 	</properties>
@@ -124,7 +124,20 @@
 
 	<!-- Maven task for building Angular Project-->	
 	<build>
+		<finalName>mrajupaint</finalName>
 		<plugins>
+			<plugin>
+			 	<groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-war-plugin</artifactId>
+			    <configuration>
+				 	<webResources>
+				        <resource>
+				            <directory>src/main/webapp</directory>
+				            <filtering>true</filtering>
+				        </resource>
+				    </webResources>
+				</configuration>
+			</plugin>
 			<!-- 
 			<plugin>
 		        <groupId>com.github.eirslett</groupId>
@@ -173,19 +186,6 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-			    <artifactId>maven-war-plugin</artifactId>
-			    <configuration>
-				 	<warSourceDirectory>target</warSourceDirectory>
-				 	<warName>mrajupaint</warName>
-				    <webResources>
-				        <resource>
-				            <directory>src/main/webapp</directory>
-				            <filtering>true</filtering>
-				        </resource>
-				    </webResources>
 				</configuration>
 			</plugin>
 		</plugins>
