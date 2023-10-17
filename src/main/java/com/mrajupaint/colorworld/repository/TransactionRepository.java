@@ -34,10 +34,10 @@ public class TransactionRepository {
 		}
 	    sql = """
 	    		INSERT INTO sstnjnp(
-        		tnbillno, tnchallan, tnscnnm, 
+        		tnbillno, tnchallan, tnscnnm, tndisc, 
         		tnprice, tntxable, tnsamt, tncamt, tntamt, tntqty, 
         		tnuqty, tnunit, tnpdcd, tnhsnc, tncgst, tnsgst)
-        		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         		""";
         List<Object[]> batchArgs = new ArrayList<>();
         
@@ -45,6 +45,7 @@ public class TransactionRepository {
             Object[] args = {entity.getTnbillno(), 
             		entity.getTnchallan(),
             		entity.getTnscnnm(),
+            		entity.getTndisc(),            		
             		entity.getTnprice(),
             		entity.getTntxable(),
             		entity.getTnsamt(),
@@ -78,6 +79,7 @@ public class TransactionRepository {
 			transaction.setTnbillno(rs.getInt("tnbillno"));
 			transaction.setTnchallan(rs.getString("tnchallan"));
 			transaction.setTnscnnm(rs.getString("tnscnnm"));
+			transaction.setTndisc(rs.getDouble("tndisc"));
 			transaction.setTnprice(rs.getDouble("tnprice"));
 			transaction.setTntxable(rs.getDouble("tntxable"));
 			transaction.setTnsamt(rs.getDouble("tnsamt"));

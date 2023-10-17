@@ -21,6 +21,8 @@ public class SSTNJNP
 	@Column
 	private String tnscnnm;
 	@Column
+	private double tndisc;
+	@Column
 	private double tnprice;
 	@Column
 	private double tntxable;

@@ -174,7 +174,7 @@ export class TaxInvoiceComponent implements OnInit {
             this.selectedProducts.forEach(element => {
                 if (element.tnpdcd.trim() === product.pnpdcd.trim()) {
                     element.tntqty += 1;
-                    element.tntxable = element.tntqty * element.tnprice;
+                    element.tntxable = element.tntqty * element.tnprice * (1 - (productItem.tndisc/100));
                     element.tncamt = element.tntxable * element.tncgst / 100;
                     element.tnsamt = element.tntxable * element.tnsgst / 100;
                     element.tntamt = element.tntxable + element.tncamt + element.tnsamt;
@@ -203,7 +203,7 @@ export class TaxInvoiceComponent implements OnInit {
         productItem.tnsgst = product.pnsgst;
 
         productItem.tntqty = 1;
-        productItem.tntxable = productItem.tntqty * productItem.tnprice;
+        productItem.tntxable = productItem.tntqty * productItem.tnprice * (1 - (productItem.tndisc/100));
         productItem.tncamt = productItem.tntxable * productItem.tncgst / 100;
         productItem.tnsamt = productItem.tntxable * productItem.tnsgst / 100;
         productItem.tntamt = productItem.tntxable + productItem.tncamt + productItem.tnsamt;
@@ -279,6 +279,9 @@ export class TaxInvoiceComponent implements OnInit {
             return;
         }
         switch (column) {
+            case "tndisc":
+                row.tntxable = parseFloat((row.tntqty * row.tnprice* (1 - (row.tndisc/100))).toFixed(2));
+                break;
             case "tqty":
             case "tnprice":
                 row.tntxable = row.tntqty * row.tnprice;
@@ -303,7 +306,7 @@ export class TaxInvoiceComponent implements OnInit {
         }
         row.tncamt = parseFloat((row.tntxable * row.tncgst / 100).toFixed(2));
         row.tnsamt = parseFloat((row.tntxable * row.tnsgst / 100).toFixed(2));
-        row.tntamt = row.tntxable + row.tncamt + row.tnsamt;
+        row.tntamt = parseFloat((row.tntxable + row.tncamt + row.tnsamt).toFixed(2));
         this.computeBillSummary();
     }
 
@@ -316,7 +319,6 @@ export class TaxInvoiceComponent implements OnInit {
 
         this.posting();
         this.saveCustomer();
-        this.clearBill();
     }
 
     validateCompanyDetails(): boolean {
@@ -370,17 +372,13 @@ export class TaxInvoiceComponent implements OnInit {
             gst: [...this.gstSummary.values()]
         }
         this.invoiceService.generate(billData).subscribe({
-            next: response => {
-                if(response["code"] != 200) {
-                    this.messageService.add(errorToastr("Error while generating Invoice"));
-                    console.error(response);
-                    return;
-                } 
+            next: response => { 
                 let htmlContent = response;
                 const newWindow = window.open('', '_blank');
                 newWindow.document.write(htmlContent);
                 newWindow.document.close();
                 this.messageService.add(successToastr("Invoice generated successfully"));
+                this.clearBill();
             },
             error: error => {
                 this.messageService.add(errorToastr("Error while generating Invoice"));

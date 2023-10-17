@@ -235,6 +235,7 @@ public class PDFService {
 			     <td>%s</td>
 			     <td>%s</td>
 			     <td>%s</td>
+			     <td>%s</td>
 				</tr>
 				""";
 			line = String.format(line, 
@@ -244,7 +245,8 @@ public class PDFService {
 					bill.getTnscnnm(),
 					bill.getTnhsnc(),
 					formatNum(bill.getTnprice()),
-					formatNum(bill.getTnprice()),
+					formatNum(bill.getTndisc()),
+					formatNum(bill.getTntxable()),
 					bill.getTncgst(),
 					formatNum(bill.getTncamt()),
 					bill.getTnsgst(),
@@ -256,6 +258,7 @@ public class PDFService {
 		for(int i = billList.size(); i<= 17; i++) {
 			var line = """
 					<tr style=\"height: 27.2px;\">
+					     <td></td>
 					     <td></td>
 					     <td></td>
 					     <td></td>

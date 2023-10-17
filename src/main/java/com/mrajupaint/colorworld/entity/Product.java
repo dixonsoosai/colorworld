@@ -25,6 +25,9 @@ public class Product {
 	@Column(name = "PNSCNNM")
 	private String pnscnm;
 	
+	@Column(name = "PNDISC")
+	private Double pndisc;
+	
 	@Id
 	@Column(name = "PNPDCD")
 	private String pnpdcd; 

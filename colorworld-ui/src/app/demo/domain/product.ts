@@ -4,6 +4,7 @@ export class ProductItem {
 	pncmpd: string = '';
 	pncolor: string = '';
 	pnscnm: string = '';
+	pndisc: number = 0;
 	pnpdcd: string = '';
 	pnhsnc: number = 0;
 	pncgst: number = 0;
@@ -23,6 +24,7 @@ export class InvoiceItem {
     tnbillno: number = 0;
     tnchallan:string = '';
 	tnscnnm: string = '';
+	tndisc: number = 0;
 	tnpdcd: string = '';
 	tnhsnc: number = 0;
 	tncgst: number = 0;
