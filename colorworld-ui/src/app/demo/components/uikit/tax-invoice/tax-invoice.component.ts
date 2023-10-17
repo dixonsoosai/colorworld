@@ -358,7 +358,8 @@ export class TaxInvoiceComponent implements OnInit {
         header.tnname = this.customerDetails.jpname;
         header.tnpgst = this.customerDetails.jppgst;
         header.tntime = getISODate(this.invoiceDate);
-
+        header.tnadd = this.customerDetails.jpadd;
+        
         header.tnchqdt = "";
         header.tncsrv = 0;
         header.tnprbn = 0;
@@ -373,6 +374,9 @@ export class TaxInvoiceComponent implements OnInit {
         }
         this.invoiceService.generate(billData).subscribe({
             next: response => { 
+                if(response.code == 500) {
+                    return;
+                }
                 let htmlContent = response;
                 const newWindow = window.open('', '_blank');
                 newWindow.document.write(htmlContent);

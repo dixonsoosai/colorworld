@@ -3,6 +3,7 @@ export class SSTNHDP {
     tnname: string = "";
     tnchqdt: string = "";
     tnpgst: string = "";
+    tnadd: string = "";
     tntime: string = "";
     tntotal: number = 0;
     tnprbn: number = 0;

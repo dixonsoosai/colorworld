@@ -172,6 +172,7 @@ public class PDFService {
 		replaceKeyword.put("@CompanyContact&GST", companyContact);
 		replaceKeyword.put("@CompanyAccountDetails", accountDetails);
 		replaceKeyword.put("@PartyCompany", header.getTnname());
+		replaceKeyword.put("@PartyAddress", "");
 		replaceKeyword.put("@PartyGST", header.getTnpgst());
 		replaceKeyword.put("@InvoiceNo", 
 				AppUtils.rephraseBill(header.getTnbillno()));

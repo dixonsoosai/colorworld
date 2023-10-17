@@ -4,9 +4,10 @@
 <head>
   <title>Invoice</title>
   <style>
-	  *	{
-	  font-size:medium;
-	}
+    * {
+      font-size: medium;
+    }
+
     body {
       margin: 0px 0px 0px 0px;
       padding: 0px 0px 0px 0px;
@@ -30,30 +31,28 @@
       margin: 0px 0px 0px 0px;
       padding: 0px 0px 0px 0px;
     }
-
     .tax-invoice {
       text-decoration: underline;
-	  font-size:large;
-    }
-
-    .bill-header {
-      border: none;
+      font-size: large;
     }
 
     .invoice_num {
-		padding: 4px;
-		border-bottom: 1px solid;
-	 }
+      padding: 4px;
+      border-bottom: 1px solid;
+    }
 
-	.invoice_date {
-		padding: 4px;
-	}
+    .invoice_date {
+      padding: 4px;
+    }
 
-	.customer_name {
-		padding: 2px;
-	}
+    .customer_name {
+      padding: 2px;
+    }
 
-    .bill table, .bill table thead, .bill table th, .bill table td {
+    .bill table,
+    .bill table thead,
+    .bill table th,
+    .bill table td {
       border: 1px solid;
       border-collapse: collapse;
     }
@@ -63,11 +62,15 @@
       border-top: 0px none;
     }
 
-    .bill table td:first-child, .bill table th:first-child, .bill table {
+    .bill table td:first-child,
+    .bill table th:first-child,
+    .bill table {
       border-left: hidden;
     }
 
-    .bill table td:last-child, .bill table th:last-child, .bill table {
+    .bill table td:last-child,
+    .bill table th:last-child,
+    .bill table {
       border-right: hidden;
     }
 
@@ -88,14 +91,18 @@
     table {
       border-spacing: 0;
     }
+
     table th,
     table td {
       padding: 4px;
     }
 
-    .declaration, .amtinwords, .partyGst {
+    .declaration,
+    .amtinwords,
+    .partyGst {
       padding: 3px;
     }
+
     .account-details {
       padding: 2px;
     }
@@ -104,24 +111,28 @@
       border-top: 1px solid;
       border-bottom: 1px solid;
     }
+
     .gst-details table td {
       text-align: right;
     }
 
     .grid-table {
       width: 100%;
-      border:none;
+      border: none;
       border-spacing: 0px;
     }
+
     .grid-table td {
       margin: 0 0 0 0;
       padding: 0 0 0 0;
     }
-    
-    .bill-footer table td:first-child{
-    	border-right: 1px solid;
+
+    .bill-footer table td:first-child {
+      border-right: 1px solid;
     }
-    .account-table, .account-table td {
+
+    .account-table,
+    .account-table td {
       margin: 0px 0px 0px 0px;
       border: 1px solid;
       border-collapse: collapse;
@@ -129,16 +140,16 @@
     }
 
     .account-table {
-	   border: hidden;
-	}
+      border: hidden;
+    }
 
     .account-table tr:first-child td {
-      border-top : 0px;
-	  width: 64%;
+      border-top: 0px;
+      width: 64%;
     }
 
     .account-table tr:last-child td {
-      border-bottom : 0px;
+      border-bottom: 0px;
     }
 
     .account-table td:last-child {
@@ -148,60 +159,85 @@
     }
 
     .gst-table,
-	  .gst-table td,
-	  .gst-table th {
-		   margin: 0px 0px 0px 0px;
-		   border-collapse: collapse;
-		   border-spacing: 0;
-		   padding: 4px;
-	  }
-
-	  .gst-details td, .gst-details th{
-		   border: 1px solid;
-	  }
-
-	  .gst-details th, .gst-details{
-		   border-top: hidden;
-	  }
-	  .gst-details td:first-child,  .gst-details th:first-child{
-		   border-left: hidden;
-	  }
-
-	  .gst-details, .gst-details td:last-child, .gst-details th:last-child {
-		   border-right: hidden;
-	  }
-
-    .blank-row td {
-      border-width:0px;
+    .gst-table td,
+    .gst-table th {
+      margin: 0px 0px 0px 0px;
+      border-collapse: collapse;
+      border-spacing: 0;
+      padding: 4px;
     }
 
+    .gst-details td,
+    .gst-details th {
+      border: 1px solid;
+    }
+
+    .gst-details th,
+    .gst-details {
+      border-top: hidden;
+    }
+
+    .gst-details td:first-child,
+    .gst-details th:first-child {
+      border-left: hidden;
+    }
+
+    .gst-details,
+    .gst-details td:last-child,
+    .gst-details th:last-child {
+      border-right: hidden;
+    }
+
+    .blank-row td {
+      border-width: 0px;
+    }
+    .bill-header td {
+      border-bottom: 1px solid;
+    }
   </style>
 </head>
 
 <body>
   <div class="header">
     <h4 class="tax-invoice">TAX INVOICE</h4>
-    <h1>@CompanyName</h1>
-    <p>@CompanyDescription</p>
-    <p>@CompanyAddress</p> 
-    <p>@CompanyContact&GST</p>
   </div>
-
-  <div class="bill-header">
-    <table class="grid-table">
-      <tbody>
-        <tr>
-          <td style="width: 50%;border-right: 2px solid">
-            <p class="customer_name">M/S. @PartyCompany</p>
-          </td>
-          <td style="width: 50%">
-            <div class="invoice_num">Invoice no: @InvoiceNo</div>
-            <div class="invoice_date">Date: @InvoiceDate</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <table class="bill-header" style="width: 100%;">
+    <tbody>
+      <tr>
+        <td style="width: 50%;border-right: 1px solid;">
+          <p class="no-margin-padding">@CompanyName</p>
+          <p class="no-margin-padding">@CompanyDescription</p>
+          <p class="no-margin-padding">@CompanyAddress</p>
+          <p class="no-margin-padding">@CompanyContact&GST</p>
+        </td>
+        <td style="border-right: 1px solid;vertical-align: top;">
+          <div style="display:flex;flex-direction: column;">
+            <div>Invoice no:</div>
+            <div>@InvoiceNo</div>
+          </div>
+        </td>
+        <td style="vertical-align: top;">
+          <div style="display:flex;flex-direction: column;">
+            <div>Invoice Date:</div>
+            <div>@InvoiceDate</div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%;border-right: 1px solid;">
+          <p class="no-margin-padding">@PartyCompany</p>
+          <p class="no-margin-padding">@PartyAddress</p>
+          <p class="no-margin-padding">@PartyGST</p>
+        </td>
+        <td style="border-right: 1px solid;vertical-align: top;">
+          
+        </td>
+        <td style="vertical-align: top;">
+          
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
   <div class="bill">
     <table width="100%">
@@ -229,17 +265,16 @@
     <table style="width: 100%;">
       <tbody>
         <tr>
-          <td style="width:70%" class="no-margin-padding">
-            <div class="partyGst">Party GST No: @PartyGST</div>
+          <td style="width:70%;vertical-align: top;" class="no-margin-padding">
             <div class="amtinwords">Amount in words: @AmountInWords</div>
             <div class="declaration">
               Declaration:<br>
-                  We declare that this invoice shows the actual price of the goods described and all particulars
-                  are true and correct
+              We declare that this invoice shows the actual price of the goods described and all particulars
+              are true and correct
             </div>
           </td>
           <td style="width:30%" class="no-margin-padding">
-            <table class= "account-table" style="width: 100%;" cell-spacing="0">
+            <table class="account-table" style="width: 100%;" cell-spacing="0">
               <tbody>
                 <tr>
                   <td>Amount before Tax</td>
@@ -290,7 +325,8 @@
           <td style="width: auto;">
             <div style="margin-top:-4px">For @CompanyName</div>
             <div style="margin-top:12px">
-              <img src="@img" height="50px" width="80px"></div>
+              <img src="@img" height="50px" width="80px">
+            </div>
             <div>Proprietor</div>
           </td>
         </tr>
