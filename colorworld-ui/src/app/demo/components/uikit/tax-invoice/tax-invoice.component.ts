@@ -376,11 +376,15 @@ export class TaxInvoiceComponent implements OnInit {
         }
         this.invoiceService.generate(billData).subscribe({
             next: response => { 
+                if(response.code == 500) {
+                    return;
+                }
                 let htmlContent = response;
                 const newWindow = window.open('', '_blank');
                 newWindow.document.write(htmlContent);
                 newWindow.document.close();
                 this.messageService.add(successToastr("Invoice generated successfully"));
+                
                 this.clearBill();
             },
             error: error => {
