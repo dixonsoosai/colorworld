@@ -5,10 +5,11 @@ Billing Software for Retail Business
 
 Pre-requisties:
 1) OpenJdk17
-2) Postgresql with server
+2) MS Access
 3) Eclipse
 4) Visual Studio
 5) Nodejs 18.16.0
+6) Tomcat 10
 
 Steps:
 1) File -> Import -> Projects from Git
