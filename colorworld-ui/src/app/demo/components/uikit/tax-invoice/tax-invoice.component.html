@@ -56,7 +56,7 @@
 
 	<div id="tax-invoice" *ngIf="this.activeItem.label == 'Invoice'">
 		<div class="mt-4">
-			<p-fieldset legend="Company Details" [toggleable]="true">
+			<div>
 				<div class="grid">
 					<div class="col">
 						<div class="field grid">
@@ -97,15 +97,15 @@
 				<div class="field grid">
 					<label htmlFor="address" class="col-12 mb-2 md:col-1 md:mb-0 font-bold">Address</label>
 					<div class="col-12 md:col-10">
-						<textarea rows="2" cols="120" pInputTextarea [autoResize]="true"
+						<textarea rows="2" style="width: 100%;" pInputTextarea [autoResize]="true"
 							[(ngModel)]="customerDetails.jpadd"></textarea>
 					</div>
 				</div>
-			</p-fieldset>
+			</div>
 		</div>
 
 		<div class="mt-4">
-			<p-fieldset legend="Tax Invoice">
+			<div style="width: 100%;">
 				<div class="flex justify-content-between">
 					<div class="field grid">
 						<label htmlFor="customerName" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Invoice
@@ -356,7 +356,7 @@
 				<div class="flex justify-content-start mt-4">
 					<p-button label="Generate Bill" (click)="generateBill()"></p-button>
 				</div>
-			</p-fieldset>
+			</div>
 		</div>
 	</div>
 

@@ -74,6 +74,10 @@ public class PDFService {
 		if(!taxInvoiceDirectory.endsWith(File.separator)) {
 			taxInvoiceDirectory += File.separator;
 		}
+		File taxInvoice = new File(taxInvoiceDirectory);
+		if(taxInvoice.mkdir()) {
+			LOGGER.info("Tax Invoice Directory created");
+		}
 	}
 	
 	public String generateInvoice(int billnum) {
@@ -104,7 +108,6 @@ public class PDFService {
 	private String downloadContent(String content, String outputFile) {
 		try {
 			String htmlFile = outputFile + ".html";
-			String pdfFile = outputFile + ".pdf";
 			Path filePath = Path.of(htmlFile);
 			new File(htmlFile).delete();
 			Files.writeString(filePath, content, StandardOpenOption.CREATE_NEW);
@@ -115,7 +118,7 @@ public class PDFService {
 		}
 	}
 	
-	private byte[] convertHTMLtoPDF(String content, String outputFile) {
+	public byte[] convertHTMLtoPDF(String content, String outputFile) {
 		try(OutputStream fileOutputStream = new FileOutputStream(outputFile)) {
 			ConverterProperties converterProperties = new ConverterProperties();
 			converterProperties.setImmediateFlush(false);

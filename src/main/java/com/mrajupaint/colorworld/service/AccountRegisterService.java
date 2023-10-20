@@ -127,6 +127,7 @@ public class AccountRegisterService {
 		return "Bill deleted successfully";
 	}
 	
+	@SuppressWarnings("deprecation")
 	public Resource downloadBills(SPRequest request) {
 		List<SSACRGP> bills = getBills(request);
 		if(bills.isEmpty()) {
