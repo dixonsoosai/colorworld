@@ -5,7 +5,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Customer } from 'src/app/demo/domain/customer';
 import { CustomersService } from 'src/app/demo/service/customers.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { errorToastr, getLastDay, successToastr } from 'src/app/demo/service/apputils.service';
+import { errorToastr, formatPurchaseBillData, getLastDay, getPurchaseHistoryHeader, saveAsExcelFile, successToastr } from 'src/app/demo/service/apputils.service';
 import { PurchaseBill } from 'src/app/demo/domain/purchase';
 import { PurchaseService } from 'src/app/demo/service/purchase.service';
 import { Table } from 'primeng/table';
@@ -18,7 +18,7 @@ export class PurchaseComponent implements OnInit {
 
     purchaseDetails;
     loading = false;
-    filteredData;
+    
     visible = false;
     purchaseBill : PurchaseBill = new PurchaseBill(); 
     filterDate;
@@ -101,30 +101,9 @@ export class PurchaseComponent implements OnInit {
         table.clear();
     }
 
-    exportFilteredData(dataTable: Table): void {
-        this.filteredData = dataTable.filteredValue;
-    }
-
     exportExcel(dataTable: Table) {
-        let filteredData = [];
-        if(dataTable.filteredValue == null) {
-            filteredData = this.purchaseDetails;
-        }
-        import('xlsx').then((xlsx) => {
-            const worksheet = xlsx.utils.json_to_sheet(filteredData);
-            const workbook = { Sheets: { data: worksheet }, SheetNames: ['Purchase History'] };
-            const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-            this.saveAsExcelFile(excelBuffer, 'Purchase History');
-        });
-    }
-
-    saveAsExcelFile(buffer: any, fileName: string): void {
-        let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-        let EXCEL_EXTENSION = '.xlsx';
-        const data: Blob = new Blob([buffer], {
-            type: EXCEL_TYPE
-        });
-        FileSaver.saveAs(data, fileName + new Date().getTime() + EXCEL_EXTENSION);
+        let filteredData = dataTable.filteredValue == null ? this.purchaseDetails : dataTable.filteredValue;
+        saveAsExcelFile(formatPurchaseBillData(filteredData), getPurchaseHistoryHeader(), "Purchase History");
     }
 
     addBill() {

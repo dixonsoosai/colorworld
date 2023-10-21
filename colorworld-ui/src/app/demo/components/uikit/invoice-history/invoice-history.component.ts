@@ -1,7 +1,7 @@
 import * as FileSaver from 'file-saver';
 import { Component } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { errorToastr, successToastr } from 'src/app/demo/service/apputils.service';
+import { errorToastr, formatInvoiceData, getInvoiceHeader, saveAsExcelFile, successToastr } from 'src/app/demo/service/apputils.service';
 import { InvoiceService } from 'src/app/demo/service/invoice.service';
 import { SSTNHDP } from 'src/app/demo/domain/sstnhdp';
 import { Table } from 'primeng/table';
@@ -43,30 +43,9 @@ export class InvoiceHistoryComponent {
         table.clear();
     }
 
-    exportFilteredData(dataTable: Table): void {
-        this.filteredData = dataTable.filteredValue;
-    }
-
     exportExcel(dataTable: Table) {
-        let filteredData = [];
-        if(dataTable.filteredValue == null) {
-            filteredData = this.invoiceDetails;
-        }
-        import('xlsx').then((xlsx) => {
-            const worksheet = xlsx.utils.json_to_sheet(filteredData);
-            const workbook = { Sheets: { data: worksheet }, SheetNames: ['Purchase History'] };
-            const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-            this.saveAsExcelFile(excelBuffer, 'Purchase History');
-        });
-    }
-
-    saveAsExcelFile(buffer: any, fileName: string): void {
-        let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-        let EXCEL_EXTENSION = '.xlsx';
-        const data: Blob = new Blob([buffer], {
-            type: EXCEL_TYPE
-        });
-        FileSaver.saveAs(data, fileName + new Date().getTime() + EXCEL_EXTENSION);
+        let filteredData = dataTable.filteredValue == null ? this.invoiceDetails : dataTable.filteredValue;
+        saveAsExcelFile(formatInvoiceData(filteredData), getInvoiceHeader(), "Invoice History");
     }
 
     download(data: SSTNHDP) {

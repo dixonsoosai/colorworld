@@ -65,7 +65,7 @@
         <ng-template pTemplate="body" let-rowData>
             <tr>
                 <td>{{rowData.tnbillno}}</td>
-                <td>{{rowData.tntime | date: 'yyyy-MM-dd'}}</td>
+                <td>{{rowData.tntime | date: 'dd-MM-yyyy'}}</td>
                 <td>{{rowData.tnname}}</td>
                 <td>{{rowData.tnpgst}}</td>
                 <td class="text-right">{{rowData.tntotal | number : '1.2-2'}}</td>
