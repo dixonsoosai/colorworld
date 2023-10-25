@@ -11,12 +11,14 @@ import { InvoiceHistoryComponent } from './invoice-history.component';
 import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
+import { CalendarModule } from 'primeng/calendar';
 
 
 @NgModule({
   declarations: [InvoiceHistoryComponent],
   imports: [
 	ButtonModule,
+	CalendarModule,
 	CardModule,
 	CommonModule,
 	ConfirmDialogModule,

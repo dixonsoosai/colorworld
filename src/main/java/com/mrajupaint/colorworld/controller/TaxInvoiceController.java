@@ -21,6 +21,7 @@ import com.mrajupaint.colorworld.config.LogTime;
 import com.mrajupaint.colorworld.entity.SPRequest;
 import com.mrajupaint.colorworld.entity.SSTNHDP;
 import com.mrajupaint.colorworld.exception.ColorWorldException;
+import com.mrajupaint.colorworld.model.InvoiceSummary;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.service.InvoiceService;
@@ -37,8 +38,8 @@ public class TaxInvoiceController {
 	
 	@LogTime
 	@GetMapping("bills")
-	public ResponseEntity<ServiceResponse<List<SSTNHDP>>> bills() {
-		var response = new ServiceResponse<List<SSTNHDP>>();
+	public ResponseEntity<ServiceResponse<List<InvoiceSummary>>> bills() {
+		var response = new ServiceResponse<List<InvoiceSummary>>();
 		response.setCode(HttpStatus.OK.value());
 		response.setErrorMessage(Strings.EMPTY);
 		response.setStatus(AppConstants.SUCCESS);

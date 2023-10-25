@@ -12,6 +12,8 @@ import com.mrajupaint.colorworld.entity.SSACRGP_KEY;
 @Repository
 public interface SSACRGPRepository extends JpaRepository<SSACRGP, SSACRGP_KEY> {
 
+	List<SSACRGP> findAllByOrderByArdateDesc();
+	
 	List<SSACRGP> findByArdateBetween(Timestamp startDate, Timestamp endDate);
 
 	List<SSACRGP> findByArname(String companyName);

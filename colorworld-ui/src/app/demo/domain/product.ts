@@ -53,3 +53,15 @@ export class GSTSummary {
 	gntsgst : number = 0;
 	gntamt : number = 0;
 }
+
+export class InvoiceSummary {
+	tnbillno: number = 0;
+    tnname: string = "";
+    tnpgst: string = "";
+    tntime: string = "";
+	gngstp : string = "";
+	gntxable: number = 0;
+	gncamt : number = 0;
+	gnsamt : number = 0;
+	gntamt : number = 0;	
+}

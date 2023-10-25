@@ -1,6 +1,7 @@
-import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 import { PurchaseBill } from '../domain/purchase';
 import { SSTNHDP } from '../domain/sstnhdp';
+import { InvoiceSummary } from '../domain/product';
 
 export const successToastr = (detail:string) => {
 	return {
@@ -66,7 +67,7 @@ export const getISODate2 = (date: Date) => {
 };
 
 export const getDMY = (date: Date): string => {
-	let formattedDate = `${date.getDay().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${(date.getFullYear()).toString()}`;
+	let formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${(date.getFullYear()).toString()}`;
 	return formattedDate;
 }
 
@@ -82,73 +83,67 @@ export const getLastDay = (date: Date) => {
 };
 
 export const saveAsExcelFile = (data: any, header, filename: string) => {
-	let filteredData = data;
-	import('xlsx').then((xlsx) => {
-		const worksheet = xlsx.utils.json_to_sheet(filteredData);
-		const workbook = { Sheets: { data: worksheet }, SheetNames: ['data'] };
-		const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-		let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-		let EXCEL_EXTENSION = '.xlsx';
-		const data: Blob = new Blob([excelBuffer], {
-			type: EXCEL_TYPE
-		});
-		FileSaver.saveAs(data, filename + EXCEL_EXTENSION);
-	});
+	let EXCEL_EXTENSION = '.xlsx';
+	const workbook = XLSX.utils.book_new();
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet([]);
+    XLSX.utils.sheet_add_aoa(worksheet, header);
+    //Starting in the second row to avoid overriding and skipping headers
+    XLSX.utils.sheet_add_json(worksheet, data, { origin: 'A2', skipHeader: true });
+    XLSX.utils.book_append_sheet(workbook, worksheet, filename);
+    XLSX.writeFile(workbook, filename + EXCEL_EXTENSION);
 };
 
 export const getInvoiceHeader = () : any => {
 	let data = [
-		[
-			"Invoice Number",
-			"Company Name",
-			"Cheque Date",
-			"Company GST",
-			"Invoice Date",
-			"Invoice Amount",
-			"Previous Balance",
-			"Grand Total",
-			"Cash Received",
-			"Returned Amount"
-		]
-	];
+        [
+            'Invoice Number',
+            'Invoice Date',
+            'Company Name',
+            'Company GST',
+            'GST',
+            'Taxable Amount',
+            'CGST',
+            'SGST',
+            'Total Amount',
+        ],
+    ];
 	return data;
 };
 
 export const getPurchaseHistoryHeader = () : any => {
-	let data =  [
-		[
-			"Invoice No",
-			"Invoice Date",
-			"Company Name",
-			"Company GST",
-			"Net Amount",
-			"CGST",
-			"SGST",
-			"Total Amount",
-			"Cheque Date",
-			"Cheque Number",
-			"Cheque Amount",
-			"Bank Name",
-			"Text",
-			"Bill Type"
-		]
-	];
-	return data;
+	let data = [
+        [
+            'Invoice No',
+            'Invoice Date',
+            'Company Name',
+            'Company GST',
+            'Net Amount',
+            'CGST',
+            'SGST',
+            'Total Amount',
+            'Cheque Date',
+            'Cheque Number',
+            'Cheque Amount',
+            'Bank Name',
+            'Text',
+            'Bill Type',
+        ],
+    ];
+    return data;
 }
 
-export const formatInvoiceData = (data: SSTNHDP[]) => {
+export const formatInvoiceData = (data: InvoiceSummary[]) => {
 	return data.map(element => {
 		return {
 			tnbillno: formatBillNum(element.tnbillno),
-			tnname: element.tnname,
-			tnchqdt: element.tnchqdt,
-			tnpgst: element.tnpgst,
 			tntime: getDMY(new Date(element.tntime)),
-			tntotal: element.tntotal,
-			tnprbn: element.tnprbn,
-			tngdtl: element.tngdtl,
-			tncsrv: element.tncsrv,
-			tnrtna: element.tnrtna
+			tnname: element.tnname,
+			tnpgst: element.tnpgst,
+			gngstp: element.gngstp,
+			gntxable: element.gntxable,
+			gncamt: element.gncamt,
+			gnsamt: element.gnsamt,
+			gntamt: element.gntamt
 		};
 	});
 }

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mrajupaint.colorworld.common.AppUtils;
-import com.mrajupaint.colorworld.entity.SSTNHDP;
+import com.mrajupaint.colorworld.model.InvoiceSummary;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
 import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
@@ -32,8 +32,8 @@ public class InvoiceService {
 	@Autowired
 	TransactionRepository transactionRepository;
 	
-	public List<SSTNHDP> getAllBills() {
-		return headerRepository.findAll(); 
+	public List<InvoiceSummary> getAllBills() {
+		return headerRepository.getBills(); 
 	}
 
 	public int refreshBillNum(Timestamp invoiceDate) {

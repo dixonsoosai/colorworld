@@ -49,8 +49,6 @@ export class ViewInvoiceComponent {
   fetchInvoice() {
     this.invoiceService.fetchBillDetails(this.invoice).subscribe({
       next: response => {
-        console.log(response);
-        
         this.header = response["data"].header;
         this.invoiceNumber = this.header.tnbillno;
         this.customerDetails.jpname = this.header.tnname;
@@ -84,12 +82,7 @@ export class ViewInvoiceComponent {
     };
 
     this.invoiceService.generate(billData).subscribe({
-        next:response => {  
-            if(response["code"] != 200) {
-              this.messageService.add(errorToastr("Error while generating Invoice"));
-              console.error(response);
-              return;
-            }
+        next:response => {
             let htmlContent = response;
             const newWindow = window.open('', '_blank');
             newWindow.document.write(htmlContent);

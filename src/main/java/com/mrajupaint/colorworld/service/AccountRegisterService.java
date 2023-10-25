@@ -61,7 +61,7 @@ public class AccountRegisterService {
 	}
 	
 	public List<SSACRGP> getAllBills(){
-		return sSACRGPRepository.findAll();
+		return sSACRGPRepository.findAllByOrderByArdateDesc();
 	}
 	
 	public List<SSACRGP> getBills(SPRequest request){

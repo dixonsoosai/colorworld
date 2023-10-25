@@ -248,9 +248,9 @@ public class PDFService {
 					bill.getTnhsnc(),
 					formatNum(bill.getTnprice()),
 					formatNum(bill.getTntxable()),
-					bill.getTncgst(),
+					Math.round(bill.getTncgst()),
 					formatNum(bill.getTncamt()),
-					bill.getTnsgst(),
+					Math.round(bill.getTnsgst()),
 					formatNum(bill.getTnsamt()),
 					formatNum(bill.getTntamt()));
 			billBody.append(line);
