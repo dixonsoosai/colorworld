@@ -23,6 +23,7 @@ export class InvoiceHistoryComponent {
     @ViewChild('dt1') dt: Table;
 
     @ViewChild('filter') filter!: ElementRef;
+    overflowLimit: number  = 17;
 
     constructor(private invoiceService: InvoiceService,
         private messageService: MessageService,
@@ -80,7 +81,7 @@ export class InvoiceHistoryComponent {
     }
 
     download(data: InvoiceSummary) {
-        this.invoiceService.downloadByBill(data.tnbillno).subscribe({
+        this.invoiceService.downloadByBill(data.tnbillno, this.overflowLimit).subscribe({
             next:response => {
                 let htmlContent = response;
                 const newWindow = window.open('Tax Invoice', '_blank');

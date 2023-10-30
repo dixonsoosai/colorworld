@@ -42,10 +42,10 @@ export class TaxInvoiceComponent implements OnInit {
     invoiceNumber: number = 0;
     invoiceDate: Date;
     visible: boolean = false;
+    overflowLimit: number = 17;
 
     constructor(
         private messageService: MessageService,
-        private confirmationService: ConfirmationService,
         private productService: ProductsService,
         private customerService: CustomersService,
         private invoiceService: InvoiceService) { }
@@ -174,7 +174,7 @@ export class TaxInvoiceComponent implements OnInit {
             this.selectedProducts.forEach(element => {
                 if (element.tnpdcd.trim() === product.pnpdcd.trim()) {
                     element.tntqty += 1;
-                    element.tntxable = element.tntqty * element.tnprice;
+                    element.tntxable = parseFloat((element.tntqty * element.tnprice * (1 - 0.01 * element.tndisc)).toFixed(2));
                     element.tncamt = parseFloat((element.tntxable * element.tncgst / 100).toFixed(2));
                     element.tnsamt = parseFloat((element.tntxable * element.tnsgst / 100).toFixed(2));
                     element.tntamt = parseFloat((element.tntxable + element.tncamt + element.tnsamt).toFixed(2));
@@ -197,17 +197,13 @@ export class TaxInvoiceComponent implements OnInit {
 
         productItem.tnunit = product.pnunit;
         productItem.tnuqty = product.pnuqty;
-
-        if(product.pncgst == 9 && product.tnpdcd != '') {
-            productItem.tnprice = parseFloat((product.pncuspr/(1 + (product.pncgst/100) + (product.pnsgst/100))).toFixed(2));
-        }
-        else {
-            productItem.tnprice = product.pncuspr;
-        }
+        productItem.tnprice = product.pncuspr;
+    
         productItem.tncgst = product.pncgst;
         productItem.tnsgst = product.pnsgst;
         
         productItem.tntqty = 1;
+        productItem.tndisc = 0;
         productItem.tntxable = productItem.tntqty * productItem.tnprice;
         productItem.tncamt = parseFloat((productItem.tntxable * productItem.tncgst / 100).toFixed(2));
         productItem.tnsamt = parseFloat((productItem.tntxable * productItem.tnsgst / 100).toFixed(2));
@@ -256,12 +252,12 @@ export class TaxInvoiceComponent implements OnInit {
         this.gstSummary.clear();
         this.selectedProducts.forEach(element => {
             let gst;
-            if (this.gstSummary.has((element.tncgst + element.tnsgst).toString())) {
-                gst = this.gstSummary.get((element.tncgst + element.tnsgst).toString());
+            if (this.gstSummary.has((element.tncgst).toString())) {
+                gst = this.gstSummary.get((element.tncgst).toString());
             }
             else {
                 gst = new SSGNJNP();
-                gst.gngstp = (element.tncgst + element.tnsgst).toString();
+                gst.gngstp = (element.tncgst).toString();
             }
             gst.gnbill = this.invoiceNumber;
             gst.gntxable += element.tntxable;
@@ -287,9 +283,11 @@ export class TaxInvoiceComponent implements OnInit {
         switch (column) {
             case "tqty":
             case "tnprice":
-                row.tntxable = row.tntqty * row.tnprice;
+            case "tndisc":
+                row.tntxable = parseFloat((row.tntqty * row.tnprice * (1- 0.01*row.tndisc)).toFixed(2));
                 break;
             case "namt":
+                row.tndisc = 0;
                 row.tnprice = parseFloat((row.tntxable / row.tntqty).toFixed(2));
                 break;
             case "cgst":
@@ -299,6 +297,7 @@ export class TaxInvoiceComponent implements OnInit {
                 row.tncgst = row.tnsgst;
                 break;
             case "tntamt":
+                row.tndisc = 0;
                 row.tntxable = parseFloat((row.tntamt / (1 + (row.tncgst / 100) + (row.tnsgst / 100))).toFixed(2));
                 row.tncamt = parseFloat((row.tntxable * row.tncgst / 100).toFixed(2));
                 row.tnsamt = parseFloat((row.tntxable * row.tnsgst / 100).toFixed(2));
@@ -340,6 +339,7 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     clearBill() {
+        this.overflowLimit = 17;
         this.customerDetails = new Customer();
         this.selectedProducts = [];
         this.gstSummary.clear();
@@ -374,7 +374,7 @@ export class TaxInvoiceComponent implements OnInit {
             details: this.selectedProducts,
             gst: [...this.gstSummary.values()]
         }
-        this.invoiceService.generate(billData).subscribe({
+        this.invoiceService.generate(billData, this.overflowLimit).subscribe({
             next: response => { 
                 if(response.code == 500) {
                     return;
@@ -385,7 +385,6 @@ export class TaxInvoiceComponent implements OnInit {
                 newWindow.document.close();
                 this.messageService.add(successToastr("Invoice generated successfully"));
                 
-                this.clearBill();
             },
             error: error => {
                 this.messageService.add(errorToastr("Error while generating Invoice"));

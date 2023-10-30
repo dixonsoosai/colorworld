@@ -18,6 +18,7 @@ import { DialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import {AutoCompleteModule} from 'primeng/autocomplete';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 @NgModule({
 	imports: [
 		AutoCompleteModule,
@@ -31,6 +32,7 @@ import {AutoCompleteModule} from 'primeng/autocomplete';
 		FieldsetModule,
 		FormsModule,
 		InputNumberModule,
+		InputTextareaModule,
 		InputTextModule,
 		MultiSelectModule,
 		RippleModule,

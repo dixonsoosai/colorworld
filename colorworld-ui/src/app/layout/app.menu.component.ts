@@ -18,7 +18,7 @@ export class AppMenuComponent implements OnInit {
                 label: 'Billing',
                 items: [
                     { label: 'Tax Invoice', icon: 'pi pi-fw pi-file', routerLink: ['/home/tax-invoice'] },
-                    { label: 'Invoice History', icon: 'pi pi-fw pi-history', routerLink: ['/home/invoice-history'] },
+                    { label: 'Sales Invoice History', icon: 'pi pi-fw pi-history', routerLink: ['/home/invoice-history'] },
                     { label: 'Purchase Bills', icon: 'pi pi-fw pi-chart-line', routerLink: ['/home/purchase'] },
                 ]
             },

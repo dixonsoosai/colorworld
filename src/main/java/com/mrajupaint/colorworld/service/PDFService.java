@@ -68,6 +68,7 @@ public class PDFService {
 	@Autowired
 	private SSGNJNPRepository gstRepository;
 	
+	private int overflowLimit = 17;
 	
 	@PostConstruct
 	private void init() {
@@ -78,6 +79,18 @@ public class PDFService {
 		if(taxInvoice.mkdir()) {
 			LOGGER.info("Tax Invoice Directory created");
 		}
+	}
+	
+	public int getOverflowLimit() {
+		return overflowLimit;
+	}
+
+	public void setOverflowLimit(int overflowLimit) {
+		this.overflowLimit = overflowLimit;
+	}
+	
+	public void resetOverflowLimit() {
+		setOverflowLimit(17);
 	}
 	
 	public String generateInvoice(int billnum) {
@@ -238,6 +251,7 @@ public class PDFService {
 			     <td>%s</td>
 			     <td>%s</td>
 			     <td>%s</td>
+			     <td>%s</td>
 				</tr>
 				""";
 			line = String.format(line, 
@@ -247,6 +261,7 @@ public class PDFService {
 					bill.getTnscnnm(),
 					bill.getTnhsnc(),
 					formatNum(bill.getTnprice()),
+					formatNum(bill.getTndisc()),
 					formatNum(bill.getTntxable()),
 					Math.round(bill.getTncgst()),
 					formatNum(bill.getTncamt()),
@@ -256,9 +271,10 @@ public class PDFService {
 			billBody.append(line);
 		}
 		
-		for(int i = billList.size(); i<= 17; i++) {
+		for(int i = billList.size(); i<= getOverflowLimit(); i++) {
 			var line = """
 					<tr style=\"height: 27.2px;\">
+					     <td></td>
 					     <td></td>
 					     <td></td>
 					     <td></td>

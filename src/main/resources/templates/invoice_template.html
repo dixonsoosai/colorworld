@@ -86,7 +86,8 @@
     .bill tbody tr td:nth-child(8),
     .bill tbody tr td:nth-child(9),
     .bill tbody tr td:nth-child(10),
-    .bill tbody tr td:nth-child(11) {
+    .bill tbody tr td:nth-child(11),
+    .bill tbody tr td:nth-child(12) {
       text-align: right;
     }
 
@@ -212,14 +213,15 @@
     <table width="100%">
       <thead>
         <th>Challan<br>No</th>
-        <th>Quantity</th>
+        <th style="width:12%">Quantity</th>
         <th>Description</th>
         <th>HSN<br>Code</th>
         <th>Rate<br>per unit</th>
+        <th>Disc<br>%</th>
         <th>Taxable</th>
-        <th>C%</th>
+        <th>C<br>%</th>
         <th>CGST</th>
-        <th>S%</th>
+        <th>S<br>%</th>
         <th>SGST</th>
         <th style="width:70px!important">Amount</th>
       </thead>
@@ -294,7 +296,7 @@
           <td style="width: auto;">
             <div style="margin-top:-4px">For @CompanyName</div>
             <div style="margin-top:12px">
-              <img src="@img" height="50px" width="80px"></div>
+              <img src="@img" height="50px" width="80px" style="margin-right:14px"></div>
             <div>Proprietor</div>
           </td>
         </tr>

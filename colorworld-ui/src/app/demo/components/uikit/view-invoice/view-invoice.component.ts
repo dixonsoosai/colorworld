@@ -35,6 +35,8 @@ export class ViewInvoiceComponent {
 
   invoiceNumber: number = 0;
   invoiceDate: Date;
+  overflowLimit: number = 17;
+  
   constructor(
       private messageService: MessageService,
       private route: ActivatedRoute,
@@ -81,7 +83,7 @@ export class ViewInvoiceComponent {
       gst: [...this.gstSummary.values()]
     };
 
-    this.invoiceService.generate(billData).subscribe({
+    this.invoiceService.generate(billData, this.overflowLimit).subscribe({
         next:response => {
             let htmlContent = response;
             const newWindow = window.open('', '_blank');

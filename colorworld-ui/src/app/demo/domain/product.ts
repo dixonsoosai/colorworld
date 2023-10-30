@@ -31,6 +31,7 @@ export class InvoiceItem {
 	tnunit: string = '';
 	tntqty: number = 0;
 	tnprice: number = 0;
+	tndisc: number = 0;
 	tntxable: number = 0;
 	tncamt: number = 0;
 	tnsamt: number = 0;

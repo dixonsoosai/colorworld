@@ -33,15 +33,11 @@
 				</div>
 				<div class="row flex justify-content-between">
 					<span>Quantity</span>
-					<b>{{product.pnuqty}}</b>
+					<b>{{product.pnuqty + " " + product.pnunit}}</b>
 				</div>
 				<div class="row flex justify-content-between">
 					<span>Price</span>
-					<b>{{product.pnmrp}}</b>
-				</div>
-				<div class="row flex justify-content-between">
-					<span>Unit</span>
-					<b>{{product.pnunit}}</b>
+					<b>{{product.pncuspr}}</b>
 				</div>
 				<div class="mt-4 flex justify-content-end gap-3">
 					<p-button label="View" styleClass="p-button-outlined" (click) ="view(product)"></p-button>

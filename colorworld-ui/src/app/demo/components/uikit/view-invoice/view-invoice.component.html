@@ -1,6 +1,7 @@
 <p-card>
+	<h4>View Tax Invoice</h4>
     <div class="mt-4">
-        <p-fieldset legend="Company Details" [toggleable]="true">
+        <div>
             <div class="grid">
                 <div class="col">
                     <div class="field grid">
@@ -36,14 +37,26 @@
                     </div>
                 </div>
             </div>
-            <div class="field grid">
-                <label htmlFor="address" class="col-12 mb-2 md:col-1 md:mb-0 font-bold">Address</label>
-                <div class="col-12 md:col-10">
-                    <textarea rows="2" cols="120" pInputTextarea [autoResize]="true"
-                        [(ngModel)]="customerDetails.jpadd"></textarea>
-                </div>
-            </div>
-        </p-fieldset>
+			<div class="grid">
+				<div class="col-8">
+					<div class="field grid">
+						<label htmlFor="address" class="col-12 mb-2 md:col-1 md:mb-0 font-bold">Address</label>
+						<div class="col-12 md:col">
+							<textarea rows="2" pInputTextarea [autoResize]="true" style="width: 100%;"
+								[(ngModel)]="customerDetails.jpadd"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="col">
+					<div class="field grid">
+						<label htmlFor="balance" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Overflow Limit</label>
+						<div class="col-12 md:col-9">
+							<input pInputText type="number" [(ngModel)]="overflowLimit">
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
     </div>
 
     <div class="mt-4">

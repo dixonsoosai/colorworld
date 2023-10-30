@@ -21,16 +21,6 @@ public class SSTNJNP
 	@Column
 	private String tnscnnm;
 	@Column
-	private double tnprice;
-	@Column
-	private double tntxable;
-	@Column
-	private double tnsamt;
-	@Column
-	private double tncamt;
-	@Column
-	private double tntamt;
-	@Column
 	private double tntqty;
 	@Column
 	private double tnuqty;
@@ -45,4 +35,17 @@ public class SSTNJNP
 	private double tncgst;
 	@Column
 	private double tnsgst;
+	@Column
+	private double tnprice;
+	@Column
+	private double tndisc;
+	@Column
+	private double tntxable;
+	@Column
+	private double tnsamt;
+	@Column
+	private double tncamt;
+	@Column
+	private double tntamt;
+	
 }
