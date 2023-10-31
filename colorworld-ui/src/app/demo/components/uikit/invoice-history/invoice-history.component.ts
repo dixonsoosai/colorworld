@@ -49,8 +49,11 @@ export class InvoiceHistoryComponent {
                 this.loading = false;
             }, 
             error: error => {
-
-            }
+                this.loading = false;
+            },
+            complete() {
+                
+            },
         });
     }
     

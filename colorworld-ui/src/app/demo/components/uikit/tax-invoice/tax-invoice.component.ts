@@ -169,6 +169,9 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     addToCart(product) {
+        if(this.selectedProducts.length >= this.overflowLimit) {
+            this.messageService.add(errorToastr("Cannot add more Products"));
+        }
         let checkFlag = false;
         if (product.pnpdcd != "") {
             this.selectedProducts.forEach(element => {
@@ -238,10 +241,10 @@ export class TaxInvoiceComponent implements OnInit {
     computeBillSummary() {
         this.billSummary = new BillSummary();
         this.selectedProducts.forEach(element => {
-            this.billSummary.bsnamt += element.tntxable;
-            this.billSummary.bstcgst += element.tncamt;
-            this.billSummary.bstsgst += element.tnsamt;
-            this.billSummary.bstamt += element.tntamt;
+            this.billSummary.bsnamt += parseFloat((element.tntxable).toFixed(2));
+            this.billSummary.bstcgst += parseFloat((element.tncamt).toFixed(2));
+            this.billSummary.bstsgst += parseFloat((element.tnsamt).toFixed(2));
+            this.billSummary.bstamt += parseFloat((element.tntamt).toFixed(2));
             this.billSummary.bsfamt = Math.round(this.billSummary.bstamt);
             this.billSummary.bsroff = this.billSummary.bsfamt - this.billSummary.bstamt;
         });
@@ -260,10 +263,10 @@ export class TaxInvoiceComponent implements OnInit {
                 gst.gngstp = (element.tncgst).toString();
             }
             gst.gnbill = this.invoiceNumber;
-            gst.gntxable += element.tntxable;
-            gst.gncamt += element.tncamt;
-            gst.gnsamt += element.tnsamt;
-            gst.gntamt += element.tntamt;
+            gst.gntxable += parseFloat((element.tntxable).toFixed(2));
+            gst.gncamt += parseFloat((element.tncamt).toFixed(2));
+            gst.gnsamt += parseFloat((element.tnsamt).toFixed(2));
+            gst.gntamt += parseFloat((element.tntamt).toFixed(2));
             this.gstSummary.set(gst.gngstp, gst);
         });
         let totalGst = new SSGNJNP();

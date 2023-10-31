@@ -111,10 +111,15 @@ public class PostingService {
 		}
 		
 		String buffer = pdfService.generateInvoice(taxInvoice);
-		transactionRepository.addTransaction(taxInvoice.getDetails());
-		sSTNHDPRepository.save(taxInvoice.getHeader());
-		sSGNJNPRepository.saveAll(taxInvoice.getGst());
-		
+		try {
+			transactionRepository.addTransaction(taxInvoice.getDetails());
+			sSTNHDPRepository.save(taxInvoice.getHeader());
+			sSGNJNPRepository.saveAll(taxInvoice.getGst());
+		}
+		catch(Exception e) {
+			LOGGER.error("Error while writing exception {}", e);
+			throw new ColorWorldException(e.getMessage());
+		}
 		return new ServiceResponse<>(200, AppConstants.SUCCESS, 
 				"Bill generated successfully", buffer);
 	}

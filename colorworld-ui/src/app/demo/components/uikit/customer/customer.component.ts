@@ -30,6 +30,9 @@ export class CustomerComponent implements OnInit {
         this.isDataLoaded = true;
         this.customerService.fetchAll().subscribe(response => {
             if (response.code == 200) {
+                response.data.forEach(element => {
+                    element.jpmobno = element.jpmobno || '';
+                });
                 this.customerData = response.data;
             }
         },
@@ -55,7 +58,6 @@ export class CustomerComponent implements OnInit {
             header: 'Confirmation',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-
                 this.customerService.delete(cust.jpid).subscribe(response => {
                     if (response.code == 200) {
                         this.messageService.add(successToastr("Customer deleted successfully!!"));
