@@ -1,6 +1,5 @@
 import * as XLSX from 'xlsx';
 import { PurchaseBill } from '../domain/purchase';
-import { SSTNHDP } from '../domain/sstnhdp';
 import { InvoiceSummary } from '../domain/product';
 
 export const successToastr = (detail:string) => {
@@ -59,6 +58,12 @@ export const getISOCurrentDate = () => {
 };
 
 export const getISODate = (date: Date) => {
+	return date.toISOString();
+};
+
+export const getISTDate = (date: Date) => {
+	date.setHours(date.getHours() + 5);
+	date.setMinutes(date.getMinutes() + 30);
 	return date.toISOString();
 };
 

@@ -90,7 +90,7 @@ export class ProductComponent {
     
 
     view(product: ProductItem) {
-        this.product = product;
+        this.product = { ...product};
         this.show();
     }
 

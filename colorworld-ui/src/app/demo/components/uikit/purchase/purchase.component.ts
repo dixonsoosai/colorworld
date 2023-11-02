@@ -4,7 +4,7 @@ import { ConfirmationService, FilterService, MessageService } from 'primeng/api'
 import { Customer } from 'src/app/demo/domain/customer';
 import { CustomersService } from 'src/app/demo/service/customers.service';
 import { DialogService } from 'primeng/dynamicdialog';
-import { errorToastr, formatPurchaseBillData, getLastDay, getPurchaseHistoryHeader, saveAsExcelFile, successToastr } from 'src/app/demo/service/apputils.service';
+import { errorToastr, formatPurchaseBillData, getISTDate, getLastDay, getPurchaseHistoryHeader, saveAsExcelFile, successToastr } from 'src/app/demo/service/apputils.service';
 import { PurchaseBill } from 'src/app/demo/domain/purchase';
 import { PurchaseService } from 'src/app/demo/service/purchase.service';
 import { Table } from 'primeng/table';
@@ -124,6 +124,7 @@ export class PurchaseComponent implements OnInit {
     }
 
     save() {
+
         let errorFlag = false;
         if(this.purchaseBill.arbillno == "") {
             this.messageService.add(errorToastr("Invoice Number cannot be blank"));
@@ -175,12 +176,13 @@ export class PurchaseComponent implements OnInit {
         if(errorFlag) {
             return;
         }
-
-        this.purchaseService.save(this.purchaseBill).subscribe({
+        let tempBill = { ...this.purchaseBill};
+        tempBill.ardate = getISTDate(new Date(tempBill.ardate));
+        this.purchaseService.save(tempBill).subscribe({
             next: response => {
                 if(response.code == 200) {
-                    this.clear();
                     this.messageService.add(successToastr("Bill saved successfully"));
+                    this.fetchAll();
                 }
             },
             error: err => {
@@ -194,11 +196,10 @@ export class PurchaseComponent implements OnInit {
     }
     clear() {
         this.purchaseBill = new PurchaseBill();
-        this.visible = false;
     }
 
     view(purchaseBill : PurchaseBill) {
-        this.purchaseBill = purchaseBill;
+        this.purchaseBill = { ...purchaseBill};
         this.visible = true;
     }
 
@@ -212,6 +213,7 @@ export class PurchaseComponent implements OnInit {
                     next: response => {
                         if(response["status"] == 200) {
                             this.messageService.add(successToastr("Invoice deleted successfully"));
+                            this.fetchAll();
                         }
                         else {
                             this.messageService.add(errorToastr("Error deleting Invoice"));
@@ -234,15 +236,18 @@ export class PurchaseComponent implements OnInit {
         switch(column) {
             case "arnamt":
                 this.purchaseBill.arcgst = this.purchaseBill.arsgst = parseFloat((this.purchaseBill.arnamt * 0.09).toFixed(2));
-                this.purchaseBill.artamt = this.purchaseBill.arnamt + this.purchaseBill.arcgst + this.purchaseBill.arsgst;
+                this.purchaseBill.artamt = parseFloat((this.purchaseBill.arnamt + this.purchaseBill.arcgst + 
+                        this.purchaseBill.arsgst).toFixed(2));
                 break;
             case "arcgst":
                 this.purchaseBill.arsgst = this.purchaseBill.arcgst;
-                this.purchaseBill.artamt = this.purchaseBill.arnamt + this.purchaseBill.arcgst + this.purchaseBill.arsgst;
+                this.purchaseBill.artamt = parseFloat((this.purchaseBill.arnamt + this.purchaseBill.arcgst + 
+                    this.purchaseBill.arsgst).toFixed(2));
                 break;
             case "arsgst":
                 this.purchaseBill.arcgst = this.purchaseBill.arsgst;
-                this.purchaseBill.artamt = this.purchaseBill.arnamt + this.purchaseBill.arcgst + this.purchaseBill.arsgst;
+                this.purchaseBill.artamt = parseFloat((this.purchaseBill.arnamt + this.purchaseBill.arcgst + 
+                    this.purchaseBill.arsgst).toFixed(2));
                 break;
             case "artamt":
                 this.purchaseBill.arnamt = parseFloat((this.purchaseBill.artamt/(1.18)).toFixed(2));
