@@ -25,6 +25,7 @@ export class PurchaseComponent implements OnInit {
     customerList: Customer[] = [];
     filteredCustomers: any[];
     customerSuggestions: string[];
+    filteredInvoice: string[];
 
     @ViewChild('dt1') dt: Table;
 
@@ -45,6 +46,9 @@ export class PurchaseComponent implements OnInit {
         this.configureFilter();
     }
 
+    fetchInvoiceList() {
+        this.filteredInvoice = this.purchaseDetails.map(element => element.arbillno);
+    }
     fetchCustomerList() {
         this.customerService.fetchAll().subscribe({
             next:response => {
@@ -60,7 +64,17 @@ export class PurchaseComponent implements OnInit {
             return value>= startDate && value <= endDate;
         });
     }
-
+    searchInvoice(event: AutoCompleteCompleteEvent) {
+        let filtered: string[] = [];
+        let query = event.query;
+        for (let i = 0; i < this.purchaseDetails.length; i++) {
+            let purchaseBill = this.purchaseDetails[i];
+            if (purchaseBill.arbillno.toLowerCase().indexOf(query.toLowerCase()) == 0 || query.trim() == "") {
+                filtered.push(purchaseBill.arbillno);
+            }
+        }
+        this.filteredInvoice = filtered;
+    }
     searchSuggestion(event: AutoCompleteCompleteEvent) {
         let filtered: string[] = [];
         let query = event.query;
@@ -73,6 +87,12 @@ export class PurchaseComponent implements OnInit {
         this.filteredCustomers = filtered;
     }
 
+    populateBill() {
+        let temp: PurchaseBill[] = this.purchaseDetails.filter(element => element.arbillno == this.purchaseBill.arbillno);
+        if(temp.length > 0 ){
+            this.purchaseBill = { ...temp[0]};
+        }
+    }
     populateDetails() {
         let temp:Customer [] = this.customerList.filter(customer => customer.jpname == this.purchaseBill.arname);
         if(temp.length > 0){
@@ -96,6 +116,7 @@ export class PurchaseComponent implements OnInit {
                     }
                 });
                 this.purchaseDetails = response.data;
+                this.fetchInvoiceList();
                 this.loading = false;
             },
             error: error => {
