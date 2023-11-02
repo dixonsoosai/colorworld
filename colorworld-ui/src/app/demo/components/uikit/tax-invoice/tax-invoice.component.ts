@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Customer } from 'src/app/demo/domain/customer';
 import { CustomersService } from 'src/app/demo/service/customers.service';
-import { errorToastr, getCurrentDate, getISODate, getISODate2, invoiceTab, productUnits, successToastr} from 'src/app/demo/service/apputils.service';
+import { errorToastr, getCurrentDate, getISODate2, getISTDate, invoiceTab, productUnits, successToastr} from 'src/app/demo/service/apputils.service';
 import { InvoiceService } from 'src/app/demo/service/invoice.service';
 import { ProductsService } from 'src/app/demo/service/products.service';
 import { SSGNJNP } from 'src/app/demo/domain/ssgnjnp';
@@ -363,7 +363,7 @@ export class TaxInvoiceComponent implements OnInit {
         header.tnbillno = this.invoiceNumber;
         header.tnname = this.customerDetails.jpname;
         header.tnpgst = this.customerDetails.jppgst;
-        header.tntime = getISODate(this.invoiceDate);
+        header.tntime = getISTDate(this.invoiceDate);
 
         header.tnchqdt = "";
         header.tncsrv = 0;
