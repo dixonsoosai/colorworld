@@ -83,8 +83,7 @@ export const getLastDay = (date: Date) => {
 
 	currentYear = currentMonth + 1 === 12 ? currentYear + 1: currentYear;
 	currentMonth = currentMonth + 1 === 12 ? 0: currentMonth + 1;
-	return new Date(currentYear, currentMonth, date.getDate() - 1);
-
+	return new Date(currentYear, currentMonth, date.getDate() - 1, 23, 59, 59);
 };
 
 export const saveAsExcelFile = (data: any, header, filename: string) => {
