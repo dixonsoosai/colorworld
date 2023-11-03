@@ -49,7 +49,7 @@ export class CustomerComponent implements OnInit {
     }
 
     selectCustomer(cust: Customer) {
-        this.customerDetails = cust;
+        this.customerDetails = {...cust};
     }
 
     delete(cust) {

@@ -255,12 +255,12 @@ export class TaxInvoiceComponent implements OnInit {
         this.gstSummary.clear();
         this.selectedProducts.forEach(element => {
             let gst;
-            if (this.gstSummary.has((element.tncgst).toString())) {
-                gst = this.gstSummary.get((element.tncgst).toString());
+            if (this.gstSummary.has((element.tncgst + element.tnsgst).toString())) {
+                gst = this.gstSummary.get((element.tncgst + element.tnsgst).toString());
             }
             else {
                 gst = new SSGNJNP();
-                gst.gngstp = (element.tncgst).toString();
+                gst.gngstp = (element.tncgst + element.tnsgst).toString();
             }
             gst.gnbill = this.invoiceNumber;
             gst.gntxable += parseFloat((element.tntxable).toFixed(2));
@@ -311,7 +311,7 @@ export class TaxInvoiceComponent implements OnInit {
         }
         row.tncamt = parseFloat((row.tntxable * row.tncgst / 100).toFixed(2));
         row.tnsamt = parseFloat((row.tntxable * row.tnsgst / 100).toFixed(2));
-        row.tntamt = row.tntxable + row.tncamt + row.tnsamt;
+        row.tntamt = parseFloat((row.tntxable + row.tncamt + row.tnsamt).toFixed(2));
         this.computeBillSummary();
     }
 

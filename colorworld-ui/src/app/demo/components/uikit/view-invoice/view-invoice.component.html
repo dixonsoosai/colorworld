@@ -92,6 +92,7 @@
 							<th style="width:10%">Unit Qty</th>
 							<th style="width:10%">Unit</th>
 							<th style="width:10%">Unit Price</th>
+							<th style="width:10%">Disc (%)</th>
 							<th style="width:10%">Net Amount</th>
 							<th style="width:10%">CGST (%)</th>
 							<th style="width:10%">CGST</th>
@@ -103,7 +104,7 @@
 					</ng-template>
 					<ng-template pTemplate="emptymessage" let-columns>
 						<tr>
-							<td [attr.colspan]="14" class="text-center">
+							<td [attr.colspan]="15" class="text-center">
 								No records found
 							</td>
 						</tr>
@@ -182,6 +183,18 @@
 									</ng-template>
 									<ng-template pTemplate="output">
 										{{cproduct.tnprice}}
+									</ng-template>
+								</p-cellEditor>
+							</td>
+							<td class="text-right" [pEditableColumn]="cproduct.tndisc" pEditableColumnField="tndisc">
+								<p-cellEditor>
+									<ng-template pTemplate="input">
+										<input pInputText type="number" [(ngModel)]="cproduct.tndisc"
+											(ngModelChange)="onChange($event, cproduct, 'tndisc')">
+										
+									</ng-template>
+									<ng-template pTemplate="output">
+										{{cproduct.tndisc}}
 									</ng-template>
 								</p-cellEditor>
 							</td>

@@ -33,10 +33,10 @@ public class Product {
 	private String pnhsnc;
 	
 	@Column(name = "PNCGST")
-	private int pncgst;
+	private double pncgst;
 	
 	@Column(name = "PNSGST")
-	private int pnsgst;
+	private double pnsgst;
 	
 	@Column(name = "PNUQTY")
 	private int pnuqty;
@@ -46,19 +46,19 @@ public class Product {
 	private String pnunit;
 	
 	@Column(name = "PNMRP")
-	private int pnmrp;
+	private double pnmrp;
 	
 	@Column(name = "PNCUSPR")
-	private int pncuspr;
+	private double pncuspr;
 	
 	@Column(name = "PNMCPR")
-	private int pnmcpr;
+	private double pnmcpr;
 	
 	@Column(name = "PNSPCPR")
-	private int pnspcpr;
+	private double pnspcpr;
 	
 	@Column(name = "PNGSTPR")
-	private int pngstpr;
+	private double pngstpr;
 	
 	@PositiveOrZero
 	@Column(name = "PNIOSTK")

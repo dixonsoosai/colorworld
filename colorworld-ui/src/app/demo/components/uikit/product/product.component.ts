@@ -35,6 +35,7 @@ export class ProductComponent {
 
     fetchAll() {
         this.isLoading = false;
+        this.searchText = "";
         this.productService.fetchAllProducts().subscribe({
             next: response => {
                 if (response.code === 200) {
@@ -70,8 +71,6 @@ export class ProductComponent {
         });
     }
 
-    
-
     view(product: ProductItem) {
         this.product = { ...product};
         this.show();
@@ -82,6 +81,7 @@ export class ProductComponent {
     }
 
     clear() {
+        this.searchText = "";
         this.product = new ProductItem();
         this.visible = false;
     }
@@ -177,6 +177,7 @@ export class ProductComponent {
         if(errorFlag) {
             return;
         }
+        console.log(this.product.pncgst)
         this.product.pnavail ="Y";
         this.product.pngstpr = this.product.pncuspr;
         this.productService.addProduct(this.product).subscribe({
