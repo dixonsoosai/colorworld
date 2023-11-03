@@ -46,23 +46,6 @@ export class ProductComponent {
         });
     }
 
-    add() {
-        this.isLoading = false;
-        let product = "";
-        this.productService.addProduct(product).subscribe({
-            next: response => {
-                if (response.code === 200) {
-                    console.log(response);
-                }
-            },
-            error: err => {
-                this.messageService.add(errorToastr("Error while adding Product. Kindly contact system administrator"));
-                console.error(err);
-            },
-            complete: () => this.isLoading = true
-        });
-    }
-
     delete(product: ProductItem) {
         this.confirmationService.confirm({
             message: `Are you sure that you want to delete this product? <br>Product Name: ${product.pnscnm} <br> Product Code: ${product.pnpdcd}`,
@@ -200,6 +183,7 @@ export class ProductComponent {
             next: response => {
                 if(response.code == 200) {
                     this.messageService.add(successToastr("Product added successfully"));
+                    this.fetchAll();
                 }
             },
             error: error => {
