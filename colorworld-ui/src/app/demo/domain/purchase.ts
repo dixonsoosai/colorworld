@@ -14,5 +14,5 @@ export class PurchaseBill {
     archqamt: number = 0;
     arbname: string = "";
     artext: string = "";
-    artype: string = "";
+    artype: string = "Purchase";
   }

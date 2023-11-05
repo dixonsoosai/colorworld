@@ -115,7 +115,7 @@
                     </label>
 					<div class="col-12 md:col-7">
                         <p-autoComplete [(ngModel)]="purchaseBill.arbillno" [suggestions]="filteredInvoice" 
-                            (completeMethod)="searchInvoice($event)" (onSelect)="populateBill()"> 
+                            (completeMethod)="searchInvoice($event)" (onSelect)="populateBill()" (onBlur)="populateBill()"> 
                         </p-autoComplete>
 					</div>
 				</div>

@@ -92,6 +92,11 @@ export class PurchaseComponent implements OnInit {
         if(temp.length > 0 ){
             this.purchaseBill = { ...temp[0]};
         }
+        if(temp.length == 0) {
+            let invoice = this.purchaseBill.arbillno;
+            this.purchaseBill = new PurchaseBill();
+            this.purchaseBill.arbillno = invoice;
+        }
     }
     populateDetails() {
         let temp:Customer [] = this.customerList.filter(customer => customer.jpname == this.purchaseBill.arname);
@@ -106,18 +111,19 @@ export class PurchaseComponent implements OnInit {
         const dateRange = [startDate, endDate];
         this.dt.filter(dateRange, 'ardate', 'dateContains');
     }
+
     fetchAll() {
         this.loading = true;
         this.purchaseService.fetchAll().subscribe({
             next: response => {
                 response.data.forEach(item => {
                     if(item != null) {
-                        item.ardate = item.ardate == null ? "" : new Date(item.ardate.substring(0,10));
+                        item.ardate = item.ardate == null || item.ardate == "" ? "" : new Date(item.ardate.substring(0,10));
+                        item.archqdte = item.archqdte == null || item.archqdte == "" ? "" : new Date(item.archqdte.substring(0,10));
                     }
                 });
                 this.purchaseDetails = response.data;
                 this.fetchInvoiceList();
-                this.loading = false;
             },
             error: error => {
 
@@ -141,11 +147,11 @@ export class PurchaseComponent implements OnInit {
     }
 
     addBill() {
+        this.purchaseBill = new PurchaseBill();
         this.visible = true;
     }
 
     save() {
-
         let errorFlag = false;
         if(this.purchaseBill.arbillno == "") {
             this.messageService.add(errorToastr("Invoice Number cannot be blank"));
@@ -199,6 +205,10 @@ export class PurchaseComponent implements OnInit {
         }
         let tempBill = { ...this.purchaseBill};
         tempBill.ardate = getISTDate(new Date(tempBill.ardate));
+        if(tempBill.archqdte != null) {
+            tempBill.archqdte = getISTDate(new Date(tempBill.archqdte));    
+        }
+        tempBill.artype = "Purchase";
         this.purchaseService.save(tempBill).subscribe({
             next: response => {
                 if(response.code == 200) {
