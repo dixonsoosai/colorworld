@@ -398,7 +398,7 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     copy(product: InvoiceItem) {
-        this.selectedProducts.push(product);
+        this.selectedProducts.push({...product});
     }
 
     delete(rowIndex: number) {
