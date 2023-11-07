@@ -51,7 +51,8 @@ export class TaxInvoiceComponent implements OnInit {
     invoiceDate: Date;
     visible: boolean = false;
     overflowLimit: number = 17;
-    
+    filename: string = "";
+
     constructor(
         private messageService: MessageService,
         private route: ActivatedRoute,
@@ -166,6 +167,7 @@ export class TaxInvoiceComponent implements OnInit {
             this.header.tnadd = temp[0].jpadd || "";
             this.header.tnprvbn = temp[0].jpbaln;
             this.header.tnpgst = temp[0].jppgst;
+            this.filename = `${this.header.tnbillno}_${this.header.tnname}_TaxInvoice.pdf`;
         }
     }
 

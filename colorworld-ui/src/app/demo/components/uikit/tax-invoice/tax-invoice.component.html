@@ -380,9 +380,10 @@
 						</div>
 					</div>
 				</p-card>
-				<div class="flex justify-content-start gap-3 mt-4">
+				<div class="flex justify-content-start gap-3 mt-4 align-items-center">
 					<p-button label="Generate Bill" (click)="generateBill()"></p-button>
 					<p-button label="Clear Bill" (click)="clearBill()"></p-button>
+					<div *ngIf="filename != ''">Filename : {{filename}}</div>
 				</div>
 			</div>
 		</div>
