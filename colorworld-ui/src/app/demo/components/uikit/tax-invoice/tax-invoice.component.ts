@@ -167,7 +167,7 @@ export class TaxInvoiceComponent implements OnInit {
             this.header.tnadd = temp[0].jpadd || "";
             this.header.tnprvbn = temp[0].jpbaln;
             this.header.tnpgst = temp[0].jppgst;
-            this.filename = `${this.header.tnbillno}_${this.header.tnname}_TaxInvoice.pdf`;
+            this.filename = `${this.header.tnbillno}_${this.header.tnname}_Tax Invoice.pdf`;
         }
     }
 
@@ -273,6 +273,7 @@ export class TaxInvoiceComponent implements OnInit {
         this.invoiceService.fetchBillDetails(this.invoice).subscribe({
             next: (response) => {
                 this.header = response['data'].header;
+                this.filename = `${this.header.tnbillno}_${this.header.tnname}_Tax Invoice.pdf`;
                 this.invoiceDate = new Date(this.header.tntime.substring(0,10));
                 this.selectedProducts = response['data'].details;
                 this.populateDetails();
@@ -367,7 +368,6 @@ export class TaxInvoiceComponent implements OnInit {
                 const newWindow = window.open('', '_blank');
                 newWindow.document.write(htmlContent);
                 newWindow.document.close();
-                newWindow.print();
                 this.messageService.add(successToastr("Invoice generated successfully"));
                 
             },
