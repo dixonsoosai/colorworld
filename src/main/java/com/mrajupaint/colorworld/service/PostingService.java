@@ -204,10 +204,10 @@ public class PostingService {
 		
 		for(int i=0; i< taxInvoice.getDetails().size(); i++) {
 			var billDetails = taxInvoice.getDetails().get(i);
-			billTaxable += billDetails.getTntxable();
-			billCAmt += billDetails.getTncamt();
-			billSAmt += billDetails.getTnsamt();
-			billTAmt += billDetails.getTntamt();
+			billTaxable = round(billTaxable + billDetails.getTntxable());
+			billCAmt = round(billCAmt + billDetails.getTncamt());
+			billSAmt = round(billSAmt + billDetails.getTnsamt());
+			billTAmt = round(billTAmt + billDetails.getTntamt());
 			billDetails.setTnbillno(billNum);
 		}
 		if(round(billTaxable) != round(totalTaxable) || round(billCAmt) != round(totalCGST) || 

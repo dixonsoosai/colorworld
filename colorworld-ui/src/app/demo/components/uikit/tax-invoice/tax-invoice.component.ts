@@ -5,11 +5,12 @@ import { Component, OnInit } from '@angular/core';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Customer } from 'src/app/demo/domain/customer';
 import { CustomersService } from 'src/app/demo/service/customers.service';
-import { errorToastr, getCurrentDate, getISODate2, getISTDate, invoiceTab, productUnits, successToastr} from 'src/app/demo/service/apputils.service';
+import { errorToastr, getISODate2, getISTDate, invoiceTab, productUnits, successToastr} from 'src/app/demo/service/apputils.service';
 import { InvoiceService } from 'src/app/demo/service/invoice.service';
 import { ProductsService } from 'src/app/demo/service/products.service';
 import { SSGNJNP } from 'src/app/demo/domain/ssgnjnp';
-import { SSTNHDP } from 'src/app/demo/domain/sstnhdp';
+import { ActivatedRoute } from '@angular/router';
+import { Header } from 'src/app/demo/domain/header';
 
 @Component({
     templateUrl: './tax-invoice.component.html',
@@ -19,44 +20,60 @@ import { SSTNHDP } from 'src/app/demo/domain/sstnhdp';
 export class TaxInvoiceComponent implements OnInit {
 
     isLoading = false;
+    newBill = true;
 
+    //Tab Menu Configuration
     items: MenuItem[] | undefined;
     activeItem: MenuItem | undefined;
 
+    //Path Param
+    invoice: string;
+    
+    //All List
     productList = [];
     customerList: Customer[] = [];
+    
+    //Filtered List
     filteredCustomers: any[];
+    filteredUnits: any = {};
     customerSuggestions: string[];
-
-    customerDetails: Customer = new Customer();
     selectedProducts: InvoiceItem[] = [];
     newProduct: ProductItem = new ProductItem();
 
+    //Bill Format
+    header: Header = new Header();
     billSummary = new BillSummary();
     gstSummary = new Map<string, SSGNJNP>();
 
+    //Additional 
     searchText !: string;
     units = productUnits;
-    filteredUnits: any = {};
-
-    invoiceNumber: number = 0;
     invoiceDate: Date;
     visible: boolean = false;
     overflowLimit: number = 17;
-
+    
     constructor(
         private messageService: MessageService,
+        private route: ActivatedRoute,
         private productService: ProductsService,
         private customerService: CustomersService,
         private invoiceService: InvoiceService) { }
 
     ngOnInit() {
         this.items = invoiceTab;
-        this.activeItem = this.items[0];
-        this.invoiceDate = new Date();
         this.fetchAll();
-        this.generateNewInvoiceNum();
         this.fetchCustomerList();
+        if(this.route.snapshot.paramMap.has('bill')) {
+            this.newBill = false;
+            this.invoice = this.route.snapshot.paramMap.get('bill');
+            this.fetchInvoice();
+            this.activeItem = this.items[1];
+        }
+        else {
+            this.activeItem = this.items[0];
+            this.invoiceDate = new Date();
+            this.generateNewInvoiceNum();
+        }
     }
 
     dummy() {
@@ -69,8 +86,42 @@ export class TaxInvoiceComponent implements OnInit {
         this.newProduct.pnuqty = 4;
         this.newProduct.pnunit = "kg";
         this.newProduct.pnmcpr = 400;
-        this.customerDetails.jppgst = "DUFPS0618A";
+        this.header.tnpgst = "DUFPS0618A";
         //this.addProduct();
+    }
+
+    clearBill() {
+        this.overflowLimit = 17;
+        this.header = new Header();
+        this.selectedProducts = [];
+        this.gstSummary.clear();
+        this.billSummary = new BillSummary();
+        this.invoiceDate = new Date();
+        this.generateNewInvoiceNum();
+        this.fetchCustomerList();
+    }
+
+    generateNewInvoiceNum() {
+        //Spinner
+        if(this.invoiceDate == null) {
+            this.invoiceDate = new Date();
+        }
+        this.invoiceService.newInvoice(getISODate2(this.invoiceDate)).subscribe({
+            next: response => {
+                if(response.code === 200) {
+                    this.header.tnbillno = response.data;
+                }
+                else {
+                    this.header.tnbillno = parseInt(`${new Date().getFullYear()}${new Date().getMonth() + 1}${new Date().getDay}001`);
+                }
+                this.newBill = true;
+            },
+            error: error => {
+                console.error("Error while fetching Invoice Number");
+                console.error(error);
+                this.header.tnbillno = parseInt(`${new Date().getFullYear()}${new Date().getMonth() + 1}${new Date().getDay}001`);
+            }
+        })
     }
 
     fetchCustomerList() {
@@ -80,25 +131,6 @@ export class TaxInvoiceComponent implements OnInit {
             }
         });
     }
-    searchSuggestion(event: AutoCompleteCompleteEvent) {
-        let filtered: string[] = [];
-        let query = event.query;
-        for (let i = 0; i < this.customerList.length; i++) {
-            let customer = this.customerList[i];
-            if (customer.jpname.toLowerCase().indexOf(query.toLowerCase()) == 0 || query.trim() == "") {
-                filtered.push(customer.jpname);
-            }
-        }
-        this.filteredCustomers = filtered;
-    }
-
-    populateDetails() {
-        let temp:Customer [] = this.customerList.filter(customer => customer.jpname == this.customerDetails.jpname);
-        if(temp.length > 0){
-            this.customerDetails = temp[0];
-        }
-    }
-
 
     fetchAll() {
         this.isLoading = false;
@@ -113,6 +145,30 @@ export class TaxInvoiceComponent implements OnInit {
         });
     }
 
+    searchSuggestion(event: AutoCompleteCompleteEvent) {
+        let filtered: string[] = [];
+        let query = event.query;
+        for (let i = 0; i < this.customerList.length; i++) {
+            let customer = this.customerList[i];
+            if (customer.jpname.toLowerCase().indexOf(query.toLowerCase()) == 0 || query.trim() == "") {
+                filtered.push(customer.jpname);
+            }
+        }
+        this.filteredCustomers = filtered;
+    }
+
+    populateDetails() {
+        let temp:Customer [] = this.customerList.filter(customer => customer.jpname == this.header.tnname);
+        if(temp.length > 0){
+            this.header.tncusid = temp[0].jpid;
+            this.header.tnname = temp[0].jpname;
+            this.header.tnmobno = temp[0].jpmobno;
+            this.header.tnadd = temp[0].jpadd || "";
+            this.header.tnprvbn = temp[0].jpbaln;
+            this.header.tnpgst = temp[0].jppgst;
+        }
+    }
+
     //Filter     
     filter(event) {
         let filteredProduct = $(event.srcElement).val().toLowerCase();
@@ -121,14 +177,7 @@ export class TaxInvoiceComponent implements OnInit {
         });
     }
 
-    onActiveItemChange(event: MenuItem) {
-        this.activeItem = event;
-    }
-
-    clearProduct() {
-        this.newProduct = new ProductItem();
-    }
-
+    
     addProduct() {
         //Validation
         this.newProduct.pnpdcd = '';
@@ -192,7 +241,7 @@ export class TaxInvoiceComponent implements OnInit {
         }
 
         let productItem: InvoiceItem = new InvoiceItem();
-        productItem.tnbillno = this.invoiceNumber;
+        productItem.tnbillno = this.header.tnbillno;
         productItem.tnscnnm = product.pnscnm;
         productItem.tnchallan = '';
         productItem.tnhsnc = product.pnhsnc;
@@ -217,66 +266,17 @@ export class TaxInvoiceComponent implements OnInit {
         this.messageService.add(successToastr("Product added to Invoice"));
     }
 
-    generateNewInvoiceNum() {
-        //Spinner
-        if(this.invoiceDate == null) {
-            this.invoiceDate = new Date();
-        }
-        this.invoiceService.newInvoice(getISODate2(this.invoiceDate)).subscribe({
-            next: response => {
-                if(response.code === 200) {
-                    this.invoiceNumber = response.data;
-                }
-                else {
-                    this.invoiceNumber = parseInt(`${new Date().getFullYear()}${new Date().getMonth() + 1}${new Date().getDay}001`);
-                }
+    
+    fetchInvoice() {
+        this.invoiceService.fetchBillDetails(this.invoice).subscribe({
+            next: (response) => {
+                this.header = response['data'].header;
+                this.invoiceDate = new Date(this.header.tntime.substring(0,10));
+                this.selectedProducts = response['data'].details;
+                this.populateDetails();
+                this.computeBillSummary();
             },
-            error: error => {
-                console.error("Error while fetching Invoice Number");
-                console.error(error);
-                this.invoiceNumber = parseInt(`${new Date().getFullYear()}${new Date().getMonth() + 1}${new Date().getDay}001`);
-            }
-        })
-    }
-    computeBillSummary() {
-        this.billSummary = new BillSummary();
-        this.selectedProducts.forEach(element => {
-            this.billSummary.bsnamt += parseFloat((element.tntxable).toFixed(2));
-            this.billSummary.bstcgst += parseFloat((element.tncamt).toFixed(2));
-            this.billSummary.bstsgst += parseFloat((element.tnsamt).toFixed(2));
-            this.billSummary.bstamt += parseFloat((element.tntamt).toFixed(2));
-            this.billSummary.bsfamt = Math.round(this.billSummary.bstamt);
-            this.billSummary.bsroff = this.billSummary.bsfamt - this.billSummary.bstamt;
         });
-        this.computeGSTSummary();
-    }
-
-    computeGSTSummary() {
-        this.gstSummary.clear();
-        this.selectedProducts.forEach(element => {
-            let gst;
-            if (this.gstSummary.has((element.tncgst + element.tnsgst).toString())) {
-                gst = this.gstSummary.get((element.tncgst + element.tnsgst).toString());
-            }
-            else {
-                gst = new SSGNJNP();
-                gst.gngstp = (element.tncgst + element.tnsgst).toString();
-            }
-            gst.gnbill = this.invoiceNumber;
-            gst.gntxable += parseFloat((element.tntxable).toFixed(2));
-            gst.gncamt += parseFloat((element.tncamt).toFixed(2));
-            gst.gnsamt += parseFloat((element.tnsamt).toFixed(2));
-            gst.gntamt += parseFloat((element.tntamt).toFixed(2));
-            this.gstSummary.set(gst.gngstp, gst);
-        });
-        let totalGst = new SSGNJNP();
-        totalGst.gngstp = "Total";
-        totalGst.gnbill = this.invoiceNumber;
-        totalGst.gntxable += this.billSummary.bsnamt;
-        totalGst.gncamt += this.billSummary.bstcgst;
-        totalGst.gnsamt += this.billSummary.bstsgst;
-        totalGst.gntamt += this.billSummary.bstamt;
-        this.gstSummary.set("Total", totalGst);
     }
 
     onChange(newValue: any, row: InvoiceItem, column: string) {
@@ -317,23 +317,25 @@ export class TaxInvoiceComponent implements OnInit {
 
     generateBill() {
         //Validate Header
-        let isValidHeader = this.validateCompanyDetails();
-        if (!isValidHeader) {
+        if (!this.validateCompanyDetails()) {
             return;
         }
 
         this.posting();
-        this.saveCustomer();
+        if(this.newBill) {
+            this.saveCustomer();
+        }
+        this.newBill = false;
     }
 
     validateCompanyDetails(): boolean {
         let validFlag = true;
-        if (this.customerDetails.jpname == "") {
+        if (this.header.tnname == "") {
             this.messageService.add(errorToastr("Company Name cannot be blank"));
             validFlag = false;
         }
 
-        if (this.customerDetails.jppgst == "") {
+        if (this.header.tnpgst == "") {
             this.messageService.add(errorToastr("Company GST cannot be blank"));
             validFlag = false;
         }
@@ -341,36 +343,12 @@ export class TaxInvoiceComponent implements OnInit {
         return validFlag;
     }
 
-    clearBill() {
-        this.overflowLimit = 17;
-        this.customerDetails = new Customer();
-        this.selectedProducts = [];
-        this.gstSummary.clear();
-        this.billSummary = new BillSummary();
-        this.invoiceDate = new Date();
-        this.generateNewInvoiceNum();
-    }
-
-    saveCustomer() {
-        this.customerDetails.jpbaln += -1 * this.billSummary.bsfamt;
-        this.customerDetails.jpdate = getCurrentDate();
-        this.customerDetails.jpmobno = this.customerDetails.jpmobno == '0' ? '' : this.customerDetails.jpmobno;
-    }
-
     posting() {
         //Generate Header
-        let header = new SSTNHDP();
-        header.tnbillno = this.invoiceNumber;
-        header.tnname = this.customerDetails.jpname;
-        header.tnpgst = this.customerDetails.jppgst;
+        let header = {...this.header};
         header.tntime = getISTDate(this.invoiceDate);
-
-        header.tnchqdt = "";
-        header.tncsrv = 0;
+        header.tntotal  = header.tngdtl = this.billSummary.bstamt;
         header.tnprbn = 0;
-        header.tnrtna = 0;
-        header.tntotal = header.tngdtl = this.billSummary.bstamt;
-     
         //Generate Summary
         let billData = {
             header: header,
@@ -379,13 +357,15 @@ export class TaxInvoiceComponent implements OnInit {
         }
         this.invoiceService.generate(billData, this.overflowLimit).subscribe({
             next: response => { 
-                if(response.code == 500) {
+                if(response.code == 500 || response == "") {
+                    this.messageService.add(errorToastr("Error while generating Invoice"));
                     return;
                 }
                 let htmlContent = response;
                 const newWindow = window.open('', '_blank');
                 newWindow.document.write(htmlContent);
                 newWindow.document.close();
+                newWindow.print();
                 this.messageService.add(successToastr("Invoice generated successfully"));
                 
             },
@@ -395,6 +375,78 @@ export class TaxInvoiceComponent implements OnInit {
             },
             complete: () => {}
         });
+    }
+
+    computeBillSummary() {
+        this.billSummary = new BillSummary();
+        this.selectedProducts.forEach(element => {
+            this.billSummary.bsnamt += parseFloat((element.tntxable).toFixed(2));
+            this.billSummary.bstcgst += parseFloat((element.tncamt).toFixed(2));
+            this.billSummary.bstsgst += parseFloat((element.tnsamt).toFixed(2));
+            this.billSummary.bstamt += parseFloat((element.tntamt).toFixed(2));
+            this.billSummary.bsfamt = Math.round(this.billSummary.bstamt);
+            this.billSummary.bsroff = this.billSummary.bsfamt - this.billSummary.bstamt;
+        });
+        this.computeGSTSummary();
+    }
+
+    computeGSTSummary() {
+        this.gstSummary.clear();
+        this.selectedProducts.forEach(element => {
+            let gst;
+            if (this.gstSummary.has((element.tncgst + element.tnsgst).toString())) {
+                gst = this.gstSummary.get((element.tncgst + element.tnsgst).toString());
+            }
+            else {
+                gst = new SSGNJNP();
+                gst.gngstp = (element.tncgst + element.tnsgst).toString();
+            }
+            gst.gnbill = this.header.tnbillno;
+            gst.gntxable += parseFloat((element.tntxable).toFixed(2));
+            gst.gncamt += parseFloat((element.tncamt).toFixed(2));
+            gst.gnsamt += parseFloat((element.tnsamt).toFixed(2));
+            gst.gntamt += parseFloat((element.tntamt).toFixed(2));
+            this.gstSummary.set(gst.gngstp, gst);
+        });
+        let totalGst = new SSGNJNP();
+        totalGst.gngstp = "Total";
+        totalGst.gnbill = this.header.tnbillno;
+        totalGst.gntxable += this.billSummary.bsnamt;
+        totalGst.gncamt += this.billSummary.bstcgst;
+        totalGst.gnsamt += this.billSummary.bstsgst;
+        totalGst.gntamt += this.billSummary.bstamt;
+        this.gstSummary.set("Total", totalGst);
+    }
+
+    saveCustomer() {
+        let customer = new Customer();
+        customer.jpid = this.header.tncusid;
+        customer.jpname = this.header.tnname;
+        customer.jpadd = this.header.tnadd;
+        customer.jpbaln = this.header.tnprvbn + (-1 * this.billSummary.bsfamt);
+        customer.jpdate = getISTDate(this.invoiceDate);
+        customer.jppgst = this.header.tnpgst;
+        customer.jpmobno = this.header.tnmobno;
+        this.customerService.add(customer).subscribe({
+            next: response => {
+                if(response.code == 200) {
+                    return;
+                }
+                this.messageService.add(errorToastr("Failed to update customer Details"));
+            },
+            error: error => {
+                this.messageService.add(errorToastr("Failed to update customer Details"));
+            },
+            complete: () => {}
+        });
+    }
+
+    onActiveItemChange(event: MenuItem) {
+        this.activeItem = event;
+    }
+
+    clearProduct() {
+        this.newProduct = new ProductItem();
     }
 
     copy(product: InvoiceItem) {

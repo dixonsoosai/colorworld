@@ -60,7 +60,7 @@
 							<label htmlFor="customerName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Customer
 								Name</label>
 							<div class="col-12 md:col-9">
-								<p-autoComplete [(ngModel)]="customerDetails.jpname" [suggestions]="filteredCustomers" 
+								<p-autoComplete [(ngModel)]="header.tnname" [suggestions]="filteredCustomers" 
 									(completeMethod)="searchSuggestion($event)" (onSelect)="populateDetails()"> 
 								</p-autoComplete>
 							</div>
@@ -70,7 +70,7 @@
 						<div class="field grid">
 							<label htmlFor="gst" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">GST</label>
 							<div class="col-12 md:col-9">
-								<input pInputText type="text" [(ngModel)]="customerDetails.jppgst" />
+								<input pInputText type="text" [(ngModel)]="header.tnpgst" />
 							</div>
 						</div>
 					</div>
@@ -78,7 +78,7 @@
 						<div class="field grid">
 							<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Mobile</label>
 							<div class="col-12 md:col-9">
-								<input pInputText type="number" [(ngModel)]="customerDetails.jpmobno">
+								<input pInputText type="number" [(ngModel)]="header.tnmobno">
 							</div>
 						</div>
 					</div>
@@ -86,7 +86,7 @@
 						<div class="field grid">
 							<label htmlFor="balance" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Balance</label>
 							<div class="col-12 md:col-9">
-								<input pInputText type="number" [(ngModel)]="customerDetails.jpbaln">
+								<input pInputText type="number" [(ngModel)]="header.tnprvbn">
 							</div>
 						</div>
 					</div>
@@ -97,7 +97,7 @@
 							<label htmlFor="address" class="col-12 mb-2 md:col-1 md:mb-0 font-bold">Address</label>
 							<div class="col-12 md:col">
 								<textarea rows="2" pInputTextarea [autoResize]="true" style="width: 100%;"
-									[(ngModel)]="customerDetails.jpadd"></textarea>
+									[(ngModel)]="header.tnadd"></textarea>
 							</div>
 						</div>
 					</div>
@@ -120,7 +120,11 @@
 						<label htmlFor="invoiceNumber" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Invoice
 							Number</label>
 						<div class="col-12 md:col-7">
-							<input pInputText type="text" [(ngModel)]="invoiceNumber" />
+							<div class="flex gap-2 align-items-center">
+								<input pInputText type="text" [(ngModel)]="header.tnbillno" />
+								<i class="pi pi-check" style="color: green;cursor: pointer;" pTooltip="New Bill" 
+									tooltipPosition="bottom" *ngIf="newBill"></i>
+							</div>
 						</div>
 					</div>
 					<div class="field grid">
