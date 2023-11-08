@@ -453,9 +453,11 @@ export class TaxInvoiceComponent implements OnInit {
 
     copy(product: InvoiceItem) {
         this.selectedProducts.push({...product});
+        this.computeBillSummary();
     }
 
     delete(rowIndex: number) {
         this.selectedProducts.splice(rowIndex,1);
+        this.computeBillSummary();
     }
 }
