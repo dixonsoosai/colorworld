@@ -68,12 +68,6 @@
 		    <artifactId>ucanaccess</artifactId>
 		    <version>3.0.1</version>
 		</dependency>
-		<!-- 
-		<dependency>
-		    <groupId>org.postgresql</groupId>
-		    <artifactId>postgresql</artifactId>
-		</dependency>
-		-->
 		<!-- OPEN API -->
 		<dependency>
 		    <groupId>org.springdoc</groupId>
@@ -111,14 +105,9 @@
 	    
 	    <!-- HTML to PDF Dependencies -->
 		<dependency>
-		    <groupId>com.itextpdf</groupId>
-		    <artifactId>kernel</artifactId>
-		    <version>7.1.14</version>
-		</dependency>
-		<dependency>
-		    <groupId>com.itextpdf</groupId>
-		    <artifactId>html2pdf</artifactId>
-		    <version>3.0.3</version>
+		    <groupId>org.xhtmlrenderer</groupId>
+		    <artifactId>flying-saucer-pdf</artifactId>
+		    <version>9.1.22</version>
 		</dependency>
 	</dependencies>
 

@@ -22,11 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
-import com.itextpdf.html2pdf.ConverterProperties;
-import com.itextpdf.html2pdf.HtmlConverter;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
 import com.mrajupaint.colorworld.common.AppUtils;
 import com.mrajupaint.colorworld.entity.SSGNJNP;
 import com.mrajupaint.colorworld.model.TaxInvoice;
@@ -105,7 +102,7 @@ public class PDFService {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
 			File file = ResourceUtils.getFile("classpath:templates/invoice_template.html");
-			
+			//File file = new File("C:\\Users\\acer\\git\\colorworld\\src\\main\\resources\\templates\\invoice_template.html");
 			String finalContent = editContent(file, placeholder);
 			String outputFilename = taxInvoiceDirectory + 
 					taxInvoice.getHeader().getTnbillno() +  
@@ -121,33 +118,22 @@ public class PDFService {
 	private String downloadContent(String content, String outputFile) {
 		try {
 			String htmlFile = outputFile + ".html";
+			String pdfFile = outputFile + ".pdf";
 			Path filePath = Path.of(htmlFile);
 			new File(htmlFile).delete();
-			Files.writeString(filePath, content, StandardOpenOption.CREATE_NEW);
+			Files.writeString(filePath, content, StandardOpenOption.CREATE_NEW);			
+			try {
+				convertHtmlToPdf(content, pdfFile);
+			} catch (Exception e) {
+				LOGGER.error("Exception while converting to PDF file: {}", e.getMessage(), e);
+			}
 			return content;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			LOGGER.error("Exception while writing to HTML file: {}", e.getMessage(), e);
 			return null;
 		}
 	}
 	
-	public byte[] convertHTMLtoPDF(String content, String outputFile) {
-		try(OutputStream fileOutputStream = new FileOutputStream(outputFile)) {
-			ConverterProperties converterProperties = new ConverterProperties();
-			converterProperties.setImmediateFlush(false);
-			Document doc = HtmlConverter.convertToDocument(content, 
-					new PdfWriter(fileOutputStream), converterProperties);
-			doc.setMargins(10, 10, 10, 10);
-			doc.relayout();
-			doc.close();
-			File temp = new File(outputFile);
-			return Files.readAllBytes(Path.of(temp.getAbsolutePath()));
-		}
-		catch (Exception e) {
-			LOGGER.error("Exception while converting HTML to PDF: {}", e.getMessage(), e);
-			return null;
-		}
-	}
 	private String editContent(File file, Map<String, String> placeholder) {
 		String finalContent = "";
 		try(FileReader fr = new FileReader(file)) {
@@ -309,5 +295,17 @@ public class PDFService {
         }
 		
 		return replaceKeyword;
+	}
+	public void convertHtmlToPdf(String htmlContent, String outputPdfFilePath) throws Exception {
+        //Replace all single tag
+		htmlContent = htmlContent.replaceAll("<br>", "<br></br>");
+		File file = new File(outputPdfFilePath);
+        try (OutputStream os = new FileOutputStream(file)) {
+            ITextRenderer renderer = new ITextRenderer();
+            renderer.setDocumentFromString(htmlContent);
+            renderer.layout();
+            renderer.createPDF(os, false);
+            renderer.finishPDF();
+        }
 	}
 }
