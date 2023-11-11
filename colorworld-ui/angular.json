@@ -31,7 +31,7 @@
                             "src/assets"
                         ],
                         "styles": [
-                            "node_modules/ngx-spinner/animations/*.css",
+                            "node_modules/ngx-spinner/animations/ball-beat.css",
                             "src/styles.scss"
                         ],
                         "scripts": [
