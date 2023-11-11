@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +25,7 @@ import org.springframework.util.ResourceUtils;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.mrajupaint.colorworld.common.AppUtils;
-import com.mrajupaint.colorworld.entity.GSTSummary;
+import com.mrajupaint.colorworld.entity.SSGNJNP;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
 import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
@@ -34,7 +34,7 @@ import com.mrajupaint.colorworld.repository.TransactionRepository;
 import jakarta.annotation.PostConstruct;
 
 @Service
-public class PDFService {
+public class PDFService3 {
 	
 	private static final Logger LOGGER = LogManager.getLogger(PDFService.class);
 	
@@ -101,8 +101,8 @@ public class PDFService {
 	public String generateInvoice(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			File file = ResourceUtils.getFile("classpath:templates/invoice_template2.html");
-			//File file = new File("C:\\Users\\acer\\git\\colorworld\\src\\main\\resources\\templates\\invoice_template2.html");
+			File file = ResourceUtils.getFile("classpath:templates/invoice_template.html");
+			//File file = new File("C:\\Users\\acer\\git\\colorworld\\src\\main\\resources\\templates\\invoice_template.html");
 			String finalContent = editContent(file, placeholder);
 			String outputFilename = taxInvoiceDirectory + 
 					taxInvoice.getHeader().getTnbillno() +  
@@ -164,7 +164,7 @@ public class PDFService {
 	
 	private Map<String, String> createPlaceholder(TaxInvoice taxInvoice) {
 		var header = taxInvoice.getHeader();
-		var gstList = getGST(taxInvoice);
+		var gstList = taxInvoice.getGst();
 		var billList = taxInvoice.getDetails();
 	
 		Map<String, String> replaceKeyword = new HashMap<>();
@@ -181,18 +181,20 @@ public class PDFService {
 				AppUtils.formatDate(header.getTntime(), "dd-MM-yyyy"));
 		replaceKeyword.put("@AmountInWords", 
 				AppUtils.convertToWords((int) Math.round(header.getTntotal()) ));
-		GSTSummary totalGst = gstList.get("Total");
-		replaceKeyword.put("@AmtB4Tax", formatNum(totalGst.getGntxable()));
-		replaceKeyword.put("@TotalCGST", formatNum(totalGst.getGncamt()));
-		replaceKeyword.put("@TotalSGST", formatNum(totalGst.getGnsamt()));
+		List<SSGNJNP> totalGst = gstList.stream()
+				.filter(s -> s.getGngstp().equals("Total"))
+				.toList();
+		replaceKeyword.put("@AmtB4Tax", formatNum(totalGst.get(0).getGntxable()));
+		replaceKeyword.put("@TotalCGST", formatNum(totalGst.get(0).getGncamt()));
+		replaceKeyword.put("@TotalSGST", formatNum(totalGst.get(0).getGnsamt()));
 		replaceKeyword.put("@RoundingOff", 
-				formatNum(Math.round(totalGst.getGntamt()) - totalGst.getGntamt() ));
-		replaceKeyword.put("@TotalAmount", formatNum(Math.round(totalGst.getGntamt())));
+				formatNum(Math.round(totalGst.get(0).getGntamt()) - totalGst.get(0).getGntamt() ));
+		replaceKeyword.put("@TotalAmount", formatNum(Math.round(totalGst.get(0).getGntamt())));
 						
 		StringBuilder billBody= new StringBuilder();
 		StringBuilder gstBody = new StringBuilder();
 		
-		for(var gst: gstList.values()) {
+		for(var gst: gstList) {
 			var line = """
 				<tr>
 					<td>%s</td>
@@ -200,22 +202,18 @@ public class PDFService {
 					<td>%s</td>
 					<td>%s</td>
 					<td>%s</td>
-					<td>%s</td>
 				</tr>
 				""";
-			line = String.format(line, 
-					gst.getGnhsnc(), 
-					gst.getGngstp(), 
+			line = String.format(line, gst.getGngstp(), 
 					formatNum(gst.getGntxable()),
 					formatNum(gst.getGncamt()), 
 					formatNum(gst.getGnsamt()), 
 					formatNum(gst.getGntamt()));
 			gstBody.append(line);
-		}	
+		}
 		for(int i = gstList.size(); i< 3 ; i++) {
 			var line = """
 					<tr style=\"height: 27.2px;\" class= \"blank-row\">
-					     <td></td>
 					     <td></td>
 					     <td></td>
 					     <td></td>
@@ -236,6 +234,10 @@ public class PDFService {
 			     <td>%s</td>
 			     <td>%s</td>
 			     <td>%s</td>
+			     <td>%s</td>
+			     <td>%s</td>
+			     <td>%s</td>
+			     <td>%s</td>
 				</tr>
 				""";
 			line = String.format(line, 
@@ -247,13 +249,21 @@ public class PDFService {
 					formatNum(bill.getTnprice()),
 					formatNum(bill.getTndisc()),
 					formatNum(bill.getTntxable()),
+					Math.round(bill.getTncgst()),
+					formatNum(bill.getTncamt()),
+					Math.round(bill.getTnsgst()),
+					formatNum(bill.getTnsamt()),
 					formatNum(bill.getTntamt()));
 			billBody.append(line);
 		}
 		
-		for(int i = billList.size(); i<= getOverflowLimit() + 3 - gstList.size(); i++) {
+		for(int i = billList.size(); i<= getOverflowLimit(); i++) {
 			var line = """
 					<tr style=\"height: 27.2px;\">
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
 					     <td></td>
 					     <td></td>
 					     <td></td>
@@ -297,37 +307,5 @@ public class PDFService {
             renderer.createPDF(os, false);
             renderer.finishPDF();
         }
-	}
-	
-	public Map<String, GSTSummary> getGST(TaxInvoice taxInvoice) {
-		Map<String, GSTSummary> gst = new LinkedHashMap<>();
-		var gstTotal = new GSTSummary();
-		for(var bill: taxInvoice.getDetails()) {
-			GSTSummary gstDetail;
-			if(gst.containsKey(String.valueOf(bill.getTnhsnc()))) {
-				gstDetail = gst.get(String.valueOf(bill.getTnhsnc()));
-			}
-			else {
-				gstDetail = new GSTSummary();
-				gstDetail.setGnhsnc(String.valueOf(bill.getTnhsnc()));
-				gstDetail.setGngstp(String.valueOf(Math.round(bill.getTncgst() + 
-						bill.getTnsgst())));	
-			}
-			gstDetail.setGntxable(gstDetail.getGntxable() + bill.getTntxable());
-			gstDetail.setGnsamt(gstDetail.getGnsamt() + bill.getTnsamt());
-			gstDetail.setGncamt(gstDetail.getGncamt() + bill.getTncamt());
-			gstDetail.setGntamt(gstDetail.getGntamt() + bill.getTntamt());
-			
-			gstTotal.setGnhsnc("Total");
-			gstTotal.setGngstp("-");
-			gstTotal.setGntxable(gstTotal.getGntxable() + bill.getTntxable());
-			gstTotal.setGnsamt(gstTotal.getGnsamt() + bill.getTnsamt());
-			gstTotal.setGncamt(gstTotal.getGncamt() + bill.getTncamt());
-			gstTotal.setGntamt(gstTotal.getGntamt() + bill.getTntamt());
-			
-			gst.put(String.valueOf(bill.getTnhsnc()), gstDetail);
-		}
-		gst.put(gstTotal.getGnhsnc(), gstTotal);
-		return gst;
 	}
 }
