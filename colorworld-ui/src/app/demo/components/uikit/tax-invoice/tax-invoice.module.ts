@@ -19,6 +19,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { NgxSpinnerModule } from 'ngx-spinner';
+
 @NgModule({
 	imports: [
 		AutoCompleteModule,
@@ -35,6 +37,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 		InputTextareaModule,
 		InputTextModule,
 		MultiSelectModule,
+		NgxSpinnerModule,
 		RippleModule,
 		TabMenuModule,
 		TableModule,

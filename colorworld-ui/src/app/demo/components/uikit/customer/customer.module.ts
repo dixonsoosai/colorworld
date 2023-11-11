@@ -11,6 +11,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { CardModule } from 'primeng/card';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TooltipModule } from 'primeng/tooltip';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
 	imports: [
@@ -23,6 +24,7 @@ import { TooltipModule } from 'primeng/tooltip';
 		InputNumberModule,
 		InputTextModule,
 		InputTextareaModule,
+		NgxSpinnerModule,
 		ToastModule,
 		TooltipModule
 	],

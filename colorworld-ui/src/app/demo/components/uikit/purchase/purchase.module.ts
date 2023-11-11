@@ -16,7 +16,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { AutoCompleteModule } from 'primeng/autocomplete';
-
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
 	imports: [
@@ -31,6 +31,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 		FormsModule,
 		InputNumberModule,
 		InputTextModule,
+		NgxSpinnerModule,
 		PurchaseRoutingModule,
 		RippleModule,
 		TableModule,

@@ -100,8 +100,8 @@ public class AppUtils {
             i += divider == 10 ? 1 : 2;
             if (number > 0) {
                 int counter = str.size();
-                String plural = (counter > 0 && number > 9) ? "s" : "";
-                String tmp = (number < 21) ? words.get(Integer.valueOf((int) number)) + " " + digits[counter] + plural : words.get(Integer.valueOf((int) Math.floor(number / 10) * 10)) + " " + words.get(Integer.valueOf((int) (number % 10))) + " " + digits[counter] + plural;                
+                //String plural = (counter > 0 && number > 9) ? "s" : "";
+                String tmp = (number < 21) ? words.get(Integer.valueOf((int) number)) + " " + digits[counter] : words.get(Integer.valueOf((int) Math.floor(number / 10) * 10)) + " " + words.get(Integer.valueOf((int) (number % 10))) + " " + digits[counter];                
                 str.add(tmp);
             } else {
                 str.add("");

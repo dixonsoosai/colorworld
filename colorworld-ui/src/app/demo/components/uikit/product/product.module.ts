@@ -11,6 +11,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { FieldsetModule } from 'primeng/fieldset';
 import { DialogModule } from 'primeng/dialog';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
 	imports: [
@@ -23,6 +24,7 @@ import { DialogModule } from 'primeng/dialog';
 		InputNumberModule,
 		InputTextModule,
 		MultiSelectModule,
+		NgxSpinnerModule,
 		ProductRoutingModule,
 		ToastModule
 	],

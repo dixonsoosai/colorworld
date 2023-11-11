@@ -39,34 +39,64 @@ public class TaxInvoiceController {
 	@LogTime
 	@GetMapping("bills")
 	public ResponseEntity<ServiceResponse<List<InvoiceSummary>>> bills() {
-		var response = new ServiceResponse<List<InvoiceSummary>>();
-		response.setCode(HttpStatus.OK.value());
-		response.setErrorMessage(Strings.EMPTY);
-		response.setStatus(AppConstants.SUCCESS);
-		response.setData(invoiceService.getAllBills());
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = new ServiceResponse<List<InvoiceSummary>>();
+			response.setCode(HttpStatus.OK.value());
+			response.setErrorMessage(Strings.EMPTY);
+			response.setStatus(AppConstants.SUCCESS);
+			response.setData(invoiceService.getAllBills());
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<List<InvoiceSummary>>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(null);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@LogTime
 	@GetMapping("refreshBilNum")
 	public ResponseEntity<ServiceResponse<Integer>> refreshBilNum(@RequestParam String billDate) {
-		var response = new ServiceResponse<Integer>();
-		response.setCode(HttpStatus.OK.value());
-		response.setErrorMessage(Strings.EMPTY);
-		response.setStatus(AppConstants.SUCCESS);
-		response.setData(invoiceService.refreshBillNum(Timestamp.valueOf(billDate)));
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = new ServiceResponse<Integer>();
+			response.setCode(HttpStatus.OK.value());
+			response.setErrorMessage(Strings.EMPTY);
+			response.setStatus(AppConstants.SUCCESS);
+			response.setData(invoiceService.refreshBillNum(Timestamp.valueOf(billDate)));
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<Integer>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(0);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@LogTime
 	@GetMapping("bill")
 	public ResponseEntity<ServiceResponse<List<SSTNHDP>>> bill(SPRequest request) {
-		var response = new ServiceResponse<List<SSTNHDP>>();
-		response.setCode(HttpStatus.OK.value());
-		response.setErrorMessage(Strings.EMPTY);
-		response.setStatus(AppConstants.SUCCESS);
-		//response.setData(accRegService.getBills(request));
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = new ServiceResponse<List<SSTNHDP>>();
+			response.setCode(HttpStatus.OK.value());
+			response.setErrorMessage(Strings.EMPTY);
+			response.setStatus(AppConstants.SUCCESS);
+			//response.setData(accRegService.getBills(request));
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<List<SSTNHDP>>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(null);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@LogTime
@@ -90,12 +120,22 @@ public class TaxInvoiceController {
 	@LogTime
 	@GetMapping("billDetails")
 	public ResponseEntity<ServiceResponse<TaxInvoice>> billDetails(@RequestParam String billnum) {
-		var response = new ServiceResponse<TaxInvoice>();
-		response.setCode(HttpStatus.OK.value());
-		response.setErrorMessage(Strings.EMPTY);
-		response.setStatus(AppConstants.SUCCESS);
-		response.setData(invoiceService.getBillDetails(billnum));
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = new ServiceResponse<TaxInvoice>();
+			response.setCode(HttpStatus.OK.value());
+			response.setErrorMessage(Strings.EMPTY);
+			response.setStatus(AppConstants.SUCCESS);
+			response.setData(invoiceService.getBillDetails(billnum));
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<TaxInvoice>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(null);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 }

@@ -5,6 +5,7 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { errorToastr, productUnits, successToastr } from 'src/app/demo/service/apputils.service';
 import { ProductItem } from 'src/app/demo/domain/product';
 import { ProductsService } from 'src/app/demo/service/products.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     templateUrl: './product.component.html',
@@ -23,6 +24,7 @@ export class ProductComponent {
     visible: boolean = false;
     
     constructor(
+        private spinner: NgxSpinnerService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private productService: ProductsService
@@ -34,7 +36,7 @@ export class ProductComponent {
     }
 
     fetchAll() {
-        this.isLoading = false;
+        this.spinner.show();
         this.searchText = "";
         this.productService.fetchAllProducts().subscribe({
             next: response => {
@@ -43,7 +45,7 @@ export class ProductComponent {
                 }
             },
             error: err => console.error('An error occurred :', err.errorMessage),
-            complete: () => this.isLoading = true
+            complete: () => this.spinner.hide()
         });
     }
 
@@ -53,7 +55,7 @@ export class ProductComponent {
             header: 'Confirmation',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.isLoading = false;
+                this.spinner.show();
                 this.productService.deleteProductByCode(product.pnpdcd).subscribe({
                     next: response => {
                         if (response.code === 200) {
@@ -65,7 +67,7 @@ export class ProductComponent {
                         this.messageService.add(errorToastr("Error while deleting Product. Kindly Kindly contact system administrator"));
                         console.error(err);
                     },
-                    complete: () => this.isLoading = true
+                    complete: () => this.spinner.hide()
                 });
             }
         });
@@ -177,9 +179,9 @@ export class ProductComponent {
         if(errorFlag) {
             return;
         }
-        console.log(this.product.pncgst)
         this.product.pnavail ="Y";
         this.product.pngstpr = this.product.pncuspr;
+        this.spinner.show();
         this.productService.addProduct(this.product).subscribe({
             next: response => {
                 if(response.code == 200) {
@@ -190,7 +192,8 @@ export class ProductComponent {
             error: error => {
                 this.messageService.add(errorToastr("Error while saving product"));
                 console.error(error);
-            }
+            },
+            complete:() => this.spinner.hide()
         });
     }
 }

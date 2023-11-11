@@ -12,7 +12,7 @@ import { CardModule } from 'primeng/card';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
-
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 @NgModule({
   declarations: [InvoiceHistoryComponent],
@@ -25,6 +25,7 @@ import { CalendarModule } from 'primeng/calendar';
 	FormsModule,
 	InputTextModule,
 	InvoiceHistoryRoutingModule,
+	NgxSpinnerModule,
 	RippleModule,
 	TableModule,
 	ToastModule,

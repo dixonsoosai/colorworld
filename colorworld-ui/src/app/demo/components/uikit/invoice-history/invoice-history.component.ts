@@ -4,6 +4,7 @@ import { errorToastr, formatInvoiceData, getInvoiceHeader, getLastDay, saveAsExc
 import { InvoiceService } from 'src/app/demo/service/invoice.service';
 import { Table } from 'primeng/table';
 import { InvoiceSummary } from 'src/app/demo/domain/product';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   templateUrl: './invoice-history.component.html',
@@ -26,6 +27,7 @@ export class InvoiceHistoryComponent {
     overflowLimit: number  = 17;
 
     constructor(private invoiceService: InvoiceService,
+        private spinner: NgxSpinnerService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService,
         private filterService: FilterService
@@ -37,7 +39,7 @@ export class InvoiceHistoryComponent {
     }
 
     fetchAll() {
-        this.loading = true;
+        this.spinner.show();
         this.invoiceService.fetchAll().subscribe({
             next: response => {
                 response.data.forEach(item => {
@@ -51,9 +53,7 @@ export class InvoiceHistoryComponent {
             error: error => {
                 this.loading = false;
             },
-            complete() {
-                
-            },
+            complete:() => this.spinner.hide()
         });
     }
     
@@ -79,11 +79,14 @@ export class InvoiceHistoryComponent {
     }
 
     exportExcel(dataTable: Table) {
+        this.spinner.show();
         let filteredData = dataTable.filteredValue == null ? this.invoiceDetails : dataTable.filteredValue;
         saveAsExcelFile(formatInvoiceData(filteredData), getInvoiceHeader(), "Invoice History");
+        this.spinner.hide();
     }
 
     download(data: InvoiceSummary) {
+        this.spinner.show();
         this.invoiceService.downloadByBill(data.tnbillno, this.overflowLimit).subscribe({
             next:response => {
                 let htmlContent = response;
@@ -94,7 +97,8 @@ export class InvoiceHistoryComponent {
             error : error => {
                 this.messageService.add(errorToastr("Error generating Invoice"));
                 console.error(error);
-            }
+            },
+            complete:() => this.spinner.hide()
         });
     }
     
@@ -104,6 +108,7 @@ export class InvoiceHistoryComponent {
             header: 'Confirmation',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
+                this.spinner.show();
                 this.invoiceService.delete(data.tnbillno).subscribe({
                     next: response => {
                         if(response.code == 200) {
@@ -119,7 +124,7 @@ export class InvoiceHistoryComponent {
                         this.messageService.add(errorToastr("Error deleting Invoice"));
                         console.error(error);
                     },
-                    complete:() => {}
+                    complete:() => this.spinner.hide()
 
                 });
             }

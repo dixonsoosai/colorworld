@@ -11,6 +11,7 @@ import { ProductsService } from 'src/app/demo/service/products.service';
 import { SSGNJNP } from 'src/app/demo/domain/ssgnjnp';
 import { ActivatedRoute } from '@angular/router';
 import { Header } from 'src/app/demo/domain/header';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     templateUrl: './tax-invoice.component.html',
@@ -19,7 +20,6 @@ import { Header } from 'src/app/demo/domain/header';
 })
 export class TaxInvoiceComponent implements OnInit {
 
-    isLoading = false;
     newBill = true;
 
     //Tab Menu Configuration
@@ -54,6 +54,7 @@ export class TaxInvoiceComponent implements OnInit {
     filename: string = "";
 
     constructor(
+        private spinner: NgxSpinnerService,
         private messageService: MessageService,
         private route: ActivatedRoute,
         private productService: ProductsService,
@@ -134,15 +135,18 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     fetchAll() {
-        this.isLoading = false;
+        this.spinner.show();
         this.productService.fetchAllProducts().subscribe({
             next: response => {
                 if (response.code === 200) {
                     this.productList = response.data;
                 }
             },
-            error: err => console.error('An error occurred :', err.errorMessage),
-            complete: () => this.isLoading = true
+            error: err => {
+                console.error(err);
+                this.messageService.add(errorToastr("Error fetching Products"));
+            },
+            complete: () => this.spinner.hide()
         });
     }
 
@@ -270,6 +274,7 @@ export class TaxInvoiceComponent implements OnInit {
 
     
     fetchInvoice() {
+        this.spinner.show();
         this.invoiceService.fetchBillDetails(this.invoice).subscribe({
             next: (response) => {
                 this.header = response['data'].header;
@@ -279,6 +284,11 @@ export class TaxInvoiceComponent implements OnInit {
                 this.populateDetails();
                 this.computeBillSummary();
             },
+            error: err => {
+                console.error(err);
+                this.messageService.add(errorToastr("Error fetching Invoice Details"));
+            },
+            complete:() => this.spinner.hide()
         });
     }
 
@@ -358,6 +368,7 @@ export class TaxInvoiceComponent implements OnInit {
             details: this.selectedProducts,
             gst: [...this.gstSummary.values()]
         }
+        this.spinner.show();
         this.invoiceService.generate(billData, this.overflowLimit).subscribe({
             next: response => { 
                 if(response.code == 500 || response == "") {
@@ -375,7 +386,7 @@ export class TaxInvoiceComponent implements OnInit {
                 this.messageService.add(errorToastr("Error while generating Invoice"));
                 console.error(error);
             },
-            complete: () => {}
+            complete: () => this.spinner.hide()
         });
     }
 

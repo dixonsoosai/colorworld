@@ -2,6 +2,8 @@ package com.mrajupaint.colorworld.controller;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,50 +27,92 @@ import com.mrajupaint.colorworld.service.CustomerService;
 @CrossOrigin
 public class CustomerController {
 
+	private static final Logger LOGGER = LogManager.getLogger(CustomerController.class);
+	
 	@Autowired
 	private CustomerService customerService;
 	
 	@LogTime
 	@GetMapping("customers")
 	public ResponseEntity<ServiceResponse<List<Customer>>> getCustomers() {
-		var response = new ServiceResponse<List<Customer>>();
-		response.setCode(HttpStatus.OK.value());
-		response.setStatus(AppConstants.SUCCESS);
-		response.setErrorMessage(Strings.EMPTY);
-		response.setData(customerService.getAllCustomers());
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = new ServiceResponse<List<Customer>>();
+			response.setCode(HttpStatus.OK.value());
+			response.setStatus(AppConstants.SUCCESS);
+			response.setErrorMessage(Strings.EMPTY);
+			response.setData(customerService.getAllCustomers());
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<List<Customer>>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(null);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@LogTime
 	@GetMapping("customer")
 	public ResponseEntity<ServiceResponse<Customer>> getCustomer(
 			@RequestParam("customerId") String customerId) {
-		var response = new ServiceResponse<Customer>();
-		response.setCode(HttpStatus.OK.value());
-		response.setStatus(AppConstants.SUCCESS);
-		response.setErrorMessage(Strings.EMPTY);
-		response.setData(customerService.getCustomer(Integer.parseInt(customerId)));
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = new ServiceResponse<Customer>();
+			response.setCode(HttpStatus.OK.value());
+			response.setStatus(AppConstants.SUCCESS);
+			response.setErrorMessage(Strings.EMPTY);
+			response.setData(customerService.getCustomer(Integer.parseInt(customerId)));
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<Customer>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(null);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@LogTime
 	@PutMapping("customer")
 	public ResponseEntity<ServiceResponse<Object>> addCustomer(
 			@RequestBody Customer customer) throws Exception {
-		var response = customerService.addCustomer(customer);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = customerService.addCustomer(customer);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<Object>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(null);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@LogTime
 	@DeleteMapping("customer")
 	public ResponseEntity<ServiceResponse<String>> deleteCustomer(
 			@RequestParam("customerId") String customerId) throws ColorWorldException {
-		var response = new ServiceResponse<String>();
-		response.setCode(HttpStatus.OK.value());
-		response.setStatus("Success");
-		response.setErrorMessage(Strings.EMPTY);
-		response.setData(customerService.deleteCustomer(Integer.parseInt(customerId)));
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = new ServiceResponse<String>();
+			response.setCode(HttpStatus.OK.value());
+			response.setStatus("Success");
+			response.setErrorMessage(Strings.EMPTY);
+			response.setData(customerService.deleteCustomer(Integer.parseInt(customerId)));
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<String>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData("Customer deletion failed");
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 }

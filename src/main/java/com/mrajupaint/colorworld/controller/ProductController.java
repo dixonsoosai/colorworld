@@ -2,6 +2,8 @@ package com.mrajupaint.colorworld.controller;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,48 +27,90 @@ import com.mrajupaint.colorworld.service.ProductService;
 @CrossOrigin
 public class ProductController {
 
+	private static final Logger LOGGER = LogManager.getLogger(ProductController.class);
+	
 	@Autowired
 	private ProductService productService;
 	
 	@LogTime
 	@GetMapping("products")
 	public ResponseEntity<ServiceResponse<List<Product>>> products() {
-		var response = new ServiceResponse<List<Product>>();
-		response.setCode(HttpStatus.OK.value());
-		response.setStatus(AppConstants.SUCCESS);
-		response.setErrorMessage(Strings.EMPTY);
-		response.setData(productService.getAllProducts());
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = new ServiceResponse<List<Product>>();
+			response.setCode(HttpStatus.OK.value());
+			response.setStatus(AppConstants.SUCCESS);
+			response.setErrorMessage(Strings.EMPTY);
+			response.setData(productService.getAllProducts());
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<List<Product>>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(null);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@LogTime
 	@GetMapping("product")
 	public ResponseEntity<ServiceResponse<Product>> product(
 			@RequestParam("productCode") String productCode) {
-		var response = new ServiceResponse<Product>();
-		response.setCode(HttpStatus.OK.value());
-		response.setStatus(AppConstants.SUCCESS);
-		response.setErrorMessage(Strings.EMPTY);
-		response.setData(productService.getProduct(productCode));
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = new ServiceResponse<Product>();
+			response.setCode(HttpStatus.OK.value());
+			response.setStatus(AppConstants.SUCCESS);
+			response.setErrorMessage(Strings.EMPTY);
+			response.setData(productService.getProduct(productCode));
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<Product>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(null);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@LogTime
 	@PutMapping("product")
 	public ResponseEntity<ServiceResponse<Object>> addProduct(@RequestBody Product product) {
-		var response = productService.addProduct(product);
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = productService.addProduct(product);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<Object>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(null);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@LogTime
 	@DeleteMapping("product")
 	public ResponseEntity<ServiceResponse<String>> deleteProduct(
 			@RequestParam("productCode") String productCode) throws ColorWorldException {
-		var response = new ServiceResponse<String>();
-		response.setCode(HttpStatus.OK.value());
-		response.setStatus("Success");
-		response.setErrorMessage(Strings.EMPTY);
-		response.setData(productService.deleteProduct(productCode));
-		return new ResponseEntity<>(response, HttpStatus.OK);
+		try {
+			var response = new ServiceResponse<String>();
+			response.setCode(HttpStatus.OK.value());
+			response.setStatus("Success");
+			response.setErrorMessage(Strings.EMPTY);
+			response.setData(productService.deleteProduct(productCode));
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<String>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData("Product deletion failed");
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }
