@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,7 @@ public class CustomerService {
 	CustomerRepository customerRepository;
 	
 	@Transactional(rollbackFor = Exception.class)
+	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
 	public ServiceResponse<Object> addCustomer(Customer customer) throws Exception {
 		//Validation
 		var response = new ServiceResponse<Object>();
@@ -54,6 +57,7 @@ public class CustomerService {
 	}
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
+	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
 	public String deleteCustomer(int customerId) throws ColorWorldException {
 		int count = customerRepository.deleteByJpid(customerId);
 		if(count > 1) {

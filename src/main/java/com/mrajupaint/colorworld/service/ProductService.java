@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ public class ProductService {
 	ProductRepository productRepository;
 	
 	@Transactional(rollbackFor = Exception.class)
+	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
 	public ServiceResponse<Object> addProduct(Product product) {
 		var response = new ServiceResponse<Object>();
 		var errorMessage = new HashMap<String, String>();
@@ -58,6 +61,7 @@ public class ProductService {
 	}
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
+	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
 	public String deleteProduct(String productCode) throws ColorWorldException {
 		int count = productRepository.deleteByPnpdcd(productCode);
 		if(count > 1) {

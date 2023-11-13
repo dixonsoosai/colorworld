@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +52,7 @@ public class InvoiceService {
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
+	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
 	public String deleteBillByInvoice(int billnum) throws Exception {
 		int count = headerRepository.deleteByTnbillno(billnum);
 		if(count > 1) {

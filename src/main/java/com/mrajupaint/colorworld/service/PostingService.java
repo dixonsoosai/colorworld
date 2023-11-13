@@ -7,6 +7,8 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,6 +74,7 @@ public class PostingService {
 	
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
+	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
 	public ServiceResponse<String> postBill(TaxInvoice taxInvoice) throws ColorWorldException {
 		
 		//Header should be present

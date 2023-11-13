@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -98,6 +100,8 @@ public class AccountRegisterService {
 		return new ArrayList<>();
 	}
 	
+	@Transactional
+	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
 	public ServiceResponse<Object> addBillDetails(SSACRGP accountDetails){
 		//Validation
 		var response = new ServiceResponse<Object>();
@@ -118,7 +122,8 @@ public class AccountRegisterService {
 		return response;
 	}
 	
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(rollbackFor = ColorWorldException.class)
+	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
 	public String deleteBillByBillNo(String billNo, String companyName) throws ColorWorldException{
 		int count = sSACRGPRepository.deleteByArbillnoAndArname(billNo, companyName);
 		if(count > 1) {
