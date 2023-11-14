@@ -125,9 +125,9 @@ export class PurchaseComponent implements OnInit {
             this.purchaseBill = { ...temp[0] };
         }
         if (temp.length == 0) {
-            let invoice = this.purchaseBill.arbillno;
-            this.purchaseBill = new PurchaseBill();
-            this.purchaseBill.arbillno = invoice;
+            this.purchaseBill.arnamt = this.purchaseBill.arcgst = this.purchaseBill.arsgst = this.purchaseBill.artamt = 
+            this.purchaseBill.archqamt = this.purchaseBill.archqno = 0;
+            this.purchaseBill.artext = this.purchaseBill.arbname = this.purchaseBill.archqdte = "";
         }
     }
     populateDetails() {
@@ -311,7 +311,7 @@ export class PurchaseComponent implements OnInit {
                     .delete(purchaseBill.arbillno, purchaseBill.arname)
                     .subscribe({
                         next: (response) => {
-                            if (response['status'] == 200) {
+                            if (response['code'] == 200) {
                                 this.messageService.add(
                                     successToastr(
                                         'Invoice deleted successfully'

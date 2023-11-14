@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { BillSummary, InvoiceItem, ProductItem } from 'src/app/demo/domain/product';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Customer } from 'src/app/demo/domain/customer';
 import { CustomersService } from 'src/app/demo/service/customers.service';
@@ -75,6 +75,7 @@ export class TaxInvoiceComponent implements OnInit {
             this.activeItem = this.items[0];
             this.invoiceDate = new Date();
             this.generateNewInvoiceNum();
+            this.extractFromSession();
         }
     }
 
@@ -380,7 +381,7 @@ export class TaxInvoiceComponent implements OnInit {
                 newWindow.document.write(htmlContent);
                 newWindow.document.close();
                 this.messageService.add(successToastr("Invoice generated successfully"));
-                
+                this.clearSession();
             },
             error: error => {
                 this.messageService.add(errorToastr("Error while generating Invoice"));
@@ -470,5 +471,36 @@ export class TaxInvoiceComponent implements OnInit {
     delete(rowIndex: number) {
         this.selectedProducts.splice(rowIndex,1);
         this.computeBillSummary();
+    }
+
+    saveToSession() {
+        sessionStorage.setItem("InvoiceHeader", JSON.stringify(this.header));
+        sessionStorage.setItem("InvoiceBody", JSON.stringify(this.selectedProducts));
+    }
+
+    extractFromSession() {
+        if(this.selectedProducts.length == 0) {
+            try {
+                if(sessionStorage.getItem("InvoiceHeader") != null) {
+                    this.header = JSON.parse(sessionStorage.getItem("InvoiceHeader"));
+                }
+                if(sessionStorage.getItem("InvoiceBody") != null) {
+                    this.selectedProducts = JSON.parse(sessionStorage.getItem("InvoiceBody"));
+                }
+                this.computeBillSummary();
+                this.activeItem = this.items[1];
+            } catch (error) {
+
+            }
+        }
+    }
+
+    clearSession() {
+        sessionStorage.removeItem("InvoiceHeader");
+        sessionStorage.removeItem("InvoiceBody");
+    }
+
+    @HostListener("window:beforeunload", ["$event"]) unloadHandler(event: Event) {
+        this.saveToSession();
     }
 }
