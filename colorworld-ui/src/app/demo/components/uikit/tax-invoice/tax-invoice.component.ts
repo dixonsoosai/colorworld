@@ -474,8 +474,10 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     saveToSession() {
-        sessionStorage.setItem("InvoiceHeader", JSON.stringify(this.header));
-        sessionStorage.setItem("InvoiceBody", JSON.stringify(this.selectedProducts));
+        if(this.selectedProducts.length > 0){
+            sessionStorage.setItem("InvoiceHeader", JSON.stringify(this.header));
+            sessionStorage.setItem("InvoiceBody", JSON.stringify(this.selectedProducts));
+        }
     }
 
     extractFromSession() {
