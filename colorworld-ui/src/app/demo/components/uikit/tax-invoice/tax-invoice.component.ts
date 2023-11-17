@@ -102,6 +102,7 @@ export class TaxInvoiceComponent implements OnInit {
         this.invoiceDate = new Date();
         this.generateNewInvoiceNum();
         this.fetchCustomerList();
+        this.clearSession();
     }
 
     generateNewInvoiceNum() {
@@ -225,8 +226,10 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     addToCart(product) {
-        if(this.selectedProducts.length >= this.overflowLimit) {
+        let gstSize = new Set(this.selectedProducts.map(element => element.tnhsnc)).size + 1;
+        if(this.selectedProducts.length >= this.overflowLimit + 3 - gstSize) {
             this.messageService.add(errorToastr("Cannot add more Products"));
+            return;
         }
         let checkFlag = false;
         if (product.pnpdcd != "") {
