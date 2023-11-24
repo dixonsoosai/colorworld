@@ -17,7 +17,9 @@ public class SSTNHDP
 	@Column
 	private String tnname;
 	@Column
-	private String tnchqdt;
+	private String tnaddress;
+	@Column
+	private String tnmob;
 	@Column
 	private String tnpgst;
 	@Column
@@ -25,12 +27,6 @@ public class SSTNHDP
 	@Column
 	private double tntotal;
 	@Column
-	private double tnprbn;
-	@Column
-	private double tngdtl;
-	@Column
-	private double tncsrv;
-	@Column
-	private double tnrtna;
+	private String tntext;
 
 }

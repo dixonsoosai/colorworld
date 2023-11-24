@@ -162,6 +162,13 @@ public class PDFService {
 		return String.format("%.2f", num);
 	}
 	
+	private String formatDecimal(double num) {
+		if(num == (int) num) {
+			return String.format("%.0f", num);	
+		}
+		return String.format("%.1f", num);
+	}
+	
 	private Map<String, String> createPlaceholder(TaxInvoice taxInvoice) {
 		var header = taxInvoice.getHeader();
 		var gstList = getGST(taxInvoice);
@@ -177,6 +184,7 @@ public class PDFService {
 		replaceKeyword.put("@PartyGST", header.getTnpgst());
 		replaceKeyword.put("@InvoiceNo", 
 				AppUtils.rephraseBill(header.getTnbillno()));
+		replaceKeyword.put("@Comments", header.getTntext().trim());
 		replaceKeyword.put("@InvoiceDate", 
 				AppUtils.formatDate(header.getTntime(), "dd-MM-yyyy"));
 		replaceKeyword.put("@AmountInWords", 
@@ -240,7 +248,7 @@ public class PDFService {
 				""";
 			line = String.format(line, 
 					bill.getTnchallan(),
-					Math.round(bill.getTntqty()) + " X " + Math.round(bill.getTnuqty()) + " " +  
+					formatDecimal(bill.getTntqty()) + " X " + Math.round(bill.getTnuqty()) + " " +  
 					bill.getTnunit(),
 					bill.getTnscnnm(),
 					bill.getTnhsnc(),

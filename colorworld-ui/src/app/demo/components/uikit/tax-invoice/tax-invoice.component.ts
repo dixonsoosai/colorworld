@@ -170,7 +170,7 @@ export class TaxInvoiceComponent implements OnInit {
             this.header.tncusid = temp[0].jpid;
             this.header.tnname = temp[0].jpname;
             this.header.tnmobno = temp[0].jpmobno;
-            this.header.tnadd = temp[0].jpadd || "";
+            this.header.tnaddress = temp[0].jpaddress|| "";
             this.header.tnprvbn = temp[0].jpbaln;
             this.header.tnpgst = temp[0].jppgst;
             this.filename = `${this.header.tnbillno}_${this.header.tnname}_Tax Invoice.pdf`;
@@ -357,6 +357,11 @@ export class TaxInvoiceComponent implements OnInit {
             validFlag = false;
         }
 
+        if (this.header.tntext.length > 40) {
+            this.messageService.add(errorToastr("Comments should be less than 40 chars"));
+            validFlag = false;
+        }
+
         return validFlag;
     }
 
@@ -364,8 +369,7 @@ export class TaxInvoiceComponent implements OnInit {
         //Generate Header
         let header = {...this.header};
         header.tntime = getISTDate(this.invoiceDate);
-        header.tntotal  = header.tngdtl = this.billSummary.bstamt;
-        header.tnprbn = 0;
+        header.tntotal  = this.billSummary.bstamt;
         //Generate Summary
         let billData = {
             header: header,
@@ -439,7 +443,7 @@ export class TaxInvoiceComponent implements OnInit {
         let customer = new Customer();
         customer.jpid = this.header.tncusid;
         customer.jpname = this.header.tnname;
-        customer.jpadd = this.header.tnadd;
+        customer.jpaddress = this.header.tnaddress;
         customer.jpbaln = this.header.tnprvbn + (-1 * this.billSummary.bsfamt);
         customer.jpdate = getISTDate(this.invoiceDate);
         customer.jppgst = this.header.tnpgst;

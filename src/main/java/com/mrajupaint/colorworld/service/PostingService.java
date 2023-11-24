@@ -141,20 +141,7 @@ public class PostingService {
 		if(AppUtils.isBlank(sstnhdp.getTnname()) || AppUtils.isBlank(sstnhdp.getTnpgst())) {
 			return "Invalid Header, Company Name or Company GST not entered";
 		}
-		if(round(sstnhdp.getTntotal() + sstnhdp.getTnprbn()) != round(sstnhdp.getTngdtl())) {
-			LOGGER.error("Total + Prev Balance = Grand Total");
-			LOGGER.error("{} + {} = {}" , sstnhdp.getTntotal(), sstnhdp.getTntotal(), 
-					sstnhdp.getTngdtl());
-			return "Invalid Header Total";
-		}
-		if(sstnhdp.getTncsrv() != 0) {
-			if(round(sstnhdp.getTncsrv() - sstnhdp.getTngdtl()) != round(sstnhdp.getTnrtna())) {
-				LOGGER.error("Cash Received - Grand Total = Return Amount");
-				LOGGER.error("{} - {} = {}" ,sstnhdp.getTncsrv(), sstnhdp.getTngdtl(), 
-						sstnhdp.getTnrtna());
-				return "Calculation mismatch in Cash Received";
-			}
-		}
+		
 		sstnhdp.setTnbillno(billNum);
 		return "****";
 	}
