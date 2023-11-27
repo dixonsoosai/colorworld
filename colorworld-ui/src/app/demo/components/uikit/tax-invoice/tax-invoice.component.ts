@@ -170,7 +170,7 @@ export class TaxInvoiceComponent implements OnInit {
     filterQty() {
         let size = this.filteredQty.length;
         let filteredQty = this.filteredQty;
-        if(filteredQty.length == 0) {
+        if((filteredQty || []).length == 0) {
             this.filter();
             return;
         }
@@ -219,7 +219,7 @@ export class TaxInvoiceComponent implements OnInit {
         $("#productView div").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(filteredProduct) > -1)
         });
-        let size = this.filteredQty.length;
+        let size = (this.filteredQty || []).length;
         if(size != 0) {
             this.filterQty();
         }

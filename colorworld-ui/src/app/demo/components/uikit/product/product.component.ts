@@ -105,7 +105,7 @@ export class ProductComponent {
             else
                 $(this).hide();
         });
-        let size = this.filteredQty.length;
+        let size = (this.filteredQty || []).length;
         if(size != 0) {
             this.filterQty();
         }
@@ -119,7 +119,7 @@ export class ProductComponent {
     filterQty() {
         let size = this.filteredQty.length;
         let filteredQty = this.filteredQty;
-        if(filteredQty.length == 0) {
+        if((filteredQty || []).length == 0) {
             this.filter();
             return;
         }
