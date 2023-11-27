@@ -171,7 +171,6 @@ export class TaxInvoiceComponent implements OnInit {
             this.header.tnname = temp[0].jpname;
             this.header.tnmobno = temp[0].jpmobno;
             this.header.tnaddress = temp[0].jpaddress|| "";
-            this.header.tnprvbn = temp[0].jpbaln;
             this.header.tnpgst = temp[0].jppgst;
             this.filename = `${this.header.tnbillno}_${this.header.tnname}_Tax Invoice.pdf`;
         }
@@ -285,7 +284,7 @@ export class TaxInvoiceComponent implements OnInit {
                 this.filename = `${this.header.tnbillno}_${this.header.tnname}_Tax Invoice.pdf`;
                 this.invoiceDate = new Date(this.header.tntime.substring(0,10));
                 this.selectedProducts = response['data'].details;
-                this.populateDetails();
+                //this.populateDetails();
                 this.computeBillSummary();
             },
             error: err => {
@@ -370,6 +369,8 @@ export class TaxInvoiceComponent implements OnInit {
         let header = {...this.header};
         header.tntime = getISTDate(this.invoiceDate);
         header.tntotal  = this.billSummary.bstamt;
+        let seq = 0;
+        this.selectedProducts.forEach(element => element.tnseqno = ++seq);
         //Generate Summary
         let billData = {
             header: header,
@@ -379,7 +380,7 @@ export class TaxInvoiceComponent implements OnInit {
         this.spinner.show();
         this.invoiceService.generate(billData, this.overflowLimit).subscribe({
             next: response => { 
-                if(response.code == 500 || response == "") {
+                if(response.status == 500 || response == "") {
                     this.messageService.add(errorToastr("Error while generating Invoice"));
                     return;
                 }
@@ -444,16 +445,17 @@ export class TaxInvoiceComponent implements OnInit {
         customer.jpid = this.header.tncusid;
         customer.jpname = this.header.tnname;
         customer.jpaddress = this.header.tnaddress;
-        customer.jpbaln = this.header.tnprvbn + (-1 * this.billSummary.bsfamt);
         customer.jpdate = getISTDate(this.invoiceDate);
         customer.jppgst = this.header.tnpgst;
         customer.jpmobno = this.header.tnmobno;
         this.customerService.add(customer).subscribe({
             next: response => {
                 if(response.code == 200) {
-                    return;
+                    this.messageService.add(successToastr("Customer saved successfully"));
                 }
-                this.messageService.add(errorToastr("Failed to update customer Details"));
+                else {
+                    this.messageService.add(errorToastr("Failed to update customer Details"));
+                }
             },
             error: error => {
                 this.messageService.add(errorToastr("Failed to update customer Details"));

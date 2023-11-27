@@ -6,5 +6,5 @@ import lombok.Data;
 public class SSTNJNP_KEY {
 
 	private int tnbillno;
-	private String tnpdcd;
+	private int tnseqno;
 }

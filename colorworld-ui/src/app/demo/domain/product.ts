@@ -36,6 +36,7 @@ export class InvoiceItem {
 	tncamt: number = 0;
 	tnsamt: number = 0;
 	tntamt: number = 0;
+	tnseqno: number = 0;
 }
 
 export class BillSummary {

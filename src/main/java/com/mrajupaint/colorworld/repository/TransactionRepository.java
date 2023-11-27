@@ -1,114 +1,32 @@
 package com.mrajupaint.colorworld.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mrajupaint.colorworld.entity.SSTNJNP;
-import com.mrajupaint.colorworld.exception.ColorWorldException;
 
 @Repository
 public class TransactionRepository {
 
-	private static final Logger LOGGER = LogManager.getLogger(TransactionRepository.class);
-	
 	@Autowired
-	private JdbcTemplate jdbcTemplate;
+	private SSTNJNPRepository sstnjnpRepository;
 	
-	@Transactional(rollbackFor = ColorWorldException.class)
-    public void addTransaction(List<SSTNJNP> entities) throws ColorWorldException {
-		
-		String sql = """
-				DELETE FROM sstnjnp WHERE tnbillno = %s
-				""".formatted(entities.get(0).getTnbillno());
-		int deleteCount = jdbcTemplate.update(sql);
-		if(deleteCount > 0) {
-			LOGGER.info("Deleted Count: {}", deleteCount);
-		}
-	    sql = """
-	    		INSERT INTO sstnjnp(
-        		tnbillno, tnchallan, tnscnnm, 
-        		tntqty, tnuqty, tnunit, tnpdcd, tnhsnc, tncgst, tnsgst,
-        		tnprice, tndisc, tntxable, tnsamt, tncamt, tntamt)
-        		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        		""";
-        List<Object[]> batchArgs = new ArrayList<>();
-        
-        for (var entity : entities) {
-            Object[] args = {
-            		entity.getTnbillno(), 
-            		entity.getTnchallan(),
-            		entity.getTnscnnm(),
-            		entity.getTntqty(),
-            		entity.getTnuqty(),
-            		entity.getTnunit(),
-            		entity.getTnpdcd(),
-            		entity.getTnhsnc(),
-            		entity.getTncgst(),
-            		entity.getTnsgst(),
-            		entity.getTnprice(),
-            		entity.getTndisc(),
-            		entity.getTntxable(),
-            		entity.getTnsamt(),
-            		entity.getTncamt(),
-            		entity.getTntamt()
-            		};
-            batchArgs.add(args);
-        }
-        int[] rows = jdbcTemplate.batchUpdate(sql, batchArgs);
-        for(var rowCount : rows) {
-        	if(rowCount != 1) {
-        		throw new ColorWorldException("Error while adding bill details");
-        	}
-        }
+	@Transactional(rollbackFor = Exception.class)
+	public void addTransaction(List<SSTNJNP> entities) throws Exception {
+		deleteInvoice(entities.get(0).getTnbillno());
+		sstnjnpRepository.saveAll(entities);
     }
 	
 	public List<SSTNJNP> getTransaction(int billnum) {
-		String sql = """
-				SELECT * FROM sstnjnp WHERE tnbillno = %d
-				""".formatted(billnum);
-		
-		return jdbcTemplate.query(sql, (rs, rowNum) -> {
-			SSTNJNP transaction = new SSTNJNP();
-			transaction.setTnbillno(rs.getInt("tnbillno"));
-			transaction.setTnchallan(rs.getString("tnchallan"));
-			transaction.setTnscnnm(rs.getString("tnscnnm"));
-			transaction.setTnprice(rs.getDouble("tnprice"));
-			transaction.setTndisc(rs.getDouble("tndisc"));
-			transaction.setTntxable(rs.getDouble("tntxable"));
-			transaction.setTnsamt(rs.getDouble("tnsamt"));
-			transaction.setTncamt(rs.getDouble("tncamt"));
-			transaction.setTntamt(rs.getDouble("tntamt"));
-			transaction.setTntqty(rs.getDouble("tntqty"));
-			transaction.setTnuqty(rs.getDouble("tnuqty"));
-			transaction.setTnunit(rs.getString("tnunit"));
-			transaction.setTnpdcd(rs.getString("tnpdcd"));
-			transaction.setTnhsnc(rs.getInt("tnhsnc"));
-			transaction.setTncgst(rs.getDouble("tncgst"));
-			transaction.setTnsgst(rs.getDouble("tnsgst"));
-			
-			return transaction;
-		});
+		return sstnjnpRepository.findByTnbillno(billnum);
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
 	public boolean deleteInvoice(int billnum) throws Exception {
-		try {
-			String sql = """
-					DELETE FROM sstnjnp WHERE tnbillno = %s
-					""".formatted(billnum);
-			jdbcTemplate.update(sql);
-		} catch (DataAccessException e) {
-			LOGGER.error("Exception while deleting invoice {}", e);
-			throw new Exception(e.getMessage());
-		}
+		sstnjnpRepository.deleteByTnbillno(billnum);
 		return true;
 	}
 		

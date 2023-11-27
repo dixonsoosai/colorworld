@@ -20,7 +20,7 @@ import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
 import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
-import com.mrajupaint.colorworld.repository.TransactionRepository;
+import com.mrajupaint.colorworld.repository.SSTNJNPRepository;
 
 @Service
 public class PostingService {
@@ -28,7 +28,7 @@ public class PostingService {
 	private static final Logger LOGGER = LogManager.getLogger(PostingService.class);
 	
 	@Autowired
-	TransactionRepository transactionRepository;
+	SSTNJNPRepository sSTNJNPRepository;
 	
 	@Autowired
 	SSGNJNPRepository sSGNJNPRepository;
@@ -74,7 +74,7 @@ public class PostingService {
 	
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
-	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+	@Retryable(maxAttempts = 2, backoff = @Backoff(delay = 1000))
 	public ServiceResponse<String> postBill(TaxInvoice taxInvoice) throws ColorWorldException {
 		
 		//Header should be present
@@ -91,10 +91,10 @@ public class PostingService {
 			LOGGER.error("Invalid GST format");
 			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);	
 		}
-		
+		int billNum = 0;
 		synchronized (this) {
 			//Generate Bill No
-			int billNum = generateBillNum(taxInvoice);
+			billNum = generateBillNum(taxInvoice);
 			LOGGER.info("New Bill number: {}", billNum);
 			//Header Validation
 			var response = validateHeader(taxInvoice.getHeader(), billNum);
@@ -112,19 +112,19 @@ public class PostingService {
 						response, null);
 			}
 		}
-		
-		String buffer = pdfService.generateInvoice(taxInvoice);
 		try {
-			transactionRepository.addTransaction(taxInvoice.getDetails());
+			sSTNJNPRepository.deleteByTnbillno(billNum);
+			sSTNJNPRepository.saveAll(taxInvoice.getDetails());
 			sSTNHDPRepository.save(taxInvoice.getHeader());
 			sSGNJNPRepository.saveAll(taxInvoice.getGst());
+			String buffer = pdfService.generateInvoice(taxInvoice);
+			return new ServiceResponse<>(200, AppConstants.SUCCESS, 
+					"Bill generated successfully", buffer);
 		}
 		catch(Exception e) {
 			LOGGER.error("Error while writing exception {}", e);
 			throw new ColorWorldException(e.getMessage());
 		}
-		return new ServiceResponse<>(200, AppConstants.SUCCESS, 
-				"Bill generated successfully", buffer);
 	}
 
 	private boolean checkNull(Object ...items) {

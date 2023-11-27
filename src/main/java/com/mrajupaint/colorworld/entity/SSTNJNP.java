@@ -26,7 +26,6 @@ public class SSTNJNP
 	private double tnuqty;
 	@Column
 	private String tnunit;
-	@Id
 	@Column
 	private String tnpdcd;
 	@Column
@@ -47,5 +46,7 @@ public class SSTNJNP
 	private double tncamt;
 	@Column
 	private double tntamt;
-	
+	@Id
+	@Column
+	private int tnseqno;
 }
