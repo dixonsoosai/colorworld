@@ -74,7 +74,7 @@ public class PostingService {
 	
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
-	@Retryable(maxAttempts = 2, backoff = @Backoff(delay = 1000))
+	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 100))
 	public ServiceResponse<String> postBill(TaxInvoice taxInvoice) throws ColorWorldException {
 		
 		//Header should be present

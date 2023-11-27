@@ -9,13 +9,13 @@
 			<div class="col-12 md:col-10">
 				<span class="p-input-icon-left">
 					<i class="pi pi-search"></i>
-					<input type="text" pInputText (keyup)="filter($event)"/>
+					<input type="text" pInputText id="searchSuggestion" (keyup)="filter()"/>
 				</span>
 			</div>
 		</div>
 		<div class="flex justify-content-between gap-3">
-			<p-multiSelect [options]="units" [(ngModel)]="filteredUnits" optionLabel="name"
-				defaultLabel="Select a Unit" (onChange) = "filterUnits()">
+			<p-multiSelect [options]="qty" [(ngModel)]="filteredQty" optionLabel="name" (onClear) = "clearQty()"
+				defaultLabel="Select Qty" (onChange) = "filterQty()" [showClear]="true">
 			</p-multiSelect>	
 			<p-button label="Add" (click)="show()"></p-button>
 		</div>

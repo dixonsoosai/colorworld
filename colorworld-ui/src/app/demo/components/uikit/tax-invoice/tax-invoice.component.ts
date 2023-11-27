@@ -36,6 +36,7 @@ export class TaxInvoiceComponent implements OnInit {
     //Filtered List
     filteredCustomers: any[];
     filteredUnits: any = {};
+    filteredQty: any[];
     customerSuggestions: string[];
     selectedProducts: InvoiceItem[] = [];
     newProduct: ProductItem = new ProductItem();
@@ -48,6 +49,7 @@ export class TaxInvoiceComponent implements OnInit {
     //Additional 
     searchText !: string;
     units = productUnits;
+    qty: any[];
     invoiceDate: Date;
     visible: boolean = false;
     overflowLimit: number = 17;
@@ -142,6 +144,7 @@ export class TaxInvoiceComponent implements OnInit {
             next: response => {
                 if (response.code === 200) {
                     this.productList = response.data;
+                    this.getQty(this.productList);
                 }
             },
             error: err => {
@@ -152,6 +155,39 @@ export class TaxInvoiceComponent implements OnInit {
         });
     }
 
+    getQty(productList: ProductItem[]) {
+        let qty = new Set<string>();
+        productList.forEach(element => qty.add(element.pnuqty.toString()));
+        let tqty = [...qty].sort();
+        this.qty = tqty.map(element => {return {name : element, code : element}});
+    }
+
+    clearQty() {
+        this.filteredQty = [];
+        this.filter();
+    }
+
+    filterQty() {
+        let size = this.filteredQty.length;
+        let filteredQty = this.filteredQty;
+        if(filteredQty.length == 0) {
+            this.filter();
+            return;
+        }
+        $("#productView div:visible").filter(function () {
+            $(this).hide();
+            for(let i = 0; i< size; i++) {
+                let startPos = $(this).text().indexOf("Quantity");
+                let lastPos = $(this).text().lastIndexOf("Price");
+                let searchString = $(this).text().substring(startPos, lastPos).toLowerCase();
+                if(searchString.indexOf(filteredQty[i].code.toLowerCase()) != -1) {
+                    $(this).show();
+                    break;
+                }
+            }
+        });
+    }
+    
     searchSuggestion(event: AutoCompleteCompleteEvent) {
         let filtered: string[] = [];
         let query = event.query;
@@ -177,11 +213,16 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     //Filter     
-    filter(event) {
-        let filteredProduct = $(event.srcElement).val().toLowerCase();
+    filter() {
+        let filteredProduct = $("#searchSuggestion").val().toLowerCase();
+        //Visible fails if backspace is pressed
         $("#productView div").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(filteredProduct) > -1)
         });
+        let size = this.filteredQty.length;
+        if(size != 0) {
+            this.filterQty();
+        }
     }
 
     
@@ -284,7 +325,6 @@ export class TaxInvoiceComponent implements OnInit {
                 this.filename = `${this.header.tnbillno}_${this.header.tnname}_Tax Invoice.pdf`;
                 this.invoiceDate = new Date(this.header.tntime.substring(0,10));
                 this.selectedProducts = response['data'].details;
-                //this.populateDetails();
                 this.computeBillSummary();
             },
             error: err => {

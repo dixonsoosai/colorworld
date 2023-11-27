@@ -18,8 +18,8 @@ export class ProductComponent {
     product: ProductItem = new ProductItem();
     productList!: ProductItem[];
     searchText !: string;
-    units = productUnits;
-    filteredUnits  = [];
+    qty: any[];
+    filteredQty  = [];
 
     visible: boolean = false;
     
@@ -42,11 +42,19 @@ export class ProductComponent {
             next: response => {
                 if (response.code === 200) {
                     this.productList = response.data;
+                    this.getQty(this.productList);
                 }
             },
             error: err => console.error('An error occurred :', err.errorMessage),
             complete: () => this.spinner.hide()
         });
+    }
+
+    getQty(productList: ProductItem[]) {
+        let qty = new Set<string>();
+        productList.forEach(element => qty.add(element.pnuqty.toString()));
+        let tqty = [...qty].sort();
+        this.qty = tqty.map(element => {return {name : element, code : element}});
     }
 
     delete(product: ProductItem) {
@@ -88,30 +96,42 @@ export class ProductComponent {
         this.visible = false;
     }
     //Filter
-    filter(event) {
-        let filteredProduct = $(event.srcElement).val().toLowerCase();
+    filter() {
+        let filteredProduct = $("#searchSuggestion").val().toLowerCase();
+        //Visible fails if backspace is pressed
         $("#productView div").filter(function () {
-            $(this).toggle($(this).text().toLowerCase().indexOf(filteredProduct) > -1)
+            if($(this).text().toLowerCase().indexOf(filteredProduct) != -1)
+                $(this).show();
+            else
+                $(this).hide();
         });
+        let size = this.filteredQty.length;
+        if(size != 0) {
+            this.filterQty();
+        }
     }
 
-    filterUnits() {
-        let size = this.filteredUnits.length;
-        let filteredUnits = this.filteredUnits;
-        $("#productView div").filter(function () {
-            if(filteredUnits.length == 0) {
-                $(this).toggle(true);
-            }
-            else {
-                $(this).toggle(false);
-                for(let i = 0; i< size; i++) {
-                    let unitPos = $(this).text().indexOf("Unit");
-                    let lastPos = $(this).text().lastIndexOf("View");
-                    if($(this).text().toLowerCase().indexOf(filteredUnits[i].code.toLowerCase()) > unitPos && 
-                        $(this).text().toLowerCase().indexOf(filteredUnits[i].code.toLowerCase()) < lastPos) {
-                        $(this).toggle(true);
-                        break;
-                    }
+    clearQty() {
+        this.filteredQty = [];
+        this.filter();
+    }
+
+    filterQty() {
+        let size = this.filteredQty.length;
+        let filteredQty = this.filteredQty;
+        if(filteredQty.length == 0) {
+            this.filter();
+            return;
+        }
+        $("#productView div:visible").filter(function () {
+            $(this).hide();
+            for(let i = 0; i< size; i++) {
+                let startPos = $(this).text().indexOf("Quantity");
+                let lastPos = $(this).text().lastIndexOf("Price");
+                let searchString = $(this).text().substring(startPos, lastPos).toLowerCase();
+                if(searchString.indexOf(filteredQty[i].code.toLowerCase()) != -1) {
+                    $(this).show();
+                    break;
                 }
             }
         });
