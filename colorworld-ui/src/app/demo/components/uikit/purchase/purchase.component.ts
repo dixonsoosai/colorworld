@@ -165,7 +165,11 @@ export class PurchaseComponent implements OnInit {
                 this.purchaseDetails = response.data;
                 this.fetchInvoiceList();
             },
-            error: (error) => {},
+            error: (error) => {
+                console.log(error);
+                this.messageService.add(errorToastr("Error fetching Purchase Bills"));
+                this.spinner.hide();
+            },
             complete: () => this.spinner.hide(),
         });
     }
@@ -287,6 +291,7 @@ export class PurchaseComponent implements OnInit {
                     )
                 );
                 console.error(err);
+                this.spinner.hide();
             },
             complete: () => this.spinner.hide(),
         });
@@ -331,6 +336,7 @@ export class PurchaseComponent implements OnInit {
                                 errorToastr('Error deleting Invoice')
                             );
                             console.error(error);
+                            this.spinner.hide();
                         },
                         complete: () => this.spinner.hide(),
                     });

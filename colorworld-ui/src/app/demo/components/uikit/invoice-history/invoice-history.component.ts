@@ -52,6 +52,7 @@ export class InvoiceHistoryComponent {
             }, 
             error: error => {
                 this.loading = false;
+                this.spinner.hide();
             },
             complete:() => this.spinner.hide()
         });
@@ -97,6 +98,7 @@ export class InvoiceHistoryComponent {
             error : error => {
                 this.messageService.add(errorToastr("Error generating Invoice"));
                 console.error(error);
+                this.spinner.hide();
             },
             complete:() => this.spinner.hide()
         });
@@ -123,6 +125,7 @@ export class InvoiceHistoryComponent {
                     error: error => {
                         this.messageService.add(errorToastr("Error deleting Invoice"));
                         console.error(error);
+                        this.spinner.hide();
                     },
                     complete:() => this.spinner.hide()
 

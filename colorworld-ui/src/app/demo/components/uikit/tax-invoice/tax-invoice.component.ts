@@ -150,6 +150,7 @@ export class TaxInvoiceComponent implements OnInit {
             error: err => {
                 console.error(err);
                 this.messageService.add(errorToastr("Error fetching Products"));
+                this.spinner.hide();
             },
             complete: () => this.spinner.hide()
         });
@@ -330,6 +331,7 @@ export class TaxInvoiceComponent implements OnInit {
             error: err => {
                 console.error(err);
                 this.messageService.add(errorToastr("Error fetching Invoice Details"));
+                this.spinner.hide();
             },
             complete:() => this.spinner.hide()
         });
@@ -434,6 +436,7 @@ export class TaxInvoiceComponent implements OnInit {
             error: error => {
                 this.messageService.add(errorToastr("Error while generating Invoice"));
                 console.error(error);
+                this.spinner.hide();
             },
             complete: () => this.spinner.hide()
         });

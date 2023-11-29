@@ -3,6 +3,7 @@ package com.mrajupaint.colorworld.service;
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -112,14 +113,16 @@ public class PostingService {
 						response, null);
 			}
 		}
+		
+		CompletableFuture<String> buffer = CompletableFuture.supplyAsync(
+				() -> pdfService.generateInvoice(taxInvoice));
 		try {
 			sSTNJNPRepository.deleteByTnbillno(billNum);
 			sSTNJNPRepository.saveAll(taxInvoice.getDetails());
 			sSTNHDPRepository.save(taxInvoice.getHeader());
 			sSGNJNPRepository.saveAll(taxInvoice.getGst());
-			String buffer = pdfService.generateInvoice(taxInvoice);
 			return new ServiceResponse<>(200, AppConstants.SUCCESS, 
-					"Bill generated successfully", buffer);
+					"Bill generated successfully", buffer.get());
 		}
 		catch(Exception e) {
 			LOGGER.error("Error while writing exception {}", e);

@@ -45,7 +45,10 @@ export class ProductComponent {
                     this.getQty(this.productList);
                 }
             },
-            error: err => console.error('An error occurred :', err.errorMessage),
+            error: err => {
+                console.error('An error occurred :', err.errorMessage)
+                this.spinner.hide();
+            },
             complete: () => this.spinner.hide()
         });
     }
@@ -74,6 +77,7 @@ export class ProductComponent {
                     error: err => {
                         this.messageService.add(errorToastr("Error while deleting Product. Kindly Kindly contact system administrator"));
                         console.error(err);
+                        this.spinner.hide();
                     },
                     complete: () => this.spinner.hide()
                 });
@@ -212,6 +216,7 @@ export class ProductComponent {
             error: error => {
                 this.messageService.add(errorToastr("Error while saving product"));
                 console.error(error);
+                this.spinner.hide();
             },
             complete:() => this.spinner.hide()
         });

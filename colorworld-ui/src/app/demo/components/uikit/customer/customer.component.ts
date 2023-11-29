@@ -43,6 +43,7 @@ export class CustomerComponent implements OnInit {
             error: error => {
                 console.error(error);
                 this.messageService.add(errorToastr("Error fetching Customer Details"));
+                this.spinner.hide();
             },
             complete:() => this.spinner.hide()
         });
@@ -78,16 +79,13 @@ export class CustomerComponent implements OnInit {
                             );
                             window.location.reload();
                         } else {
-                            this.messageService.add(
-                                errorToastr(response.errMessage)
-                            );
+                            this.messageService.add(errorToastr(response.errMessage));
                         }
                     },
                     error: error => {
                         console.error(error);
-                        this.messageService.add(
-                            errorToastr(error.error.message)
-                        );
+                        this.messageService.add(errorToastr(error.error.message));
+                        this.spinner.hide();
                     },
                     complete:() => this.spinner.hide()
                 });
@@ -122,6 +120,7 @@ export class CustomerComponent implements OnInit {
             error: error => {
                 console.error(error);
                 this.messageService.add(errorToastr(error.error.message));
+                this.spinner.hide();
             },
             complete: () => this.spinner.hide()
         });
