@@ -8,7 +8,7 @@
 	    size: 215.9mm 279.4mm; /* Letter page size */
 	    margin: 8mm;
 	  }
-  	*	{
+  	*{
 	  font-size:medium;
 	}
     body {
@@ -26,8 +26,10 @@
 
     .header {
       text-align: center;
-      padding-bottom: 2px;
-      border-bottom: 1.5px solid;
+    }
+    
+    .header p {
+    	font-weight:normal;
     }
 
     .header * {
@@ -42,6 +44,7 @@
 
     .bill-header {
       border: none;
+      font-weight:normal;
     }
 
     .invoice_num {
@@ -55,6 +58,7 @@
 
 	.customer_name {
 		padding: 2px;
+		text-align:left;
 	}
 
     .bill table, .bill table thead, .bill table th, .bill table td {
@@ -184,50 +188,63 @@
     .blank-row td {
       border-width:0px;
     }
+    
+    .page-break {
+    	page-break-after: always;
+    	text-align: right !important; 
+    	font-weight: bold;
+    	border-top: 1px solid black !important;
+    }
 
   </style>
 </head>
 
 <body>
-  <div class="header">
-    <h4 class="tax-invoice">TAX INVOICE</h4>
-    <h1 style="font-size:xx-large">@CompanyName</h1>
-    <p>@CompanyDescription</p>
-    <p>@CompanyAddress</p> 
-    <p>@CompanyContact&GST</p>
-  </div>
-
-  <div class="bill-header">
-    <table class="grid-table">
-      <tbody>
-        <tr>
-          <td style="width: 50%;border-right: 2px solid">
-            <p class="customer_name">M/S. @PartyCompany</p>
-          </td>
-          <td style="width: 50%">
-            <div class="invoice_num">Invoice no: @InvoiceNo</div>
-            <div class="invoice_date">Date: @InvoiceDate</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 
   <div class="bill">
     <table width="100%">
       <thead>
-        <th>Challan<br>No</th>
-        <th style="width:19%">Quantity</th>
-        <th style="width:99%">Description</th>
-        <th>HSN<br>Code</th>
-        <th>Rate<br>per unit</th>
-        <th>Disc<br>%</th>
-        <th>Taxable</th>
-        <th style="width:70px!important">Amount</th>
+      	<tr>
+      		<th class="no-margin-padding" colspan="8">
+      		  <div class="header">
+			    <h4 class="tax-invoice">TAX INVOICE</h4>
+			    <h1 style="font-size:xx-large">@CompanyName</h1>
+			    <p>@CompanyDescription</p>
+			    <p>@CompanyAddress</p> 
+			    <p>@CompanyContact&GST</p>
+			  </div>
+			
+			  <div class="bill-header">
+			    <table class="grid-table">
+			      <tbody>
+			        <tr>
+			          <td style="width: 50%;border-right: 2px solid">
+			            <p class="customer_name">M/S. @PartyCompany</p>
+			          </td>
+			          <td style="width: 50%">
+			            <div class="invoice_num">Invoice no: @InvoiceNo</div>
+			            <div class="invoice_date">Date: @InvoiceDate</div>
+			          </td>
+			        </tr>
+			      </tbody>
+			    </table>
+			  </div>
+			 </th>
+		</tr>
+		<tr class="invoice-header">
+	        <th>Challan<br>No</th>
+	        <th style="width:19%">Quantity</th>
+	        <th style="width:99%">Description</th>
+	        <th>HSN<br>Code</th>
+	        <th>Rate<br>per unit</th>
+	        <th>Disc<br>%</th>
+	        <th>Taxable</th>
+	        <th style="width:70px!important">Amount</th>
+        </tr>
       </thead>
       <tbody>
         @BillBody
-      </tbody>
+      </tbody>   
     </table>
   </div>
 

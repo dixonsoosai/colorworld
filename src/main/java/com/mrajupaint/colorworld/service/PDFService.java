@@ -10,9 +10,11 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +28,7 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.mrajupaint.colorworld.common.AppUtils;
 import com.mrajupaint.colorworld.entity.GSTSummary;
+import com.mrajupaint.colorworld.entity.SSGNJNP;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
 import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
@@ -101,8 +104,8 @@ public class PDFService {
 	public String generateInvoice(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			File file = ResourceUtils.getFile("classpath:templates/invoice_template2.html");
-			//File file = new File("C:\\Users\\acer\\git\\colorworld\\src\\main\\resources\\templates\\invoice_template2.html");
+			//File file = ResourceUtils.getFile("classpath:templates/invoice_template2.html");
+			File file = new File("C:\\Users\\acer\\git\\colorworld2\\src\\main\\resources\\templates\\invoice_template2.html");
 			String finalContent = editContent(file, placeholder);
 			String outputFilename = taxInvoiceDirectory + 
 					taxInvoice.getHeader().getTnbillno() +  
@@ -274,6 +277,11 @@ public class PDFService {
 					""";
 			billBody.append(line);
 		}
+		String pageBreak = """
+				        <tr>
+				    		<td colspan=\"8\" class=\"page-break\">Continued..</td>
+				    	</tr>
+				""";
 		replaceKeyword.put("@BillBody", billBody.toString());		
 		replaceKeyword.put("@GSTBody", gstBody.toString());
 		
@@ -337,5 +345,67 @@ public class PDFService {
 		}
 		gst.put(gstTotal.getGnhsnc(), gstTotal);
 		return gst;
+	}
+	
+	public void convertToPages(TaxInvoice taxInvoice) {
+		
+		int pageCount = 0, pageSize = 20;
+		var pages = new HashMap<Integer, List<String>>();
+		pages.put(pageCount, new ArrayList<String>());
+		
+		
+		//Step 1: Distribute contents to pages
+		for(var bill: taxInvoice.getDetails()) {
+			var line = """
+					<tr>
+					 <td>%s</td>
+				     <td>%s</td>
+				     <td>%s</td>
+				     <td>%s</td>
+				     <td>%s</td>
+				     <td>%s</td>
+				     <td>%s</td>
+				     <td>%s</td>
+					</tr>
+					""";
+				line = String.format(line, 
+						bill.getTnchallan(),
+						formatDecimal(bill.getTntqty()) + " X " + Math.round(bill.getTnuqty()) + " " +  
+						bill.getTnunit(),
+						bill.getTnscnnm(),
+						bill.getTnhsnc(),
+						formatNum(bill.getTnprice()),
+						formatNum(bill.getTndisc()),
+						formatNum(bill.getTntxable()),
+						formatNum(bill.getTntamt()));
+				if(pages.get(pageCount).size() >= pageSize) {
+					pageCount++;
+					pages.put(pageCount, new ArrayList<String>());
+				}
+				pages.get(pageCount).add(line);
+		}
+		
+		//Step 2: Add Offset to each pages
+		for(Integer i=0; i < pages.size(); i++) {
+			int offset = pageSize - pages.get(i).size();
+			for(int j=0; j< offset; j++) {
+				var line = """
+						<tr style=\"height: 27.2px;\">
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						</tr>
+						""";
+				pages.get(pageCount).add(line);
+			}
+		}
+		
+		//Step 3: Add Offset to last Page & check for additional page
+		
 	}
 }
