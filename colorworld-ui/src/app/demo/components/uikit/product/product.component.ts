@@ -160,8 +160,8 @@ export class ProductComponent {
             this.messageService.add(errorToastr("Short Name cannot be blank"));
             errorFlag  = true;
         }
-        if(this.product.pnscnm.length >= 15) {
-            this.messageService.add(errorToastr("Display Name cannot be more than 15 chars"));
+        if(this.product.pnscnm.length >= 45) {
+            this.messageService.add(errorToastr("Display Name cannot be more than 45 chars"));
             errorFlag  = true;
         }
         if(this.product.pnpdcd == "") {
