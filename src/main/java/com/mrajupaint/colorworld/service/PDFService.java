@@ -23,7 +23,6 @@ import org.apache.logging.log4j.core.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.mrajupaint.colorworld.common.AppUtils;
@@ -103,8 +102,7 @@ public class PDFService {
 	public String generateInvoice(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			File file = ResourceUtils.getFile("classpath:templates/invoice_template2.html");
-			//File file = new File("C:\\Users\\acer\\git\\colorworld2\\src\\main\\resources\\templates\\invoice_template2.html");
+			File file = new File("C:\\Color World\\invoice_template2.html");
 			String finalContent = editContent(file, placeholder);
 			String outputFilename = taxInvoiceDirectory + 
 					taxInvoice.getHeader().getTnbillno() +  
@@ -208,8 +206,8 @@ public class PDFService {
 		
 		//Read Signature File
 		try {
-            File signFile = ResourceUtils.getFile("classpath:templates/sign.jpg");
-            String ext = FileUtils.getFileExtension(signFile);
+            File signFile = new File("C:\\Color World\\sign.jpg");
+			String ext = FileUtils.getFileExtension(signFile);
             try(FileInputStream fileInputStream = new FileInputStream(signFile)) {
 	            byte[] imageData = new byte[(int) signFile.length()];
 	            fileInputStream.read(imageData);
