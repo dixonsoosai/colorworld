@@ -214,7 +214,7 @@ export class ProductComponent {
                 }
             },
             error: error => {
-                this.messageService.add(errorToastr("Error while saving product"));
+                this.messageService.add(errorToastr("Error while saving product, Kindly retry !!"));
                 console.error(error);
                 this.spinner.hide();
             },

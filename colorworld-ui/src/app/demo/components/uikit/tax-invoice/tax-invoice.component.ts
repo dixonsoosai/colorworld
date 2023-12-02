@@ -326,7 +326,7 @@ export class TaxInvoiceComponent implements OnInit {
             },
             error: err => {
                 console.error(err);
-                this.messageService.add(errorToastr("Error fetching Invoice Details"));
+                this.messageService.add(errorToastr("Error fetching Invoice Details, Kindly refresh !!"));
                 this.spinner.hide();
             },
             complete:() => this.spinner.hide()
@@ -430,7 +430,7 @@ export class TaxInvoiceComponent implements OnInit {
                 this.clearSession();
             },
             error: error => {
-                this.messageService.add(errorToastr("Error while generating Invoice"));
+                this.messageService.add(errorToastr("Error while generating Invoice, Kindly refresh !!"));
                 console.error(error);
                 this.spinner.hide();
             },

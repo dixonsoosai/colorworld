@@ -201,7 +201,7 @@ public class PDFService {
 		StringBuilder gstBody = new StringBuilder();
 		
 		int lastPageCount = getOverflowLimit() + 3 - gstList.size();
-		billBody = convertToPages(taxInvoice, lastPageCount);
+		billBody = convertToPages(taxInvoice, lastPageCount, formatNum(totalGst.getGntxable()));
 		gstBody = convertGSTToHTMLTags(gstList);
 		replaceKeyword.put("@BillBody", billBody.toString());		
 		replaceKeyword.put("@GSTBody", gstBody.toString());
@@ -308,10 +308,9 @@ public class PDFService {
 		return gstBody;
 	}
 	
-	public StringBuilder convertToPages(TaxInvoice taxInvoice, int lastPageCount) {
+	public StringBuilder convertToPages(TaxInvoice taxInvoice, int lastPageCount, String finalTotal) {
 		
 		int pageCount = 0, pageSize = 20;
-		double grandTotal = 0;
 		var pages = new HashMap<Integer, List<String>>();
 		pages.put(pageCount, new ArrayList<String>());
 		
@@ -339,7 +338,6 @@ public class PDFService {
 						formatNum(bill.getTndisc()),
 						formatNum(bill.getTntxable()),
 						formatNum(bill.getTntamt()));
-				grandTotal += bill.getTntxable();
 				if(pages.get(pageCount).size() >= pageSize) {
 					pages.put(++pageCount, new ArrayList<String>());
 				}
@@ -406,7 +404,7 @@ public class PDFService {
 				     <td style=\"text-align:right;font-weight:bold\">%s</td>
 					</tr>
 					""";
-			totalLine = String.format(totalLine, "Total :", formatNum(grandTotal));
+			totalLine = String.format(totalLine, "Total :", finalTotal);
 			pages.get(pageCount).add(totalLine);
 			
 			for(int i = 0; i< lastPageCount - 1; i++) {

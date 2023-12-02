@@ -287,7 +287,7 @@ export class PurchaseComponent implements OnInit {
             error: (err) => {
                 this.messageService.add(
                     errorToastr(
-                        'Error while saving Bill. Kindly contact system administrator'
+                        'Error while saving Bill. , Kindly retry !!'
                     )
                 );
                 console.error(err);
