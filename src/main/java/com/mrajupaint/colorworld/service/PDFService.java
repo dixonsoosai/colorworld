@@ -103,8 +103,8 @@ public class PDFService {
 	public String generateInvoice(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			//File file = ResourceUtils.getFile("classpath:templates/invoice_template2.html");
-			File file = new File("C:\\Users\\acer\\git\\colorworld2\\src\\main\\resources\\templates\\invoice_template2.html");
+			File file = ResourceUtils.getFile("classpath:templates/invoice_template2.html");
+			//File file = new File("C:\\Users\\acer\\git\\colorworld2\\src\\main\\resources\\templates\\invoice_template2.html");
 			String finalContent = editContent(file, placeholder);
 			String outputFilename = taxInvoiceDirectory + 
 					taxInvoice.getHeader().getTnbillno() +  
