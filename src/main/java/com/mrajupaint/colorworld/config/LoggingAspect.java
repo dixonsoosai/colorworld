@@ -33,7 +33,7 @@ public class LoggingAspect {
 			long start = System.currentTimeMillis();
 			var response = joinPoint.proceed();
 			long elapsedTime  = System.currentTimeMillis();
-			LOGGER.info("Time taken is {} ms", (elapsedTime - start));
+			LOGGER.info("Time taken is {} s", (elapsedTime - start)/1000);
 			LOGGER.info("Exited method {}()" , joinPoint.getSignature());
 			LOGGER.info("********************************************************");
 			return response;

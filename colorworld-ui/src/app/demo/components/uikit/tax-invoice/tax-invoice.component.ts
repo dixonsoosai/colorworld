@@ -268,10 +268,6 @@ export class TaxInvoiceComponent implements OnInit {
 
     addToCart(product) {
         let gstSize = new Set(this.selectedProducts.map(element => element.tnhsnc)).size + 1;
-        if(this.selectedProducts.length >= this.overflowLimit + 3 - gstSize) {
-            this.messageService.add(errorToastr("Cannot add more Products"));
-            return;
-        }
         let checkFlag = false;
         if (product.pnpdcd != "") {
             this.selectedProducts.forEach(element => {

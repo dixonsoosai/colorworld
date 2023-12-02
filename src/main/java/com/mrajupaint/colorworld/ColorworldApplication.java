@@ -9,7 +9,7 @@ import org.springframework.retry.annotation.EnableRetry;
 public class ColorworldApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ColorworldApplication.class, args);
+		SpringApplication.run(ColorworldApplication.class, args);		
 	}
 
 }

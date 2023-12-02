@@ -28,7 +28,6 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.mrajupaint.colorworld.common.AppUtils;
 import com.mrajupaint.colorworld.entity.GSTSummary;
-import com.mrajupaint.colorworld.entity.SSGNJNP;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
 import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
@@ -175,8 +174,7 @@ public class PDFService {
 	private Map<String, String> createPlaceholder(TaxInvoice taxInvoice) {
 		var header = taxInvoice.getHeader();
 		var gstList = getGST(taxInvoice);
-		var billList = taxInvoice.getDetails();
-	
+
 		Map<String, String> replaceKeyword = new HashMap<>();
 		replaceKeyword.put("@CompanyName", companyName);
 		replaceKeyword.put("@CompanyDescription", companyDescription);
@@ -185,8 +183,7 @@ public class PDFService {
 		replaceKeyword.put("@CompanyAccountDetails", accountDetails);
 		replaceKeyword.put("@PartyCompany", header.getTnname());
 		replaceKeyword.put("@PartyGST", header.getTnpgst());
-		replaceKeyword.put("@InvoiceNo", 
-				AppUtils.rephraseBill(header.getTnbillno()));
+		replaceKeyword.put("@InvoiceNo", AppUtils.rephraseBill(header.getTnbillno()));
 		replaceKeyword.put("@Comments", header.getTntext().trim());
 		replaceKeyword.put("@InvoiceDate", 
 				AppUtils.formatDate(header.getTntime(), "dd-MM-yyyy"));
@@ -203,85 +200,9 @@ public class PDFService {
 		StringBuilder billBody= new StringBuilder();
 		StringBuilder gstBody = new StringBuilder();
 		
-		for(var gst: gstList.values()) {
-			var line = """
-				<tr>
-					<td>%s</td>
-					<td>%s</td>
-					<td>%s</td>
-					<td>%s</td>
-					<td>%s</td>
-					<td>%s</td>
-				</tr>
-				""";
-			line = String.format(line, 
-					gst.getGnhsnc(), 
-					gst.getGngstp(), 
-					formatNum(gst.getGntxable()),
-					formatNum(gst.getGncamt()), 
-					formatNum(gst.getGnsamt()), 
-					formatNum(gst.getGntamt()));
-			gstBody.append(line);
-		}	
-		for(int i = gstList.size(); i< 3 ; i++) {
-			var line = """
-					<tr style=\"height: 27.2px;\" class= \"blank-row\">
-					     <td></td>
-					     <td></td>
-					     <td></td>
-					     <td></td>
-					     <td></td>
-					     <td></td>
-					</tr>
-					""";
-			gstBody.append(line);
-		}
-		for(var bill: billList) {
-			var line = """
-				<tr>
-				 <td>%s</td>
-			     <td>%s</td>
-			     <td>%s</td>
-			     <td>%s</td>
-			     <td>%s</td>
-			     <td>%s</td>
-			     <td>%s</td>
-			     <td>%s</td>
-				</tr>
-				""";
-			line = String.format(line, 
-					bill.getTnchallan(),
-					formatDecimal(bill.getTntqty()) + " X " + Math.round(bill.getTnuqty()) + " " +  
-					bill.getTnunit(),
-					bill.getTnscnnm(),
-					bill.getTnhsnc(),
-					formatNum(bill.getTnprice()),
-					formatNum(bill.getTndisc()),
-					formatNum(bill.getTntxable()),
-					formatNum(bill.getTntamt()));
-			billBody.append(line);
-		}
-		
-		for(int i = billList.size(); i<= getOverflowLimit() + 3 - gstList.size(); i++) {
-			var line = """
-					<tr style=\"height: 27.2px;\">
-					     <td></td>
-					     <td></td>
-					     <td></td>
-					     <td></td>
-					     <td></td>
-					     <td></td>
-					     <td></td>
-					     <td></td>
-					</tr>
-					""";
-			billBody.append(line);
-		}
-		String pageBreak = """
-				        <tr>
-				    		<td colspan=\"8\" class=\"page-break\">Continued..</td>
-				    	</tr>
-				""";
+		int lastPageCount = getOverflowLimit() + 3 - gstList.size();
+		billBody = convertToPages(taxInvoice, lastPageCount);
+		gstBody = convertGSTToHTMLTags(gstList);
 		replaceKeyword.put("@BillBody", billBody.toString());		
 		replaceKeyword.put("@GSTBody", gstBody.toString());
 		
@@ -302,6 +223,8 @@ public class PDFService {
 		
 		return replaceKeyword;
 	}
+	
+
 	public void convertHtmlToPdf(String htmlContent, String outputPdfFilePath) throws Exception {
         //Replace all single tag
 		htmlContent = htmlContent.replaceAll("<br>", "<br></br>");
@@ -347,12 +270,50 @@ public class PDFService {
 		return gst;
 	}
 	
-	public void convertToPages(TaxInvoice taxInvoice) {
+	private StringBuilder convertGSTToHTMLTags(Map<String, GSTSummary> gstList) {
+		StringBuilder gstBody = new StringBuilder();
+		for(var gst: gstList.values()) {
+			var line = """
+				<tr>
+					<td>%s</td>
+					<td>%s</td>
+					<td>%s</td>
+					<td>%s</td>
+					<td>%s</td>
+					<td>%s</td>
+				</tr>
+				""";
+			line = String.format(line, 
+					gst.getGnhsnc(), 
+					gst.getGngstp(), 
+					formatNum(gst.getGntxable()),
+					formatNum(gst.getGncamt()), 
+					formatNum(gst.getGnsamt()), 
+					formatNum(gst.getGntamt()));
+			gstBody.append(line);
+		}	
+		for(int i = gstList.size(); i< 3 ; i++) {
+			var line = """
+					<tr style=\"height: 27.2px;\" class= \"blank-row\">
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					</tr>
+					""";
+			gstBody.append(line);
+		}
+		return gstBody;
+	}
+	
+	public StringBuilder convertToPages(TaxInvoice taxInvoice, int lastPageCount) {
 		
 		int pageCount = 0, pageSize = 20;
+		double grandTotal = 0;
 		var pages = new HashMap<Integer, List<String>>();
 		pages.put(pageCount, new ArrayList<String>());
-		
 		
 		//Step 1: Distribute contents to pages
 		for(var bill: taxInvoice.getDetails()) {
@@ -378,17 +339,77 @@ public class PDFService {
 						formatNum(bill.getTndisc()),
 						formatNum(bill.getTntxable()),
 						formatNum(bill.getTntamt()));
+				grandTotal += bill.getTntxable();
 				if(pages.get(pageCount).size() >= pageSize) {
-					pageCount++;
-					pages.put(pageCount, new ArrayList<String>());
+					pages.put(++pageCount, new ArrayList<String>());
 				}
 				pages.get(pageCount).add(line);
 		}
 		
 		//Step 2: Add Offset to each pages
-		for(Integer i=0; i < pages.size(); i++) {
+		for(Integer i=0; i < pages.size() - 1; i++) {
 			int offset = pageSize - pages.get(i).size();
 			for(int j=0; j< offset; j++) {
+				var line = """
+						<tr style=\"height: 27.2px;\">
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						     <td></td>
+						</tr>
+						""";
+				pages.get(i).add(line);
+			}
+		}
+		
+		//Step 3: Add Offset to last Page & check for additional page
+		int addOffset = 0;
+		boolean newPage = false;
+		if(pages.get(pageCount).size() <= lastPageCount) {
+			addOffset = lastPageCount - pages.get(pageCount).size(); 
+		} 
+		else {
+			addOffset = pageSize - pages.get(pageCount).size();
+			newPage = true;
+		}
+		for(int i=0; i< addOffset; i++) {
+			var line = """
+					<tr style=\"height: 27.2px;\">
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					     <td></td>
+					</tr>
+					""";
+			pages.get(pageCount).add(line);
+		}
+		//Added new Page
+		if(newPage) {
+			pages.put(++pageCount, new ArrayList<String>());
+			var totalLine = """
+					<tr>
+					 <td></td>
+				     <td></td>
+				     <td style=\"text-align:right;font-weight:bold\">%s</td>
+				     <td></td>
+				     <td></td>
+				     <td></td>
+				     <td></td>
+				     <td style=\"text-align:right;font-weight:bold\">%s</td>
+					</tr>
+					""";
+			totalLine = String.format(totalLine, "Total :", formatNum(grandTotal));
+			pages.get(pageCount).add(totalLine);
+			
+			for(int i = 0; i< lastPageCount - 1; i++) {
 				var line = """
 						<tr style=\"height: 27.2px;\">
 						     <td></td>
@@ -405,7 +426,21 @@ public class PDFService {
 			}
 		}
 		
-		//Step 3: Add Offset to last Page & check for additional page
-		
+		//Convert pages to List & add page break
+		var gstBody = new StringBuilder();
+		String pageBreak = """
+		        <tr>
+		    		<td colspan=\"8\" class=\"page-break\">Page %s</td>
+		    	</tr>
+		""";
+		for(int i=0; i< pages.size(); i++) {
+			for(var page: pages.get(i)) {
+				gstBody.append(page);
+			}
+			if(i < pages.size() - 1) {
+				gstBody.append(String.format(pageBreak, i+1));
+			}
+		}
+		return gstBody;
 	}
 }

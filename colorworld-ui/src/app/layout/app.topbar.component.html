@@ -1,7 +1,7 @@
 <div class="layout-topbar">
     <a class="layout-topbar-logo" routerLink="">
-        <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo">
-        <span>Account Register</span>
+        <img src="assets/logo/logo1.png" alt="logo">
+        <span>Billing Software</span>
     </a>
 
     <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
@@ -14,9 +14,9 @@
 
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
         <button class="p-link layout-topbar-button">
-            <i class="pi pi-user"></i>
+            <img src="assets/logo/user.png" height="45" width="45" alt="logo" style="border-radius: 50%;">
             <span>Profile</span>
         </button>
-        <span style="display: flex;align-items: center;font-size: large;"> Welcome, mrajupaint</span>
+        <span class="pl-2" style="display: flex;align-items: center;font-size: large;"> Welcome, mrajupaint</span>
     </div>
 </div>
