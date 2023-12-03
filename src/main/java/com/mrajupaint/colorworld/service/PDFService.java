@@ -66,7 +66,8 @@ public class PDFService {
 	@Autowired
 	private SSGNJNPRepository gstRepository;
 	
-	private int overflowLimit = 17;
+	@Value("${overflowLimit}")
+	private int overflowLimit;
 	
 	@PostConstruct
 	private void init() {

@@ -40,7 +40,7 @@ public class PostingController {
 	
 	@LogTime
 	@PostMapping("generateBill")
-	public ResponseEntity<String> generateBill(@RequestParam(defaultValue = "17") String overflowLimit,
+	public ResponseEntity<String> generateBill(@RequestParam(defaultValue = "16") String overflowLimit,
 	@RequestBody TaxInvoice taxInvoice) throws ColorWorldException {
 		try {
 			pdfService.setOverflowLimit(Integer.parseInt(overflowLimit));
@@ -70,7 +70,7 @@ public class PostingController {
 	
 	@LogTime
 	@GetMapping("downloadBillNum")
-	public ResponseEntity<String> downloadBillNum(@RequestParam(defaultValue = "17") String overflowLimit,
+	public ResponseEntity<String> downloadBillNum(@RequestParam(defaultValue = "16") String overflowLimit,
 			@RequestParam String billnum) throws ColorWorldException {
 		try {
 			pdfService.setOverflowLimit(Integer.parseInt(overflowLimit));

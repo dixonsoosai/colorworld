@@ -121,6 +121,7 @@
 			<plugin>
 			 	<artifactId>maven-war-plugin</artifactId>
 			    <configuration>
+			     	<warName>hp</warName>
 				 	<webResources>
 				        <resource>
 				            <directory>src/main/webapp</directory>
