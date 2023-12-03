@@ -102,7 +102,7 @@ public class PDFService {
 	public String generateInvoice(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			File file = new File("C:\\Color World\\invoice_template2.html");
+			File file = new File("C:\\Color World\\hb_invoice.html");
 			String finalContent = editContent(file, placeholder);
 			String outputFilename = taxInvoiceDirectory + 
 					taxInvoice.getHeader().getTnbillno() +  
@@ -181,6 +181,7 @@ public class PDFService {
 		replaceKeyword.put("@CompanyAccountDetails", accountDetails);
 		replaceKeyword.put("@PartyCompany", header.getTnname());
 		replaceKeyword.put("@PartyGST", header.getTnpgst());
+		replaceKeyword.put("@PartyAddress", header.getTnaddress());
 		replaceKeyword.put("@InvoiceNo", AppUtils.rephraseBill(header.getTnbillno()));
 		replaceKeyword.put("@Comments", header.getTntext().trim());
 		replaceKeyword.put("@InvoiceDate", 
