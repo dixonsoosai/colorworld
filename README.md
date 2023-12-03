@@ -30,3 +30,4 @@ npm start
 3. package.json -> base-href
 4. src -> app -> layout -> topbar & footer
 5. src -> app -> demo -> uikit -> tax-invoice -> overflowLimit
+6. pom.xml -> war file 
