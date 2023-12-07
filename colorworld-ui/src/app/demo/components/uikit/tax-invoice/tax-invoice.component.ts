@@ -52,7 +52,7 @@ export class TaxInvoiceComponent implements OnInit {
     qty: any[];
     invoiceDate: Date;
     visible: boolean = false;
-    overflowLimit: number = 17;
+    overflowLimit: number = 16;
     filename: string = "";
 
     constructor(

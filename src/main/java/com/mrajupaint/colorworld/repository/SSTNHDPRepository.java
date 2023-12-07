@@ -10,11 +10,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.mrajupaint.colorworld.entity.SSTNHDP;
-import com.mrajupaint.colorworld.entity.SSTNHDP_KEY;
 import com.mrajupaint.colorworld.model.InvoiceSummary;
 
 @Repository
-public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, SSTNHDP_KEY> {
+public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, Integer> {
 
 	@Query(value = "SELECT max(tnbillno) + 1 as billno FROM sstnhdp "
 			+ "where tntime between :startDate and :endDate",
