@@ -2,9 +2,7 @@ package com.mrajupaint.colorworld.service;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -20,7 +18,6 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -205,16 +202,12 @@ public class PDFService {
 		
 		//Read Signature File
 		try {
-            File signFile = new File("C:\\Color World\\sign.jpg");
-			String ext = FileUtils.getFileExtension(signFile);
-            try(FileInputStream fileInputStream = new FileInputStream(signFile)) {
-	            byte[] imageData = new byte[(int) signFile.length()];
-	            fileInputStream.read(imageData);
-	            String base64Image = "data:image/" + ext + ";base64," + 
-	            		Base64.getEncoder().encodeToString(imageData);
-	            replaceKeyword.put("@img", base64Image);
-            }
-        } catch (IOException e) {
+            InputStream signFile = getClass().getClassLoader().getResourceAsStream("templates/sign.jpg");
+			byte[] bytes = new byte[signFile.available()];
+			signFile.read(bytes);            
+            String base64Image = "data:image/jpg;base64," + Base64.getEncoder().encodeToString(bytes);
+            replaceKeyword.put("@img", base64Image);
+        } catch (Exception e) {
             LOGGER.error("Failed to read signature file: {}", e.getMessage(), e);
         }
 		
