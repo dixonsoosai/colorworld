@@ -4,8 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -103,7 +104,7 @@ public class PDFService {
 	public String generateInvoice(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			File file = new File("C:\\Color World\\invoice_template2.html");
+			InputStream file = getClass().getClassLoader().getResourceAsStream("templates/invoice_template2.html");
 			String finalContent = editContent(file, placeholder);
 			String outputFilename = taxInvoiceDirectory + 
 					taxInvoice.getHeader().getTnbillno() +  
@@ -135,27 +136,24 @@ public class PDFService {
 		}
 	}
 	
-	private String editContent(File file, Map<String, String> placeholder) {
+	private String editContent(InputStream file, Map<String, String> placeholder) {
 		String finalContent = "";
-		try(FileReader fr = new FileReader(file)) {
-			String readLine;
-			StringBuilder totalStr = new StringBuilder();
-			try (BufferedReader br = new BufferedReader(fr)) {
-		        while ((readLine = br.readLine()) != null) {
-		            totalStr.append(readLine);
-		        }
-		        finalContent = totalStr.toString();
-		        for(var item: placeholder.entrySet()) {
-		        	finalContent = finalContent
-		        			.replaceAll(item.getKey(), item.getValue());	
-		        }   
-			}
-			catch(Exception e) {
-				LOGGER.error("Exception while reading file: {}", e.getMessage(), e);
-			}
-		} catch (Exception ex) {
-			LOGGER.error("Exception in file: {}", ex.getMessage(), ex);
+		String readLine;
+		StringBuilder totalStr = new StringBuilder();
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(file))) {
+	        while ((readLine = br.readLine()) != null) {
+	            totalStr.append(readLine);
+	        }
+	        finalContent = totalStr.toString();
+	        for(var item: placeholder.entrySet()) {
+	        	finalContent = finalContent
+	        			.replaceAll(item.getKey(), item.getValue());	
+	        }   
 		}
+		catch(Exception e) {
+			LOGGER.error("Exception while reading file: {}", e.getMessage(), e);
+		}
+		
 		return finalContent;
 	}
 
