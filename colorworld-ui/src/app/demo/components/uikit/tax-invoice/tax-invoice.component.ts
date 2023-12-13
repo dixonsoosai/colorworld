@@ -245,7 +245,7 @@ export class TaxInvoiceComponent implements OnInit {
             this.messageService.add(errorToastr("HSN Code cannot be blank"));
             errorFlag = true;
         }
-        if (this.newProduct.pnmcpr == 0) {
+        if (this.newProduct.pncuspr == 0) {
             this.messageService.add(errorToastr("Product Price cannot be blank"));
             errorFlag = true;
         }
