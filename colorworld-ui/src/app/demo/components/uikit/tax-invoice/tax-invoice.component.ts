@@ -96,7 +96,7 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     clearBill() {
-        this.overflowLimit = 17;
+        this.overflowLimit = 16;
         this.header = new Header();
         this.selectedProducts = [];
         this.gstSummary.clear();
@@ -245,7 +245,7 @@ export class TaxInvoiceComponent implements OnInit {
             this.messageService.add(errorToastr("HSN Code cannot be blank"));
             errorFlag = true;
         }
-        if (this.newProduct.pnmcpr == 0) {
+        if (this.newProduct.pncuspr == 0) {
             this.messageService.add(errorToastr("Product Price cannot be blank"));
             errorFlag = true;
         }
@@ -267,16 +267,17 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     addToCart(product) {
-        let gstSize = new Set(this.selectedProducts.map(element => element.tnhsnc)).size + 1;
         let checkFlag = false;
         if (product.pnpdcd != "") {
             this.selectedProducts.forEach(element => {
                 if (element.tnpdcd.trim() === product.pnpdcd.trim()) {
                     element.tntqty += 1;
+                    element.tndisc = parseFloat(((element.tncgst + element.tnsgst)*100/(100 + element.tncgst + element.tnsgst)).toFixed(2));
                     element.tntxable = parseFloat((element.tntqty * element.tnprice * (1 - 0.01 * element.tndisc)).toFixed(2));
                     element.tncamt = parseFloat((element.tntxable * element.tncgst / 100).toFixed(2));
                     element.tnsamt = parseFloat((element.tntxable * element.tnsgst / 100).toFixed(2));
-                    element.tntamt = parseFloat((element.tntxable + element.tncamt + element.tnsamt).toFixed(2));
+                    element.tntamt = parseFloat((element.tntqty * element.tnprice).toFixed(2));
+                    element.tntxable = parseFloat((element.tntamt - element.tncamt - element.tnsamt).toFixed(2));
                     checkFlag = true;
                     this.messageService.add(successToastr("Product added to Invoice"));
                     this.computeBillSummary();
@@ -302,12 +303,13 @@ export class TaxInvoiceComponent implements OnInit {
         productItem.tnsgst = product.pnsgst;
         
         productItem.tntqty = 1;
-        productItem.tndisc = 0;
-        productItem.tntxable = productItem.tntqty * productItem.tnprice;
+        productItem.tndisc = parseFloat(((productItem.tncgst + productItem.tnsgst)*100/
+        (100 + productItem.tncgst + productItem.tnsgst)).toFixed(2));
+        productItem.tntxable = parseFloat((productItem.tntqty * productItem.tnprice*(1 - 0.01*productItem.tndisc)).toFixed(2));
         productItem.tncamt = parseFloat((productItem.tntxable * productItem.tncgst / 100).toFixed(2));
         productItem.tnsamt = parseFloat((productItem.tntxable * productItem.tnsgst / 100).toFixed(2));
-        productItem.tntamt = parseFloat((productItem.tntxable + productItem.tncamt + productItem.tnsamt).toFixed(2));
-
+        productItem.tntamt = parseFloat((productItem.tntqty * productItem.tnprice).toFixed(2));
+        productItem.tntxable =  parseFloat((productItem.tntamt - productItem.tnsamt - productItem.tncamt).toFixed(2)); 
         this.selectedProducts.push(productItem);
         this.computeBillSummary();
         this.messageService.add(successToastr("Product added to Invoice"));
