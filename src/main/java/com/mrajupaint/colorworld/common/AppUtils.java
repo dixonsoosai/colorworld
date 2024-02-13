@@ -55,6 +55,17 @@ public class AppUtils {
 		return DateTimeFormatter.ofPattern(pattern).format(date);
 	}
 	
+	public static String formatNum(double num) {
+		return String.format("%.2f", num);
+	}
+	
+	public static String formatDecimal(double num) {
+		if(num == (int) num) {
+			return String.format("%.0f", num);	
+		}
+		return String.format("%.1f", num);
+	}
+	
 	public static String convertToWords(int num) {
 		BigDecimal bd = new BigDecimal(num);
         long number = bd.longValue();

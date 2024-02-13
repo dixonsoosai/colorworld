@@ -48,6 +48,11 @@ export const invoiceTab = [
 	{ label: 'Invoice', icon: 'pi pi-fw pi-calendar' },
 ];
 
+export const invoiceHistory = [
+	{ label: 'Tax Invoice', icon: 'pi pi-fw pi-shopping-cart' },
+	{ label: 'Quotation', icon: 'pi pi-fw pi-calendar' },
+];
+
 export const getCurrentDate = () => {
 	const date = new Date();
 	return `${date.getFullYear()}-${date.getMonth()}-${date.getDay()}`;

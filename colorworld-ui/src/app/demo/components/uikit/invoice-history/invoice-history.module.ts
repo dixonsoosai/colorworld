@@ -13,6 +13,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { CalendarModule } from 'primeng/calendar';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { TabMenuModule } from 'primeng/tabmenu';
+import { InvoiceTableModule } from '../invoice-table/invoice-table.module';
 
 @NgModule({
   declarations: [InvoiceHistoryComponent],
@@ -24,9 +26,11 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 	ConfirmDialogModule,
 	FormsModule,
 	InputTextModule,
+	InvoiceTableModule,
 	InvoiceHistoryRoutingModule,
 	NgxSpinnerModule,
 	RippleModule,
+	TabMenuModule,
 	TableModule,
 	ToastModule,
 	TooltipModule,

@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mrajupaint.colorworld.config.Config;
 import com.mrajupaint.colorworld.config.LogTime;
 import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.service.InvoiceService;
-import com.mrajupaint.colorworld.service.PDFService;
 import com.mrajupaint.colorworld.service.PostingService;
 
 @RestController
@@ -36,14 +36,14 @@ public class PostingController {
 	InvoiceService invoiceService;
 	
 	@Autowired
-	PDFService pdfService;
+	Config config;
 	
 	@LogTime
 	@PostMapping("generateBill")
 	public ResponseEntity<String> generateBill(@RequestParam(defaultValue = "17") String overflowLimit,
 	@RequestBody TaxInvoice taxInvoice) throws ColorWorldException {
 		try {
-			pdfService.setOverflowLimit(Integer.parseInt(overflowLimit));
+			config.setOverflowLimit(Integer.parseInt(overflowLimit));
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.TEXT_HTML);
 			headers.add("Content-Disposition", "attachment; filename=\"Tax Invoice.html\"");
@@ -73,7 +73,7 @@ public class PostingController {
 	public ResponseEntity<String> downloadBillNum(@RequestParam(defaultValue = "17") String overflowLimit,
 			@RequestParam String billnum) throws ColorWorldException {
 		try {
-			pdfService.setOverflowLimit(Integer.parseInt(overflowLimit));
+			config.setOverflowLimit(Integer.parseInt(overflowLimit));
 			var taxInvoice = invoiceService.getBillDetails(billnum);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.TEXT_HTML);
