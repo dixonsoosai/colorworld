@@ -10,7 +10,7 @@ export class InvoiceHistoryComponent {
     items: MenuItem[] | undefined;
 
     activeItem: MenuItem | undefined;
-
+    activeIndex = 0;
     constructor() { }
 
     ngOnInit() {
@@ -19,11 +19,11 @@ export class InvoiceHistoryComponent {
             { label: 'Tax Invoice', icon: 'pi pi-fw pi-copy' },
             { label: 'Quotation', icon: 'pi pi-fw pi-file' }        
         ];
-
         this.activeItem = this.items[0];
+
     }
 
-    onActiveItemChange(event: MenuItem) {
+    onActiveItemChange(event) {
         this.activeItem = event;
     }
 
