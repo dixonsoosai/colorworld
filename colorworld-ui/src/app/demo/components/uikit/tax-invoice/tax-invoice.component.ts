@@ -54,7 +54,8 @@ export class TaxInvoiceComponent implements OnInit {
     visible: boolean = false;
     overflowLimit: number = 17;
     filename: string = "";
-
+    billType: string = "";
+    
     constructor(
         private spinner: NgxSpinnerService,
         private messageService: MessageService,
@@ -74,6 +75,7 @@ export class TaxInvoiceComponent implements OnInit {
             this.activeItem = this.items[1];
         }
         else {
+            this.billType = "T";
             this.activeItem = this.items[0];
             this.invoiceDate = new Date();
             this.generateNewInvoiceNum();
@@ -112,7 +114,7 @@ export class TaxInvoiceComponent implements OnInit {
         if(this.invoiceDate == null) {
             this.invoiceDate = new Date();
         }
-        this.invoiceService.newInvoice(getISODate2(this.invoiceDate)).subscribe({
+        this.invoiceService.newInvoice(getISODate2(this.invoiceDate), this.billType).subscribe({
             next: response => {
                 if(response.code === 200) {
                     this.header.tnbillno = response.data;
@@ -307,7 +309,8 @@ export class TaxInvoiceComponent implements OnInit {
         productItem.tncamt = parseFloat((productItem.tntxable * productItem.tncgst / 100).toFixed(2));
         productItem.tnsamt = parseFloat((productItem.tntxable * productItem.tnsgst / 100).toFixed(2));
         productItem.tntamt = parseFloat((productItem.tntxable + productItem.tncamt + productItem.tnsamt).toFixed(2));
-
+        productItem.tnbilltype = this.billType;
+        
         this.selectedProducts.push(productItem);
         this.computeBillSummary();
         this.messageService.add(successToastr("Product added to Invoice"));
@@ -316,12 +319,13 @@ export class TaxInvoiceComponent implements OnInit {
     
     fetchInvoice() {
         this.spinner.show();
-        this.invoiceService.fetchBillDetails(this.invoice).subscribe({
+        this.invoiceService.fetchBillDetails(this.invoice, this.billType).subscribe({
             next: (response) => {
                 this.header = response['data'].header;
                 this.filename = `${this.header.tnbillno}_${this.header.tnname}_Tax Invoice.pdf`;
                 this.invoiceDate = new Date(this.header.tntime.substring(0,10));
                 this.selectedProducts = response['data'].details;
+                this.billType = this.header.tnbilltype;
                 this.computeBillSummary();
             },
             error: err => {
@@ -407,8 +411,10 @@ export class TaxInvoiceComponent implements OnInit {
         let header = {...this.header};
         header.tntime = getISTDate(this.invoiceDate);
         header.tntotal  = this.billSummary.bstamt;
+        header.tnbilltype = this.billType;
         let seq = 0;
         this.selectedProducts.forEach(element => element.tnseqno = ++seq);
+        this.gstSummary.forEach(element => element.gnbilltype = this.billType);
         //Generate Summary
         let billData = {
             header: header,

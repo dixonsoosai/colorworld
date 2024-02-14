@@ -20,6 +20,7 @@ import { CalendarModule } from 'primeng/calendar';
 import {AutoCompleteModule} from 'primeng/autocomplete';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
 	imports: [
@@ -38,6 +39,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 		InputTextModule,
 		MultiSelectModule,
 		NgxSpinnerModule,
+		RadioButtonModule,
 		RippleModule,
 		TabMenuModule,
 		TableModule,

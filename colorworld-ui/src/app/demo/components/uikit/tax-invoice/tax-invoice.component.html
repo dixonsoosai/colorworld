@@ -54,57 +54,66 @@
 
 	<div id="tax-invoice" *ngIf="this.activeItem.label == 'Invoice'">
 		<div class="mt-4">
-			<div>
-				<div class="grid">
-					<div class="lg:col md:col-6">
-						<div class="field grid">
-							<label htmlFor="customerName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Customer
-								Name</label>
-							<div class="col-12 md:col-9">
-								<p-autoComplete 
-									[(ngModel)]="header.tnname" [suggestions]="filteredCustomers" 
-									(completeMethod)="searchSuggestion($event)" (onSelect)="populateDetails()"> 
-								</p-autoComplete>
-							</div>
-						</div>
-					</div>
-					<div class="lg:col md:col-6">
-						<div class="field grid">
-							<label htmlFor="gst" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">GST</label>
-							<div class="col-12 md:col-9">
-								<input pInputText type="text" [(ngModel)]="header.tnpgst" style="width: 100%;"/>
-							</div>
-						</div>
-					</div>
-					<div class="lg:col md:col-6">
-						<div class="field grid">
-							<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Mobile</label>
-							<div class="col-12 md:col-9">
-								<input pInputText type="number" [(ngModel)]="header.tnmob" style="width: 100%;">
-							</div>
+			<div class="flex flex-wrap gap-3 justify-content-center">
+				<div class="flex align-items-center">
+					<p-radioButton name="billType" value="T" [(ngModel)]="billType" (onClick)="generateNewInvoiceNum()"></p-radioButton>
+					<label class="ml-2">Tax Invoice</label>
+				</div>
+				
+				<div class="flex align-items-center">
+					<p-radioButton name="billType" value="Q" [(ngModel)]="billType" (onClick)="generateNewInvoiceNum()"></p-radioButton>
+					<label class="ml-2">Quotation</label>
+				</div>
+			</div>
+			<div class="grid mt-4">
+				<div class="lg:col md:col-6">
+					<div class="field grid">
+						<label htmlFor="customerName" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Customer
+							Name</label>
+						<div class="col-12 md:col-9">
+							<p-autoComplete 
+								[(ngModel)]="header.tnname" [suggestions]="filteredCustomers" 
+								(completeMethod)="searchSuggestion($event)" (onSelect)="populateDetails()"> 
+							</p-autoComplete>
 						</div>
 					</div>
 				</div>
-				<div class="grid">
-					<div class="lg:col md:col-6">
-						<div class="field grid">
-							<label htmlFor="address" class="col-12 mb-2 md:col-2 md:mb-0 font-bold">Address</label>
-							<div class="col-12 md:col">
-								<textarea rows="2" pInputTextarea [autoResize]="true" style="width: 100%;"
-									[(ngModel)]="header.tnaddress"></textarea>
-							</div>
+				<div class="lg:col md:col-6">
+					<div class="field grid">
+						<label htmlFor="gst" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">GST</label>
+						<div class="col-12 md:col-9">
+							<input pInputText type="text" [(ngModel)]="header.tnpgst" style="width: 100%;"/>
 						</div>
 					</div>
-					<div class="lg:col md:col-6">
-						<div class="field grid">
-							<label htmlFor="balance" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Comments</label>
-							<div class="col-12 md:col-9">
-								<input pInputText type="text" [(ngModel)]="header.tntext" style="width: 100%;">
-							</div>
+				</div>
+				<div class="lg:col md:col-6">
+					<div class="field grid">
+						<label htmlFor="mobile" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Mobile</label>
+						<div class="col-12 md:col-9">
+							<input pInputText type="number" [(ngModel)]="header.tnmob" style="width: 100%;">
 						</div>
 					</div>
-					
-				</div>				
+				</div>
+			</div>
+			<div class="grid">
+				<div class="lg:col md:col-6">
+					<div class="field grid">
+						<label htmlFor="address" class="col-12 mb-2 md:col-2 md:mb-0 font-bold">Address</label>
+						<div class="col-12 md:col">
+							<textarea rows="2" pInputTextarea [autoResize]="true" style="width: 100%;"
+								[(ngModel)]="header.tnaddress"></textarea>
+						</div>
+					</div>
+				</div>
+				<div class="lg:col md:col-6">
+					<div class="field grid">
+						<label htmlFor="balance" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Comments</label>
+						<div class="col-12 md:col-9">
+							<input pInputText type="text" [(ngModel)]="header.tntext" style="width: 100%;">
+						</div>
+					</div>
+				</div>
+				
 			</div>
 		</div>
 
@@ -383,6 +392,17 @@
 						<div class="col-12 md:col-7">
 							<input pInputText type="number" [(ngModel)]="overflowLimit">
 						</div>
+					</div>
+				</div>
+				<div class="mt-4 flex flex-wrap gap-3 justify-content-center">
+					<div class="flex align-items-center">
+						<p-radioButton name="billType" value="T" [(ngModel)]="billType" (onClick)="generateNewInvoiceNum()"></p-radioButton>
+						<label class="ml-2">Tax Invoice</label>
+					</div>
+					
+					<div class="flex align-items-center">
+						<p-radioButton name="billType" value="Q" [(ngModel)]="billType" (onClick)="generateNewInvoiceNum()"></p-radioButton>
+						<label class="ml-2">Quotation</label>
 					</div>
 				</div>
 			</div>

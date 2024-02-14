@@ -37,6 +37,7 @@ export class InvoiceItem {
 	tnsamt: number = 0;
 	tntamt: number = 0;
 	tnseqno: number = 0;
+	tnbilltype: string = "";
 }
 
 export class BillSummary {
@@ -54,6 +55,7 @@ export class GSTSummary {
 	gntcgst : number = 0;
 	gntsgst : number = 0;
 	gntamt : number = 0;
+	gnbilltype: string = "";
 }
 
 export class InvoiceSummary {

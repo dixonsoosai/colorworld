@@ -38,13 +38,13 @@ public class TaxInvoiceController {
 	
 	@LogTime
 	@GetMapping("bills")
-	public ResponseEntity<ServiceResponse<List<InvoiceSummary>>> bills() {
+	public ResponseEntity<ServiceResponse<List<InvoiceSummary>>> bills(@RequestParam String billType) {
 		try {
 			var response = new ServiceResponse<List<InvoiceSummary>>();
 			response.setCode(HttpStatus.OK.value());
 			response.setErrorMessage(Strings.EMPTY);
 			response.setStatus(AppConstants.SUCCESS);
-			response.setData(invoiceService.getAllBills());
+			response.setData(invoiceService.getAllBills(billType));
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			var errorResponse = new ServiceResponse<List<InvoiceSummary>>();
@@ -59,13 +59,14 @@ public class TaxInvoiceController {
 	
 	@LogTime
 	@GetMapping("refreshBilNum")
-	public ResponseEntity<ServiceResponse<Integer>> refreshBilNum(@RequestParam String billDate) {
+	public ResponseEntity<ServiceResponse<Integer>> refreshBilNum(@RequestParam String billDate,
+			@RequestParam String billType) {
 		try {
 			var response = new ServiceResponse<Integer>();
 			response.setCode(HttpStatus.OK.value());
 			response.setErrorMessage(Strings.EMPTY);
 			response.setStatus(AppConstants.SUCCESS);
-			response.setData(invoiceService.refreshBillNum(Timestamp.valueOf(billDate)));
+			response.setData(invoiceService.refreshBillNum(Timestamp.valueOf(billDate), billType));
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			var errorResponse = new ServiceResponse<Integer>();
@@ -101,13 +102,14 @@ public class TaxInvoiceController {
 	
 	@LogTime
 	@DeleteMapping("bill")
-	public ResponseEntity<ServiceResponse<String>> bill(@RequestParam String billnum) throws ColorWorldException {
+	public ResponseEntity<ServiceResponse<String>> bill(@RequestParam String billnum,
+			@RequestParam String billType) throws ColorWorldException {
 		var response = new ServiceResponse<String>();
 		try {
 			response.setCode(HttpStatus.OK.value());
 			response.setErrorMessage(Strings.EMPTY);
 			response.setStatus(AppConstants.SUCCESS);
-			response.setData(invoiceService.deleteBillByInvoice(Integer.parseInt(billnum)));
+			response.setData(invoiceService.deleteBillByInvoice(Integer.parseInt(billnum), billType));
 		} catch (Exception e) {
 			LOGGER.error("Error while deleting Invoice {}", e);
 			response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());

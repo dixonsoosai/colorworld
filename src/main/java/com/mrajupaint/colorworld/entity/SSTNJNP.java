@@ -49,4 +49,6 @@ public class SSTNJNP
 	@Id
 	@Column
 	private int tnseqno;
+	@Column
+	private String tnbilltype;
 }

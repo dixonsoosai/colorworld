@@ -28,5 +28,7 @@ public class SSTNHDP
 	private double tntotal;
 	@Column
 	private String tntext;
+	@Column
+	private String tnbilltype;
 
 }

@@ -1,7 +1,6 @@
 package com.mrajupaint.colorworld.service;
 
 import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,37 +33,44 @@ public class InvoiceService {
 	@Autowired
 	TransactionRepository transactionRepository;
 	
-	public List<InvoiceSummary> getAllBills() {
-		return headerRepository.getBills(); 
+	public List<InvoiceSummary> getAllBills(String billType) {
+		return headerRepository.getBills(billType); 
 	}
 
-	public int refreshBillNum(Timestamp invoiceDate) {
+	public int refreshBillNum(Timestamp invoiceDate, String billType) {
 		Timestamp startDate = AppUtils.getStartFYear(invoiceDate);
 		Timestamp endDate = AppUtils.getEndFYear(invoiceDate);
-		Optional<Integer> billnum = headerRepository.getBillNo(startDate, endDate);
-		if(billnum.isEmpty()) {
-			return Integer.parseInt(startDate.toLocalDateTime()
-					.format(DateTimeFormatter.ofPattern("yyyyMMdd")) + "001");
+		Optional<Integer> billnum;
+		if(billType.equals("T")) {
+			billnum = headerRepository.getBillNo(startDate, endDate);
+			if(billnum.isEmpty()) {
+				return Integer.parseInt(String.valueOf(AppUtils.getFinancialYear(invoiceDate)) 
+						+ "001");
+			}
 		}
 		else {
-			return billnum.get();
+			billnum = headerRepository.getQuotationNo();
+			if(billnum.isEmpty()) {
+				return 1;
+			}
 		}
+		return billnum.get();
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
 	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
-	public String deleteBillByInvoice(int billnum) throws Exception {
-		int count = headerRepository.deleteByTnbillno(billnum);
+	public String deleteBillByInvoice(int billnum, String billType) throws Exception {
+		int count = headerRepository.deleteByTnbillnoAndTnbilltype(billnum, billType);
 		if(count > 1) {
 			throw new Exception("Delete count greater than 1 " + count);
 		}
 		LOGGER.info("Delete from SSTNHDP");
-		int gstcount = gstRepository.deleteAllByGnbill(billnum);
+		int gstcount = gstRepository.deleteAllByGnbillAndGnbilltype(billnum, billType);
 		if(gstcount >= 5) {
 			throw new Exception("Delete count greater than 1 " + count);
 		}
 		LOGGER.info("Delete from SSGNJNP");
-		transactionRepository.deleteInvoice(billnum);
+		transactionRepository.deleteInvoice(billnum, billType);
 		LOGGER.info("Delete from SSTNJNP");
 		return "Bill deleted successfully";
 	}

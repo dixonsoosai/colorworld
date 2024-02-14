@@ -6,4 +6,5 @@ export class SSGNJNP {
     gncamt:number = 0;
     gnsamt:number = 0;
     gntamt:number = 0;
+    gnbilltype: string = "";
 }

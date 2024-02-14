@@ -12,16 +12,16 @@ export class InvoiceService {
 
   constructor(private httpClient: HttpClient) { }
 
-  fetchAll(): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}tax-invoice/bills`);
+  fetchAll(billType: string): Observable<any> {
+    return this.httpClient.get(`${this.baseUrl}tax-invoice/bills`, { params: {'billType': billType }});
   }
 
-  fetch(invoice: string): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}tax-invoice/bill`);
+  fetch(invoice: string, billType: string): Observable<any> {
+    return this.httpClient.get(`${this.baseUrl}tax-invoice/bill`, { params: {'billType': billType }});
   }
 
-  fetchBillDetails(invoice: string) {
-    return this.httpClient.get(`${this.baseUrl}tax-invoice/billDetails`, {params: {"billnum" : invoice}});
+  fetchBillDetails(invoice: string, billType: string) {
+    return this.httpClient.get(`${this.baseUrl}tax-invoice/billDetails`, {params: {"billnum" : invoice, 'billType': billType}});
   }
 
 
@@ -38,16 +38,18 @@ export class InvoiceService {
     params:{"billnum" : billnum, "overflowLimit" : overflowLimit}});
   }
 
-  delete(billnum): Observable<any> {
+  delete(billnum, billType): Observable<any> {
     return this.httpClient.delete(`${this.baseUrl}tax-invoice/bill`, {
       params: {
-        "billnum" : billnum
+        "billnum" : billnum,
+        'billType': billType
       }
     });
   }
 
-  newInvoice(date): Observable<any> {
-    return this.httpClient.get(`${this.baseUrl}tax-invoice/refreshBilNum`, {params: {"billDate" : date}});
+  newInvoice(date, billType: string): Observable<any> {
+    return this.httpClient.get(`${this.baseUrl}tax-invoice/refreshBilNum`, 
+      { params: {"billDate" : date, 'billType': billType }});
   }
 
 }

@@ -1,8 +1,6 @@
 package com.mrajupaint.colorworld.service;
 
-import java.sql.Timestamp;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +37,9 @@ public class PostingService {
 	
 	@Autowired
 	PDFService pdfService;
+	
+	@Autowired
+	InvoiceService invoiceService;
 	
 	public ServiceResponse<String> downloadBill(TaxInvoice taxInvoice) {
 		//Header should be present
@@ -117,7 +118,8 @@ public class PostingService {
 		CompletableFuture<String> buffer = CompletableFuture.supplyAsync(
 				() -> pdfService.generateInvoice(taxInvoice));
 		try {
-			sSTNJNPRepository.deleteByTnbillno(billNum);
+			sSTNJNPRepository
+			.deleteByTnbillnoAndTnbilltype(billNum, taxInvoice.getHeader().getTnbilltype());
 			sSTNJNPRepository.saveAll(taxInvoice.getDetails());
 			sSTNHDPRepository.save(taxInvoice.getHeader());
 			sSGNJNPRepository.saveAll(taxInvoice.getGst());
@@ -141,10 +143,11 @@ public class PostingService {
 	
 	private String validateHeader(SSTNHDP sstnhdp, int billNum) {
 	
-		if(AppUtils.isBlank(sstnhdp.getTnname()) || AppUtils.isBlank(sstnhdp.getTnpgst())) {
-			return "Invalid Header, Company Name or Company GST not entered";
+		if(sstnhdp.getTnbilltype().equals("T")) {
+			if(AppUtils.isBlank(sstnhdp.getTnname()) || AppUtils.isBlank(sstnhdp.getTnpgst())) {
+				return "Invalid Header, Company Name or Company GST not entered";
+			}
 		}
-		
 		sstnhdp.setTnbillno(billNum);
 		return "****";
 	}
@@ -221,16 +224,8 @@ public class PostingService {
 		if(taxInvoice.getHeader().getTnbillno() != 0) {
 			return taxInvoice.getHeader().getTnbillno();
 		}
-		Timestamp billTime = taxInvoice.getHeader().getTntime();
-		Timestamp startDate = AppUtils.getStartFYear(billTime);
-		Timestamp endDate = AppUtils.getEndFYear(billTime);
-		Optional<Integer> bill = sSTNHDPRepository.getBillNo(startDate, endDate);
-		if(bill.isPresent()) {
-			return bill.get();
-		} 
-		else {
-			return Integer.parseInt(String.valueOf(AppUtils.getFinancialYear(billTime)) + "001");
-		} 
+		return invoiceService.refreshBillNum(taxInvoice.getHeader().getTntime(), 
+				taxInvoice.getHeader().getTnbilltype());
 	}
 	
 	public double round(double num) {

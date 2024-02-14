@@ -23,18 +23,34 @@ public class PDFService {
 	private SSGNJNPRepository gstRepository;
 	
 	@Autowired
+	@Qualifier("TaxInvoiceService")
+	private PrinterService taxInvoiceService;
+	
+	@Autowired
 	@Qualifier("TaxInvoice2Service")
-	private PrinterService printerService;
+	private PrinterService taxInvoice2Service;
+	
+	@Autowired
+	@Qualifier("QuotationService")
+	private PrinterService quotationService;
+	
 	
 	public String generateInvoice(int billnum) {
 		var invoice = new TaxInvoice();
 		invoice.setHeader(headerRepository.getByTnbillno(billnum));
 		invoice.setGst(gstRepository.getByGnbill(billnum));
 		invoice.setDetails(transactionRepository.getTransaction(billnum));
-		return printerService.printInvoice(invoice);
+		return generateInvoice(invoice);
 	}
 	
 	public String generateInvoice(TaxInvoice invoice) {
+		PrinterService printerService;
+		if(invoice.getHeader().getTnbilltype().equals("T")) {
+			printerService = taxInvoice2Service;
+		}
+		else {
+			printerService = quotationService;
+		}
 		return printerService.printInvoice(invoice);
 	}
 }

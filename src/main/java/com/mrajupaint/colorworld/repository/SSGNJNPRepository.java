@@ -13,6 +13,6 @@ public interface SSGNJNPRepository extends JpaRepository<SSGNJNP, SSGNJNP_KEY> {
 
 	List<SSGNJNP> getByGnbill(int billnum);
 
-	int deleteAllByGnbill(int billnum);
+	int deleteAllByGnbillAndGnbilltype(int billnum, String billType);
 
 }

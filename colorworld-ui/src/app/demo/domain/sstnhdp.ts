@@ -7,4 +7,5 @@ export class SSTNHDP {
     tntime: string = "";
     tntotal: number = 0;
     tntext: string = "";
+    tnbilltype: string = "";
 }

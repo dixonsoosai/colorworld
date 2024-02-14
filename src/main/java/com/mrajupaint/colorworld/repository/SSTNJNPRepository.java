@@ -11,7 +11,7 @@ import com.mrajupaint.colorworld.entity.SSTNJNP_KEY;
 @Repository
 public interface SSTNJNPRepository extends JpaRepository<SSTNJNP, SSTNJNP_KEY> {
 	
-	int deleteByTnbillno(int billnum);
+	int deleteByTnbillnoAndTnbilltype(int billnum, String billType);
 
 	List<SSTNJNP> findByTnbillno(int billnum);
 }

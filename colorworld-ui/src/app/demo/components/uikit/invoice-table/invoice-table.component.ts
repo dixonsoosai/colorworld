@@ -52,13 +52,16 @@ export class InvoiceTableComponent {
 
   fetchAll() {
       this.spinner.show();
-      this.invoiceService.fetchAll().subscribe({
+      this.invoiceService.fetchAll(this.billType).subscribe({
           next: response => {
               response.data.forEach(item => {
                   if(item != null) {
                       item.tntime = item.tntime == null ? "" : new Date(item.tntime.substring(0,10));
                   }
               });
+              if(this.billType == "Q") {
+                response.data = response.data.filter(e => e.gngstp === "Total");
+              }
               this.invoiceDetails = response.data;
               this.loading = false;
           }, 
@@ -123,7 +126,7 @@ export class InvoiceTableComponent {
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
               this.spinner.show();
-              this.invoiceService.delete(data.tnbillno).subscribe({
+              this.invoiceService.delete(data.tnbillno, this.billType).subscribe({
                   next: response => {
                       if(response.code == 200) {
                           this.messageService.add(successToastr("Invoice deleted successfully"));

@@ -16,7 +16,7 @@ public class TransactionRepository {
 	
 	@Transactional(rollbackFor = Exception.class)
 	public void addTransaction(List<SSTNJNP> entities) throws Exception {
-		deleteInvoice(entities.get(0).getTnbillno());
+		deleteInvoice(entities.get(0).getTnbillno(), entities.get(0).getTnbilltype());
 		sstnjnpRepository.saveAll(entities);
     }
 	
@@ -25,8 +25,8 @@ public class TransactionRepository {
 	}
 	
 	@Transactional(rollbackFor = Exception.class)
-	public boolean deleteInvoice(int billnum) throws Exception {
-		sstnjnpRepository.deleteByTnbillno(billnum);
+	public boolean deleteInvoice(int billnum, String billType) throws Exception {
+		sstnjnpRepository.deleteByTnbillnoAndTnbilltype(billnum, billType);
 		return true;
 	}
 		
