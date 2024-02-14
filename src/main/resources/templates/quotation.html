@@ -20,6 +20,10 @@
             text-align: center;
             border-bottom: 1px solid;
         }
+        .invoice_details {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
         .quotation {
             font-size: medium;
         }
@@ -32,6 +36,9 @@
         }
         .justify-content-between {
             justify-content: space-between;
+        }
+        .justify-content-end {
+            justify-content: end;
         }
         .bill-body table {
             border-collapse: collapse;
@@ -72,16 +79,19 @@
         <div class="address">@CompanyAddress</div>
         <div class="address">@CompanyContact&GST</div>
     </div>
-    <div class="flex" style="padding-left: 5px;">
-        <div style="width: 40px;">Bill</div>
-        <div style="width: 10px">:</div>
-        <div>@InvoiceNo</div>
+    <div class="invoice_details">
+        <div class="flex" style="padding-left: 5px;">
+            <div style="width: 40px;">Bill</div>
+            <div style="width: 10px">:</div>
+            <div>@InvoiceNo</div>
+        </div>
+        <div class="flex" style="padding-left: 5px;">
+            <div style="width: 40px;">Date</div>
+            <div style="width: 10px">:</div>
+            <div>@InvoiceDate</div>
+        </div>
     </div>
-    <div class="flex" style="padding-left: 5px;">
-        <div style="width: 40px;">Date</div>
-        <div style="width: 10px">:</div>
-        <div>@InvoiceDate</div>
-    </div>
+
     <div class="bill-body">
         <table style="width: 100%;">
             <thead>
@@ -95,9 +105,8 @@
                 @BillBody
             </tbody>
         </table>
-        <div class="flex justify-content-between" style="border-bottom: 1px solid;">
-            <div style="padding-left: 5px;">Total Qty: @TQty</div>
-            <div style="padding-right: 5px;">
+        <div class="flex justify-content-end" style="border-bottom: 1px solid;">
+            <div>
                 <div class="flex">
                     <div>Total: </div>
                     <div style="width: 80px;text-align: right;">@TotalAmount</div>

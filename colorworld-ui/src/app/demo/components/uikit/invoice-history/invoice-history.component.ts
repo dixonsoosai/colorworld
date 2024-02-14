@@ -10,7 +10,6 @@ export class InvoiceHistoryComponent {
     items: MenuItem[] | undefined;
 
     activeItem: MenuItem | undefined;
-    activeIndex = 0;
     constructor() { }
 
     ngOnInit() {
@@ -19,12 +18,18 @@ export class InvoiceHistoryComponent {
             { label: 'Tax Invoice', icon: 'pi pi-fw pi-copy' },
             { label: 'Quotation', icon: 'pi pi-fw pi-file' }        
         ];
-        this.activeItem = this.items[0];
-
+        if(sessionStorage.getItem("SalesInvoiceHistory") != null || sessionStorage.getItem("SalesInvoiceHistory") != undefined) {
+            this.activeItem = this.items.filter(e => e.label == sessionStorage.getItem("SalesInvoiceHistory"))[0];
+        }
+        else {
+            this.activeItem = this.items[0];
+        }
+        
     }
 
     onActiveItemChange(event) {
         this.activeItem = event;
+        sessionStorage.setItem("SalesInvoiceHistory", event.label);
     }
 
 }

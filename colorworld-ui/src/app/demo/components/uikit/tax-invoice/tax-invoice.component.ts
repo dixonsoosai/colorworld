@@ -55,7 +55,8 @@ export class TaxInvoiceComponent implements OnInit {
     overflowLimit: number = 17;
     filename: string = "";
     billType: string = "";
-    
+    originalBillType : string = "";
+
     constructor(
         private spinner: NgxSpinnerService,
         private messageService: MessageService,
@@ -113,6 +114,10 @@ export class TaxInvoiceComponent implements OnInit {
         //Spinner
         if(this.invoiceDate == null) {
             this.invoiceDate = new Date();
+        }
+        if(this.route.snapshot.paramMap.has('bill') && this.originalBillType == this.billType) {
+            this.header.tnbillno = parseInt(this.route.snapshot.paramMap.get('bill'));
+            return;
         }
         this.invoiceService.newInvoice(getISODate2(this.invoiceDate), this.billType).subscribe({
             next: response => {
@@ -243,10 +248,6 @@ export class TaxInvoiceComponent implements OnInit {
             this.messageService.add(errorToastr("CGST cannot be blank"));
             errorFlag = true;
         }
-        if (this.newProduct.pnhsnc == 0) {
-            this.messageService.add(errorToastr("HSN Code cannot be blank"));
-            errorFlag = true;
-        }
         if (this.newProduct.pncuspr == 0) {
             this.messageService.add(errorToastr("Product Price cannot be blank"));
             errorFlag = true;
@@ -260,6 +261,12 @@ export class TaxInvoiceComponent implements OnInit {
             errorFlag = true;
         }
 
+        if(this.billType == "T") {
+            if (this.newProduct.pnhsnc == 0) {
+                this.messageService.add(errorToastr("HSN Code cannot be blank"));
+                errorFlag = true;
+            }
+        }
         if (errorFlag) {
             return;
         }
@@ -326,6 +333,7 @@ export class TaxInvoiceComponent implements OnInit {
                 this.invoiceDate = new Date(this.header.tntime.substring(0,10));
                 this.selectedProducts = response['data'].details;
                 this.billType = this.header.tnbilltype;
+                this.originalBillType = this.billType;
                 this.computeBillSummary();
             },
             error: err => {
@@ -388,21 +396,23 @@ export class TaxInvoiceComponent implements OnInit {
 
     validateCompanyDetails(): boolean {
         let validFlag = true;
-        if (this.header.tnname == "") {
-            this.messageService.add(errorToastr("Company Name cannot be blank"));
-            validFlag = false;
+        if(this.billType == "T") {
+            if (this.header.tnname == "") {
+                this.messageService.add(errorToastr("Company Name cannot be blank"));
+                validFlag = false;
+            }
+    
+            if (this.header.tnpgst == "") {
+                this.messageService.add(errorToastr("Company GST cannot be blank"));
+                validFlag = false;
+            }
+    
+            if (this.header.tntext.length > 40) {
+                this.messageService.add(errorToastr("Comments should be less than 40 chars"));
+                validFlag = false;
+            }
         }
-
-        if (this.header.tnpgst == "") {
-            this.messageService.add(errorToastr("Company GST cannot be blank"));
-            validFlag = false;
-        }
-
-        if (this.header.tntext.length > 40) {
-            this.messageService.add(errorToastr("Comments should be less than 40 chars"));
-            validFlag = false;
-        }
-
+        
         return validFlag;
     }
 
