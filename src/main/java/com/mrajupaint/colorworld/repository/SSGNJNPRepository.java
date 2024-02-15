@@ -11,7 +11,7 @@ import com.mrajupaint.colorworld.entity.SSGNJNP_KEY;
 @Repository
 public interface SSGNJNPRepository extends JpaRepository<SSGNJNP, SSGNJNP_KEY> {
 
-	List<SSGNJNP> getByGnbill(int billnum);
+	List<SSGNJNP> getByGnbillAndGnbilltype(int billnum, String billType);
 
 	int deleteAllByGnbillAndGnbilltype(int billnum, String billType);
 

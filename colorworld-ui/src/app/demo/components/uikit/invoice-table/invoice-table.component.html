@@ -97,7 +97,7 @@
             <td class="text-right">{{rowData.gntamt | number : '1.2-2'}}</td>
             <td>
                 <div class="flex gap-3">
-                    <a [routerLink]="['/home/tax-invoice/' + rowData.tnbillno]">
+                    <a [routerLink]="['/home/tax-invoice/' + rowData.tnbillno + '/' + billType]">
                         <i class="pi pi-eye" style="font-size: 1.5rem;cursor: pointer;" pTooltip="View" 
                             tooltipPosition="bottom">
                         </i>

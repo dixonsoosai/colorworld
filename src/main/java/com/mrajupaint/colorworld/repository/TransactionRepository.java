@@ -20,8 +20,8 @@ public class TransactionRepository {
 		sstnjnpRepository.saveAll(entities);
     }
 	
-	public List<SSTNJNP> getTransaction(int billnum) {
-		return sstnjnpRepository.findByTnbillno(billnum);
+	public List<SSTNJNP> getTransaction(int billnum, String billType) {
+		return sstnjnpRepository.findByTnbillnoAndTnbilltype(billnum, billType);
 	}
 	
 	@Transactional(rollbackFor = Exception.class)

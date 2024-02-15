@@ -72,6 +72,7 @@ export class TaxInvoiceComponent implements OnInit {
         if(this.route.snapshot.paramMap.has('bill')) {
             this.newBill = false;
             this.invoice = this.route.snapshot.paramMap.get('bill');
+            this.billType = this.route.snapshot.paramMap.get('billType');
             this.fetchInvoice();
             this.activeItem = this.items[1];
         }
@@ -420,6 +421,7 @@ export class TaxInvoiceComponent implements OnInit {
         //Generate Header
         let header = {...this.header};
         header.tntime = getISTDate(this.invoiceDate);
+        console.log(header.tntime);
         header.tntotal  = this.billSummary.bstamt;
         header.tnbilltype = this.billType;
         let seq = 0;
@@ -496,6 +498,9 @@ export class TaxInvoiceComponent implements OnInit {
     }
 
     saveCustomer() {
+        if(this.header.tnname === "") {
+            return;
+        }
         let customer = new Customer();
         customer.jpid = this.header.tncusid;
         customer.jpname = this.header.tnname;

@@ -75,11 +75,11 @@ public class InvoiceService {
 		return "Bill deleted successfully";
 	}
 
-	public TaxInvoice getBillDetails(String billnum) {
+	public TaxInvoice getBillDetails(String billnum, String billType) {
 		TaxInvoice taxInvoice = new TaxInvoice();
-		taxInvoice.setHeader(headerRepository.getByTnbillno(Integer.parseInt(billnum)));
-		taxInvoice.setGst(gstRepository.getByGnbill(Integer.parseInt(billnum)));
-		taxInvoice.setDetails(transactionRepository.getTransaction(Integer.parseInt(billnum)));
+		taxInvoice.setHeader(headerRepository.getByTnbillnoAndTnbilltype(Integer.parseInt(billnum), billType));
+		taxInvoice.setGst(gstRepository.getByGnbillAndGnbilltype(Integer.parseInt(billnum), billType));
+		taxInvoice.setDetails(transactionRepository.getTransaction(Integer.parseInt(billnum), billType));
 		return taxInvoice;
 	}
 }

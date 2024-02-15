@@ -35,11 +35,11 @@ public class PDFService {
 	private PrinterService quotationService;
 	
 	
-	public String generateInvoice(int billnum) {
+	public String generateInvoice(int billnum, String billType) {
 		var invoice = new TaxInvoice();
-		invoice.setHeader(headerRepository.getByTnbillno(billnum));
-		invoice.setGst(gstRepository.getByGnbill(billnum));
-		invoice.setDetails(transactionRepository.getTransaction(billnum));
+		invoice.setHeader(headerRepository.getByTnbillnoAndTnbilltype(billnum, billType));
+		invoice.setGst(gstRepository.getByGnbillAndGnbilltype(billnum, billType));
+		invoice.setDetails(transactionRepository.getTransaction(billnum, billType));
 		return generateInvoice(invoice);
 	}
 	

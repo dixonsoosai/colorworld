@@ -31,7 +31,7 @@ public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, Integer> {
 			nativeQuery = true)
 	Optional<Integer> getQuotationNo();
 	
-	SSTNHDP getByTnbillno(int billnum);
+	SSTNHDP getByTnbillnoAndTnbilltype(int billnum, String billType);
 
 	int deleteByTnbillnoAndTnbilltype(int billnum, String billType);
 	

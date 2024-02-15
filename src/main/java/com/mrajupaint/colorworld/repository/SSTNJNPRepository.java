@@ -13,5 +13,5 @@ public interface SSTNJNPRepository extends JpaRepository<SSTNJNP, SSTNJNP_KEY> {
 	
 	int deleteByTnbillnoAndTnbilltype(int billnum, String billType);
 
-	List<SSTNJNP> findByTnbillno(int billnum);
+	List<SSTNJNP> findByTnbillnoAndTnbilltype(int billnum, String billType);
 }

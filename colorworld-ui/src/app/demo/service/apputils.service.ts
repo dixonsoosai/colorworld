@@ -66,9 +66,8 @@ export const getISODate = (date: Date) => {
 	return date.toISOString();
 };
 
-export const getISTDate = (date: Date) => {
-	date.setHours(date.getHours() + 5);
-	date.setMinutes(date.getMinutes() + 30);
+export const getISTDate = (inputDate: Date) => {
+	let date = new Date(inputDate);
 	return date.toISOString();
 };
 

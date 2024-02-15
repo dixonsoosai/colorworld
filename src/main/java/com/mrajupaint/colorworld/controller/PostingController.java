@@ -71,10 +71,10 @@ public class PostingController {
 	@LogTime
 	@GetMapping("downloadBillNum")
 	public ResponseEntity<String> downloadBillNum(@RequestParam(defaultValue = "17") String overflowLimit,
-			@RequestParam String billnum) throws ColorWorldException {
+			@RequestParam String billnum, @RequestParam String billType) throws ColorWorldException {
 		try {
 			config.setOverflowLimit(Integer.parseInt(overflowLimit));
-			var taxInvoice = invoiceService.getBillDetails(billnum);
+			var taxInvoice = invoiceService.getBillDetails(billnum, billType);
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.TEXT_HTML);
 			headers.add("Content-Disposition", "attachment; filename=\"Tax Invoice.html\"");

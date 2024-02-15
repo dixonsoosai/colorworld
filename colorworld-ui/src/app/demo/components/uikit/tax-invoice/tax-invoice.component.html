@@ -132,11 +132,11 @@
 						</div>
 					</div>
 					<div class="field grid">
-						<div class="flex gap-2">
+						<div class="flex gap-2 align-items-center">
 							<label htmlFor="invoiceDate" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">
 								Invoice Date
 							</label>
-							<p-calendar dateFormat="yy-mm-dd"  [appendTo]="'body'" [showButtonBar]="true" 
+							<p-calendar dateFormat="yy-mm-dd" [showTime]="true" [showSeconds]="true" [appendTo]="'body'" [showButtonBar]="true" 
 								[(ngModel)]="invoiceDate"></p-calendar>
 						</div>
 					</div>

@@ -121,13 +121,14 @@ public class TaxInvoiceController {
 	
 	@LogTime
 	@GetMapping("billDetails")
-	public ResponseEntity<ServiceResponse<TaxInvoice>> billDetails(@RequestParam String billnum) {
+	public ResponseEntity<ServiceResponse<TaxInvoice>> billDetails(@RequestParam String billnum,
+			@RequestParam String billType) {
 		try {
 			var response = new ServiceResponse<TaxInvoice>();
 			response.setCode(HttpStatus.OK.value());
 			response.setErrorMessage(Strings.EMPTY);
 			response.setStatus(AppConstants.SUCCESS);
-			response.setData(invoiceService.getBillDetails(billnum));
+			response.setData(invoiceService.getBillDetails(billnum, billType));
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			var errorResponse = new ServiceResponse<TaxInvoice>();

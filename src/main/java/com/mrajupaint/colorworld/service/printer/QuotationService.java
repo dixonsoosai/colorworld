@@ -2,6 +2,7 @@ package com.mrajupaint.colorworld.service.printer;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,6 +10,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,6 +26,8 @@ import com.mrajupaint.colorworld.config.Config;
 import com.mrajupaint.colorworld.entity.GSTSummary;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 
+import jakarta.annotation.PostConstruct;
+
 @Component(value = "QuotationService")
 public class QuotationService implements PrinterService {
 
@@ -31,6 +35,11 @@ public class QuotationService implements PrinterService {
 
 	@Autowired
 	private Config config;
+	
+	@PostConstruct
+	public void init() {
+		
+	}
 	
 	/***
 	 * Steps:
@@ -44,7 +53,7 @@ public class QuotationService implements PrinterService {
 	public String printInvoice(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			InputStream file = getClass().getClassLoader().getResourceAsStream("templates/quotation.html");
+			InputStream file = new FileInputStream(new File("C:\\Users\\TIAA user\\git\\colorworld\\src\\main\\resources\\templates\\quotation.html"));
 			String finalContent = editContent(file, placeholder);
 			String outputFilename = config.getTaxInvoiceDirectory() + 
 					taxInvoice.getHeader().getTnbillno() +  
@@ -103,16 +112,15 @@ public class QuotationService implements PrinterService {
 
 		Map<String, String> replaceKeyword = new HashMap<>();
 		replaceKeyword.put("@CompanyName", config.getCompanyName());
-		replaceKeyword.put("@CompanyDescription", config.getCompanyDescription());
-		replaceKeyword.put("@CompanyAddress", config.getCompanyAddress());
-		replaceKeyword.put("@CompanyContact&GST", config.getCompanyContact());
-		replaceKeyword.put("@CompanyAccountDetails", config.getAccountDetails());
+		replaceKeyword.put("@CompanyAddress1", config.getCompanyAddress1());
+		replaceKeyword.put("@CompanyAddress2", config.getCompanyAddress2());
+		replaceKeyword.put("@CompanyAddress3", config.getCompanyAddress3());
+		replaceKeyword.put("@CompanyContact", config.getCompanyMob());
+		replaceKeyword.put("@GST", config.getCompanyGst());
 		replaceKeyword.put("@PartyCompany", header.getTnname());
-		replaceKeyword.put("@PartyGST", header.getTnpgst());
 		replaceKeyword.put("@InvoiceNo", AppUtils.rephraseBill(header.getTnbillno()));
-		replaceKeyword.put("@Comments", header.getTntext().trim());
 		replaceKeyword.put("@InvoiceDate", 
-				AppUtils.formatDate(header.getTntime(), "dd-MM-yyyy"));
+				AppUtils.formatDate(header.getTntime(), "dd-MM-yyyy hh:mm:ss aa"));
 		replaceKeyword.put("@AmountInWords", 
 				AppUtils.convertToWords((int) Math.round(header.getTntotal()) ));
 		GSTSummary totalGst = gstList.get("Total");
@@ -121,12 +129,23 @@ public class QuotationService implements PrinterService {
 		replaceKeyword.put("@TotalSGST", AppUtils.formatNum(totalGst.getGnsamt()));
 		replaceKeyword.put("@RoundingOff", 
 				AppUtils.formatNum(Math.round(totalGst.getGntamt()) - totalGst.getGntamt() ));
-		replaceKeyword.put("@TotalAmount", AppUtils.formatNum(Math.round(totalGst.getGntamt())));
+		replaceKeyword.put("@TAmt", AppUtils.formatNum(totalGst.getGntamt()));
+		replaceKeyword.put("@GAmt", AppUtils.formatNum(Math.round(totalGst.getGntamt())));
 						
 		StringBuilder billBody= new StringBuilder();
 		billBody = convertToPages(taxInvoice);
 		replaceKeyword.put("@BillBody", billBody.toString());		
 		
+		//Read Logo File
+		try {
+            InputStream logoFile = getClass().getClassLoader().getResourceAsStream("templates/logo.jpg");
+			byte[] bytes = new byte[logoFile.available()];
+			logoFile.read(bytes);            
+            String base64Image = "data:image/jpg;base64," + Base64.getEncoder().encodeToString(bytes);
+            replaceKeyword.put("@img", base64Image);
+        } catch (Exception e) {
+            LOGGER.error("Failed to read signature file: {}", e.getMessage(), e);
+        }
 		return replaceKeyword;
 	}
 	

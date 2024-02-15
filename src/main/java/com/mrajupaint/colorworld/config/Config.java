@@ -44,6 +44,21 @@ public class Config {
 	@Value("${overflowLimit}")
 	private int overflowLimit;
 	
+	@Value("${company.address1}")
+	private String companyAddress1;
+	
+	@Value("${company.address2}")
+	private String companyAddress2;
+	
+	@Value("${company.address3}")
+	private String companyAddress3;
+	
+	@Value("${company.mob}")
+	private String companyMob;
+
+	@Value("${company.gst}")
+	private String companyGst;
+	
 	@PostConstruct
 	private void init() {
 		if(!taxInvoiceDirectory.endsWith(File.separator)) {
