@@ -48,6 +48,9 @@ public class PDFService {
 		if(invoice.getHeader().getTnbilltype().equals("T")) {
 			printerService = taxInvoice2Service;
 		}
+		else if(invoice.getHeader().getTnbilltype().equals("P")) {
+			printerService = taxInvoice2Service;
+		}
 		else {
 			printerService = quotationService;
 		}

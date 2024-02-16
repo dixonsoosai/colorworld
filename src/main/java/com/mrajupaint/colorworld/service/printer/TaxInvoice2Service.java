@@ -118,6 +118,12 @@ public class TaxInvoice2Service implements PrinterService {
 				AppUtils.formatDate(header.getTntime(), "dd-MM-yyyy"));
 		replaceKeyword.put("@AmountInWords", 
 				AppUtils.convertToWords((int) Math.round(header.getTntotal()) ));
+		if(header.getTnbilltype().equals("T")) {
+			replaceKeyword.put("@BillType", "Tax Invoice");
+		}
+		else {
+			replaceKeyword.put("@BillType", "Proforma Invoice");
+		}
 		GSTSummary totalGst = gstList.get("Total");
 		replaceKeyword.put("@AmtB4Tax", AppUtils.formatNum(totalGst.getGntxable()));
 		replaceKeyword.put("@TotalCGST", AppUtils.formatNum(totalGst.getGncamt()));

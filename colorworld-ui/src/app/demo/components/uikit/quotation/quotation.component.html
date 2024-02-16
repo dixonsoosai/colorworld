@@ -376,12 +376,6 @@
 				<div class="flex justify-content-start gap-3 mt-4 align-items-center">
 					<p-button label="Generate Bill" (click)="generateBill()"></p-button>
 					<p-button label="Clear Bill" (click)="clearBill()"></p-button>
-					<div class="field grid mt-2">
-						<label htmlFor="balance" class="col-12 mb-2 md:col-5 md:mb-0 font-bold">Overflow Limit</label>
-						<div class="col-12 md:col-7">
-							<input pInputText type="number" [(ngModel)]="overflowLimit">
-						</div>
-					</div>
 				</div>
 			</div>
 		</div>
@@ -433,7 +427,7 @@
 			<p-fieldset legend="GST">
 				<div class="field grid">
 					<label htmlFor="pnhsnc" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">
-						HSNC<span class="text-danger">&nbsp;*</span>
+						HSNC
 					</label>
 					<div class="col-12 md:col-9">
 						<input pInputText type="text" style="width: 100%;" [(ngModel)]="newProduct.pnhsnc" />

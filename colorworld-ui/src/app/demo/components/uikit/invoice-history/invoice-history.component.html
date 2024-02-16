@@ -8,6 +8,8 @@
     <div *ngIf="activeItem.label=='Quotation'">
         <app-invoice-table [billType]="'Q'"></app-invoice-table>
     </div>
-    
+    <div *ngIf="activeItem.label=='Proforma Invoice'">
+        <app-invoice-table [billType]="'P'"></app-invoice-table>
+    </div>
     
 </p-card>

@@ -14,11 +14,11 @@ import { Header } from 'src/app/demo/domain/header';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
-    templateUrl: './tax-invoice.component.html',
-    styleUrls: ['./tax-invoice.component.scss'],
+    templateUrl: './proforma-invoice.component.html',
+    styleUrls: ['./proforma-invoice.component.scss'],
     providers: [MessageService, ConfirmationService]
 })
-export class TaxInvoiceComponent implements OnInit {
+export class ProformaInvoiceComponent implements OnInit {
 
     newBill = true;
 
@@ -54,7 +54,7 @@ export class TaxInvoiceComponent implements OnInit {
     visible: boolean = false;
     overflowLimit: number = 17;
     filename: string = "";
-    billType: string = "T";
+    billType: string = "P";
 
     constructor(
         private spinner: NgxSpinnerService,
@@ -388,19 +388,21 @@ export class TaxInvoiceComponent implements OnInit {
 
     validateCompanyDetails(): boolean {
         let validFlag = true;
-        if (this.header.tnname == "") {
-            this.messageService.add(errorToastr("Company Name cannot be blank"));
-            validFlag = false;
-        }
-
-        if (this.header.tnpgst == "") {
-            this.messageService.add(errorToastr("Company GST cannot be blank"));
-            validFlag = false;
-        }
-
-        if (this.header.tntext.length > 40) {
-            this.messageService.add(errorToastr("Comments should be less than 40 chars"));
-            validFlag = false;
+        if(this.billType == "T") {
+            if (this.header.tnname == "") {
+                this.messageService.add(errorToastr("Company Name cannot be blank"));
+                validFlag = false;
+            }
+    
+            if (this.header.tnpgst == "") {
+                this.messageService.add(errorToastr("Company GST cannot be blank"));
+                validFlag = false;
+            }
+    
+            if (this.header.tntext.length > 40) {
+                this.messageService.add(errorToastr("Comments should be less than 40 chars"));
+                validFlag = false;
+            }
         }
         
         return validFlag;
@@ -413,8 +415,15 @@ export class TaxInvoiceComponent implements OnInit {
         header.tntotal  = this.billSummary.bstamt;
         header.tnbilltype = this.billType;
         let seq = 0;
-        this.selectedProducts.forEach(element => element.tnseqno = ++seq);
-        this.gstSummary.forEach(element => element.gnbill = header.tnbillno);
+        this.selectedProducts.forEach(element => {
+            element.tnseqno = ++seq
+            element.tnbillno = header.tnbillno;
+            element.tnbilltype = this.billType;
+        });
+        this.gstSummary.forEach(element => {
+            element.gnbilltype = this.billType;
+            element.gnbill = header.tnbillno;
+        });
         //Generate Summary
         let billData = {
             header: header,
@@ -473,7 +482,6 @@ export class TaxInvoiceComponent implements OnInit {
             gst.gncamt += parseFloat((element.tncamt).toFixed(2));
             gst.gnsamt += parseFloat((element.tnsamt).toFixed(2));
             gst.gntamt += parseFloat((element.tntamt).toFixed(2));
-            gst.gnbilltype = this.billType;
             this.gstSummary.set(gst.gngstp, gst);
         });
         let totalGst = new SSGNJNP();
@@ -483,7 +491,6 @@ export class TaxInvoiceComponent implements OnInit {
         totalGst.gncamt += this.billSummary.bstcgst;
         totalGst.gnsamt += this.billSummary.bstsgst;
         totalGst.gntamt += this.billSummary.bstamt;
-        totalGst.gnbilltype = this.billType;
         this.gstSummary.set("Total", totalGst);
     }
 

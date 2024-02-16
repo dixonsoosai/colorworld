@@ -49,7 +49,7 @@ public class InvoiceService {
 			}
 		}
 		else {
-			billnum = headerRepository.getQuotationNo();
+			billnum = headerRepository.getBillNo(billType);
 			if(billnum.isEmpty()) {
 				return 1;
 			}

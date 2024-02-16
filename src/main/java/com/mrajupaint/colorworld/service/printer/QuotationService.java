@@ -2,7 +2,6 @@ package com.mrajupaint.colorworld.service.printer;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -53,7 +52,8 @@ public class QuotationService implements PrinterService {
 	public String printInvoice(TaxInvoice taxInvoice) {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
-			InputStream file = new FileInputStream(new File("C:\\Users\\TIAA user\\git\\colorworld\\src\\main\\resources\\templates\\quotation.html"));
+			InputStream file = getClass().getClassLoader().getResourceAsStream("templates/quotation.html");
+			//InputStream file = new FileInputStream(new File("C:\\Users\\TIAA user\\git\\colorworld\\src\\main\\resources\\templates\\quotation.html"));
 			String finalContent = editContent(file, placeholder);
 			String outputFilename = config.getTaxInvoiceDirectory() + 
 					taxInvoice.getHeader().getTnbillno() +  
