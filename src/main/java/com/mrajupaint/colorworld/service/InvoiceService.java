@@ -33,26 +33,46 @@ public class InvoiceService {
 	@Autowired
 	TransactionRepository transactionRepository;
 	
-	public List<InvoiceSummary> getAllBills(String billType) {
-		return headerRepository.getBills(billType); 
+	public List<InvoiceSummary> getInvoiceBills() {
+		return headerRepository.getInvoiceBills(); 
 	}
 
+	public List<InvoiceSummary> getQuotaionBills() {
+		return headerRepository.getQuotationBills(); 
+	}
+	
 	public int refreshBillNum(Timestamp invoiceDate, String billType) {
 		Timestamp startDate = AppUtils.getStartFYear(invoiceDate);
 		Timestamp endDate = AppUtils.getEndFYear(invoiceDate);
 		Optional<Integer> billnum;
-		if(billType.equals("T")) {
+		
+		switch(billType) {
+		case "T":
 			billnum = headerRepository.getBillNo(startDate, endDate);
 			if(billnum.isEmpty()) {
 				return Integer.parseInt(String.valueOf(AppUtils.getFinancialYear(invoiceDate)) 
 						+ "001");
 			}
-		}
-		else {
+			break;
+		case "P":
+			billnum = headerRepository.getBillNo(startDate, endDate);
+			if(billnum.isEmpty()) {
+				return Integer.parseInt(String.valueOf(AppUtils.getFinancialYear(invoiceDate)) 
+						+ "001");
+			}
+			break;
+		case "Q":
 			billnum = headerRepository.getBillNo(billType);
 			if(billnum.isEmpty()) {
 				return 1;
 			}
+			break;
+		default:
+			billnum = headerRepository.getBillNo(billType);
+			if(billnum.isEmpty()) {
+				return 1;
+			}
+			break;
 		}
 		return billnum.get();
 	}

@@ -20,7 +20,7 @@ public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, Integer> {
 	@Query(value = """
 			SELECT max(tnbillno) + 1 as billno FROM sstnhdp 
 			where tntime between :startDate and :endDate 
-			and tnbilltype = 'T'
+			and tnbilltype IN ('T','P')
 			""",
 			nativeQuery = true)
 	Optional<Integer> getBillNo(@Param("startDate") Timestamp startDate, 
@@ -38,12 +38,20 @@ public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, Integer> {
 	int deleteByTnbillnoAndTnbilltype(int billnum, String billType);
 	
 	@Query(value = """
-			SELECT tnbillno, tnname, tnpgst, tntime, 
+			SELECT tnbillno, tnname, tnpgst, tnbilltype, tntime, 
 			gngstp, gntxable, gncamt, gnsamt, gntamt 
 			FROM SSTNHDP h, SSGNJNP gst 
-			where h.tnbillno = gst.gnbill and h.tnbilltype = :billType
+			where h.tnbillno = gst.gnbill and h.tnbilltype IN ('T','P') 
 			order by tnbillno desc, tntime desc, gngstp"""
 			, nativeQuery = true)
-	List<InvoiceSummary> getBills(@Param("billType") String billType);
-	
+	List<InvoiceSummary> getInvoiceBills();
+
+	@Query(value = """
+			SELECT tnbillno, tnname, tnpgst, tnbilltype, tntime, 
+			gngstp, gntxable, gncamt, gnsamt, gntamt 
+			FROM SSTNHDP h, SSGNJNP gst 
+			where h.tnbillno = gst.gnbill and h.tnbilltype = 'Q'
+			order by tnbillno desc, tntime desc, gngstp"""
+			, nativeQuery = true)
+	List<InvoiceSummary> getQuotationBills();
 }

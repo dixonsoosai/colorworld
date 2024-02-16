@@ -38,13 +38,34 @@ public class TaxInvoiceController {
 	
 	@LogTime
 	@GetMapping("bills")
-	public ResponseEntity<ServiceResponse<List<InvoiceSummary>>> bills(@RequestParam String billType) {
+	public ResponseEntity<ServiceResponse<List<InvoiceSummary>>> bills() {
 		try {
 			var response = new ServiceResponse<List<InvoiceSummary>>();
 			response.setCode(HttpStatus.OK.value());
 			response.setErrorMessage(Strings.EMPTY);
 			response.setStatus(AppConstants.SUCCESS);
-			response.setData(invoiceService.getAllBills(billType));
+			response.setData(invoiceService.getInvoiceBills(	));
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} catch (Exception e) {
+			var errorResponse = new ServiceResponse<List<InvoiceSummary>>();
+			errorResponse.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+			errorResponse.setData(null);
+			errorResponse.setErrorMessage(e.getMessage());
+			errorResponse.setStatus(AppConstants.FAILED);
+			LOGGER.error("Exception in method: {}", e);
+			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@LogTime
+	@GetMapping("quotationBills")
+	public ResponseEntity<ServiceResponse<List<InvoiceSummary>>> quotationBills() {
+		try {
+			var response = new ServiceResponse<List<InvoiceSummary>>();
+			response.setCode(HttpStatus.OK.value());
+			response.setErrorMessage(Strings.EMPTY);
+			response.setStatus(AppConstants.SUCCESS);
+			response.setData(invoiceService.getQuotaionBills());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			var errorResponse = new ServiceResponse<List<InvoiceSummary>>();

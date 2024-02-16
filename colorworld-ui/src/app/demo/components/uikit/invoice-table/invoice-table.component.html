@@ -47,12 +47,6 @@
             </th>
             <th>
                 <div class="flex align-items-center">
-                Company GST
-                <p-columnFilter type="text" field="tnpgst" display="menu"></p-columnFilter>
-                </div>
-            </th>
-            <th>
-                <div class="flex align-items-center">
                 GST %
                 <p-columnFilter type="text" field="gngstp" display="menu"></p-columnFilter>
                 </div>
@@ -81,6 +75,12 @@
                 <p-columnFilter type="numeric" field="gntamt" display="menu"></p-columnFilter>
                 </div>
             </th>
+            <th>
+                <div class="flex align-items-center">
+                Bill Type
+                <p-columnFilter type="text" field="tnpgst" display="menu"></p-columnFilter>
+                </div>
+            </th>
             <th>Action</th>
         </tr>
     </ng-template>
@@ -89,16 +89,16 @@
             <td>{{rowData.tnbillno}}</td>
             <td>{{rowData.tntime | date: 'dd-MM-yyyy'}}</td>
             <td>{{rowData.tnname}}</td>
-            <td>{{rowData.tnpgst}}</td>
             <td class="text-right">{{rowData.gngstp}}</td>
             <td class="text-right">{{rowData.gntxable | number : '1.2-2'}}</td>
             <td class="text-right">{{rowData.gncamt | number : '1.2-2'}}</td>
             <td class="text-right">{{rowData.gnsamt | number : '1.2-2'}}</td>
             <td class="text-right">{{rowData.gntamt | number : '1.2-2'}}</td>
+            <td class="text-center">{{rowData.tnbilltype}}</td>
             <td>
                 <div class="flex gap-3">
-                    <div *ngIf="billType === 'T'">
-                        <a [routerLink]="['/home/tax-invoice/' + rowData.tnbillno]">
+                    <div *ngIf="billType !== 'Q'">
+                        <a [routerLink]="['/home/tax-invoice/' + rowData.tnbillno + '/' + rowData.tnbilltype]">
                             <i class="pi pi-eye" style="font-size: 1.5rem;cursor: pointer;" pTooltip="View" 
                                 tooltipPosition="bottom">
                             </i>
@@ -106,13 +106,6 @@
                     </div>
                     <div *ngIf="billType === 'Q'">
                         <a [routerLink]="['/home/quotation/' + rowData.tnbillno]">
-                            <i class="pi pi-eye" style="font-size: 1.5rem;cursor: pointer;" pTooltip="View" 
-                                tooltipPosition="bottom">
-                            </i>
-                        </a>
-                    </div>
-                    <div *ngIf="billType === 'P'">
-                        <a [routerLink]="['/home/proforma-invoice/' + rowData.tnbillno]">
                             <i class="pi pi-eye" style="font-size: 1.5rem;cursor: pointer;" pTooltip="View" 
                                 tooltipPosition="bottom">
                             </i>

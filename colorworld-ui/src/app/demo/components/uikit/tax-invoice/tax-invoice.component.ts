@@ -54,8 +54,7 @@ export class TaxInvoiceComponent implements OnInit {
     visible: boolean = false;
     overflowLimit: number = 17;
     filename: string = "";
-    billType: string = "T";
-
+    
     constructor(
         private spinner: NgxSpinnerService,
         private messageService: MessageService,
@@ -71,10 +70,12 @@ export class TaxInvoiceComponent implements OnInit {
         if(this.route.snapshot.paramMap.has('bill')) {
             this.newBill = false;
             this.invoice = this.route.snapshot.paramMap.get('bill');
+            this.header.tnbilltype = this.route.snapshot.paramMap.get('billType');
             this.fetchInvoice();
             this.activeItem = this.items[1];
         }
         else {
+            this.header.tnbilltype = "T";
             this.activeItem = this.items[0];
             this.invoiceDate = new Date();
             this.generateNewInvoiceNum();
@@ -113,7 +114,7 @@ export class TaxInvoiceComponent implements OnInit {
         if(this.invoiceDate == null) {
             this.invoiceDate = new Date();
         }
-        this.invoiceService.newInvoice(getISODate2(this.invoiceDate), this.billType).subscribe({
+        this.invoiceService.newInvoice(getISODate2(this.invoiceDate), this.header.tnbilltype).subscribe({
             next: response => {
                 if(response.code === 200) {
                     this.header.tnbillno = response.data;
@@ -309,7 +310,7 @@ export class TaxInvoiceComponent implements OnInit {
         productItem.tncamt = parseFloat((productItem.tntxable * productItem.tncgst / 100).toFixed(2));
         productItem.tnsamt = parseFloat((productItem.tntxable * productItem.tnsgst / 100).toFixed(2));
         productItem.tntamt = parseFloat((productItem.tntxable + productItem.tncamt + productItem.tnsamt).toFixed(2));
-        productItem.tnbilltype = this.billType;
+        productItem.tnbilltype = this.header.tnbilltype;
         
         this.selectedProducts.push(productItem);
         this.computeBillSummary();
@@ -319,13 +320,12 @@ export class TaxInvoiceComponent implements OnInit {
     
     fetchInvoice() {
         this.spinner.show();
-        this.invoiceService.fetchBillDetails(this.invoice, this.billType).subscribe({
+        this.invoiceService.fetchBillDetails(this.invoice, this.header.tnbilltype).subscribe({
             next: (response) => {
                 this.header = response['data'].header;
                 this.filename = `${this.header.tnbillno}_${this.header.tnname}_Tax Invoice.pdf`;
                 this.invoiceDate = new Date(this.header.tntime.substring(0,10));
                 this.selectedProducts = response['data'].details;
-                this.billType = this.header.tnbilltype;
                 this.computeBillSummary();
             },
             error: err => {
@@ -411,10 +411,15 @@ export class TaxInvoiceComponent implements OnInit {
         let header = {...this.header};
         header.tntime = getISTDate(this.invoiceDate);
         header.tntotal  = this.billSummary.bstamt;
-        header.tnbilltype = this.billType;
         let seq = 0;
-        this.selectedProducts.forEach(element => element.tnseqno = ++seq);
-        this.gstSummary.forEach(element => element.gnbill = header.tnbillno);
+        this.selectedProducts.forEach(element => {
+            element.tnseqno = ++seq;
+            element.tnbilltype = header.tnbilltype;
+        });
+        this.gstSummary.forEach(element => {
+            element.gnbill = header.tnbillno;
+            element.gnbilltype = header.tnbilltype;
+        });
         //Generate Summary
         let billData = {
             header: header,
@@ -473,7 +478,7 @@ export class TaxInvoiceComponent implements OnInit {
             gst.gncamt += parseFloat((element.tncamt).toFixed(2));
             gst.gnsamt += parseFloat((element.tnsamt).toFixed(2));
             gst.gntamt += parseFloat((element.tntamt).toFixed(2));
-            gst.gnbilltype = this.billType;
+            gst.gnbilltype = this.header.tnbilltype;
             this.gstSummary.set(gst.gngstp, gst);
         });
         let totalGst = new SSGNJNP();
@@ -483,7 +488,7 @@ export class TaxInvoiceComponent implements OnInit {
         totalGst.gncamt += this.billSummary.bstcgst;
         totalGst.gnsamt += this.billSummary.bstsgst;
         totalGst.gntamt += this.billSummary.bstamt;
-        totalGst.gnbilltype = this.billType;
+        totalGst.gnbilltype = this.header.tnbilltype;
         this.gstSummary.set("Total", totalGst);
     }
 

@@ -19,6 +19,18 @@
       font-size: 13px;
     }
 
+    .watermark {
+      top:400px;
+	    position: fixed;
+	    font-size:100px;
+      transform:rotate(-30deg);
+      opacity: 0.1;
+    }
+
+    .no_watermark {
+      display: none;
+    }
+
     .no-margin-padding {
       margin: 0px 0px 0px 0px;
       padding: 0px 0px 0px 0px;
@@ -39,7 +51,7 @@
 
     .tax-invoice {
       text-decoration: underline;
-	  font-size:larger;
+	    font-size:larger;
     }
 
     .bill-header {
@@ -48,18 +60,18 @@
     }
 
     .invoice_num {
-		padding: 4px;
-		border-bottom: 1px solid;
-	 }
+      padding: 4px;
+      border-bottom: 1px solid;
+    }
 
-	.invoice_date {
-		padding: 4px;
-	}
+    .invoice_date {
+      padding: 4px;
+    }
 
-	.customer_name {
-		padding: 2px;
-		text-align:left;
-	}
+    .customer_name {
+      padding: 2px;
+      text-align:left;
+    }
 
     .bill table, .bill table thead, .bill table th, .bill table td {
       border: 1px solid;
@@ -148,7 +160,7 @@
 
     .account-table tr:first-child td {
       border-top : 0px;
-	  width: 64%;
+	    width: 64%;
     }
 
     .account-table tr:last-child td {
@@ -202,7 +214,7 @@
 </head>
 
 <body>
-
+  <div class="@watermark">NOT ALLOWED<br> TO CLAIM GST<br></div>
   <div class="bill">
     <table width="100%">
       <thead>

@@ -264,16 +264,17 @@ export class QuotationComponent implements OnInit {
     }
 
     addToCart(product) {
-        let gstSize = new Set(this.selectedProducts.map(element => element.tnhsnc)).size + 1;
         let checkFlag = false;
         if (product.pnpdcd != "") {
             this.selectedProducts.forEach(element => {
                 if (element.tnpdcd.trim() === product.pnpdcd.trim()) {
                     element.tntqty += 1;
-                    element.tntxable = parseFloat((element.tntqty * element.tnprice * (1 - 0.01 * element.tndisc)).toFixed(2));
+                    element.tntamt = element.tntqty * element.tnprice;
+                    element.tntxable = parseFloat((element.tntamt / (1 + (element.tncgst / 100) + (element.tnsgst / 100))).toFixed(2));
                     element.tncamt = parseFloat((element.tntxable * element.tncgst / 100).toFixed(2));
                     element.tnsamt = parseFloat((element.tntxable * element.tnsgst / 100).toFixed(2));
-                    element.tntamt = parseFloat((element.tntxable + element.tncamt + element.tnsamt).toFixed(2));
+                    element.tntxable = parseFloat((element.tntamt - element.tncamt - element.tnsamt).toFixed(2));
+                
                     checkFlag = true;
                     this.messageService.add(successToastr("Product added to Invoice"));
                     this.computeBillSummary();
@@ -294,16 +295,20 @@ export class QuotationComponent implements OnInit {
         productItem.tnunit = product.pnunit;
         productItem.tnuqty = product.pnuqty;
         productItem.tnprice = product.pncuspr;
-    
+
         productItem.tncgst = product.pncgst;
         productItem.tnsgst = product.pnsgst;
         
         productItem.tntqty = 1;
         productItem.tndisc = 0;
-        productItem.tntxable = productItem.tntqty * productItem.tnprice;
+
+
+        productItem.tntamt = productItem.tntqty * productItem.tnprice;
+        productItem.tntxable = parseFloat((productItem.tntamt / (1 + (productItem.tncgst / 100) + (productItem.tnsgst / 100))).toFixed(2));
         productItem.tncamt = parseFloat((productItem.tntxable * productItem.tncgst / 100).toFixed(2));
         productItem.tnsamt = parseFloat((productItem.tntxable * productItem.tnsgst / 100).toFixed(2));
-        productItem.tntamt = parseFloat((productItem.tntxable + productItem.tncamt + productItem.tnsamt).toFixed(2));
+        productItem.tntxable = parseFloat((productItem.tntamt - productItem.tncamt - productItem.tnsamt).toFixed(2));
+        
         productItem.tnbilltype = this.billType;
         
         this.selectedProducts.push(productItem);
@@ -340,7 +345,7 @@ export class QuotationComponent implements OnInit {
             case "tqty":
             case "tnprice":
             case "tndisc":
-                row.tntxable = parseFloat((row.tntqty * row.tnprice * (1- 0.01*row.tndisc)).toFixed(2));
+                row.tntamt = parseFloat((row.tntqty * row.tnprice).toFixed(2));
                 break;
             case "namt":
                 row.tndisc = 0;
@@ -354,17 +359,17 @@ export class QuotationComponent implements OnInit {
                 break;
             case "tntamt":
                 row.tndisc = 0;
+                row.tnprice = parseFloat((row.tntamt / row.tntqty).toFixed(2));
                 row.tntxable = parseFloat((row.tntamt / (1 + (row.tncgst / 100) + (row.tnsgst / 100))).toFixed(2));
                 row.tncamt = parseFloat((row.tntxable * row.tncgst / 100).toFixed(2));
                 row.tnsamt = parseFloat((row.tntxable * row.tnsgst / 100).toFixed(2));
                 row.tntxable = parseFloat((row.tntamt - row.tncamt - row.tnsamt).toFixed(2));
-                row.tnprice = parseFloat((row.tntxable / row.tntqty).toFixed(2));
                 this.computeBillSummary();
                 return;
         }
         row.tncamt = parseFloat((row.tntxable * row.tncgst / 100).toFixed(2));
         row.tnsamt = parseFloat((row.tntxable * row.tnsgst / 100).toFixed(2));
-        row.tntamt = parseFloat((row.tntxable + row.tncamt + row.tnsamt).toFixed(2));
+        row.tntxable = parseFloat((row.tntamt - row.tncamt - row.tnsamt).toFixed(2));
         this.computeBillSummary();
     }
 

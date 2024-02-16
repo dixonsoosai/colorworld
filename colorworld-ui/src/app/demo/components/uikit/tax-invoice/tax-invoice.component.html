@@ -52,7 +52,21 @@
 		</div>
 	</div>
 
+	<!-- Tax Invoice Page-->
 	<div id="tax-invoice" *ngIf="this.activeItem.label == 'Invoice'">
+		
+		<div class="mt-4 flex flex-wrap gap-3 justify-content-center">
+			<div class="flex align-items-center">
+				<p-radioButton name="billType" value="T" [(ngModel)]="header.tnbilltype"></p-radioButton>
+				<label class="ml-2">Tax Invoice</label>
+			</div>
+			
+			<div class="flex align-items-center">
+				<p-radioButton name="billType" value="P" [(ngModel)]="header.tnbilltype"></p-radioButton>
+				<label class="ml-2">Proforma Invoice</label>
+			</div>
+		</div>
+
 		<div class="mt-4">
 			<div class="grid mt-4">
 				<div class="lg:col md:col-6">
@@ -381,6 +395,18 @@
 						<div class="col-12 md:col-7">
 							<input pInputText type="number" [(ngModel)]="overflowLimit">
 						</div>
+					</div>
+				</div>
+
+				<div class="mt-4 flex flex-wrap gap-3 justify-content-center">
+					<div class="flex align-items-center">
+						<p-radioButton name="billType" value="T" [(ngModel)]="header.tnbilltype"></p-radioButton>
+						<label class="ml-2">Tax Invoice</label>
+					</div>
+					
+					<div class="flex align-items-center">
+						<p-radioButton name="billType" value="P" [(ngModel)]="header.tnbilltype"></p-radioButton>
+						<label class="ml-2">Proforma Invoice</label>
 					</div>
 				</div>
 			</div>

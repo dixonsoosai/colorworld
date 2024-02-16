@@ -5,13 +5,15 @@
         @page {
 	        size: 72mm auto;
             margin-top: 0cm;
+            margin-bottom: 0cm;
 	    }
         body {
             margin: 0px 0px 0px 0px;
             padding: 0px 0px 0px 0px;
             width: 380px;
-            font-size: 18px;
-            line-height: 20px;
+            font-size: 19px;
+            line-height: 22px;
+            font-family: 'Helvetica';
         }
         .header {
             text-align: center;
@@ -45,6 +47,7 @@
             border: 1px solid;
             border-right: 0px;
             border-left: 0px;
+            font-size: 17px;
         }
 
         .bill-body table thead th, .bill-body table tbody td {
@@ -77,6 +80,7 @@
         .total tbody td {
             padding-left: 3px;
             padding-right: 3px;
+            font-size: 19px;
         }
     </style>
 </head>
@@ -118,7 +122,7 @@
             </tbody>
         </table>
         <div class="flex justify-content-end" style="border-bottom: 1px solid; padding: 5px 0px 5px 0px;">
-            <div class="flex" style="font-size: 16px;">
+            <div class="flex" style="font-size: 17px;">
                 <div>Total: </div>
                 <div style="width: 80px;text-align: right;padding-right: 3px;">@TAmt</div>
             </div>   

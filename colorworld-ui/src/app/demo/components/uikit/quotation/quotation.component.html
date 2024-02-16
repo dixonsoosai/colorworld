@@ -137,14 +137,12 @@
 					<ng-template pTemplate="header">
 						<tr>
 							<th style="width:10%"></th>
-							<th style="width:10%">Challan</th>
 							<th style="width:25%">Product</th>
 							<th style="width:15%">HSNC</th>
 							<th style="width:10%">Total Qty</th>
 							<th style="width:10%">Unit Qty</th>
 							<th style="width:10%">Unit</th>
 							<th style="width:10%">Unit Price</th>
-							<th style="width:10%">Disc (%)</th>
 							<th style="width:10%">Net Amount</th>
 							<th style="width:10%">CGST (%)</th>
 							<th style="width:10%">CGST</th>
@@ -156,7 +154,7 @@
 					</ng-template>
 					<ng-template pTemplate="emptymessage" let-columns>
 						<tr>
-							<td [attr.colspan]="16" class="text-center">
+							<td [attr.colspan]="14" class="text-center">
 								No records found
 							</td>
 						</tr>
@@ -164,16 +162,6 @@
 					<ng-template pTemplate="body" let-cproduct let-editing="editing" let-index="rowIndex">
 						<tr [pEditableRow]="cproduct" [pReorderableRow]="index">
 							<td><span class="pi pi-bars" pReorderableRowHandle></span></td>
-							<td [pEditableColumn]="cproduct.tnchallan" pEditableColumnField="tnchallan">
-								<p-cellEditor>
-									<ng-template pTemplate="input">
-										<input pInputText type="text" [(ngModel)]="cproduct.tnchallan">
-									</ng-template>
-									<ng-template pTemplate="output">
-										{{cproduct.tnchallan}}
-									</ng-template>
-								</p-cellEditor>
-							</td>
 							<td [pEditableColumn]="cproduct.tnscnnm" pEditableColumnField="tnscnnm">
 								<p-cellEditor>
 									<ng-template pTemplate="input">
@@ -238,54 +226,15 @@
 									</ng-template>
 								</p-cellEditor>
 							</td>
-							<td class="text-right" [pEditableColumn]="cproduct.tndisc" pEditableColumnField="tndisc">
-								<p-cellEditor>
-									<ng-template pTemplate="input">
-										<input pInputText type="number" [(ngModel)]="cproduct.tndisc"
-											(ngModelChange)="onChange($event, cproduct, 'tndisc')">
-										
-									</ng-template>
-									<ng-template pTemplate="output">
-										{{cproduct.tndisc}}
-									</ng-template>
-								</p-cellEditor>
+							<td class="text-right">
+								{{cproduct.tntxable}}
 							</td>
-							<td class="text-right" [pEditableColumn]="cproduct.tntxable" pEditableColumnField="tntxable">
-								<p-cellEditor>
-									<ng-template pTemplate="input">
-										<input pInputText type="number" [(ngModel)]="cproduct.tntxable"
-											(ngModelChange)="onChange($event, cproduct, 'namt')">
-										
-									</ng-template>
-									<ng-template pTemplate="output">
-										{{cproduct.tntxable}}
-									</ng-template>
-								</p-cellEditor>
-							</td>
-							<td class="text-right" [pEditableColumn]="cproduct.tncgst" pEditableColumnField="tncgst">
-								<p-cellEditor>
-									<ng-template pTemplate="input">
-										<input pInputText type="number" [(ngModel)]="cproduct.tncgst"
-											(ngModelChange)="onChange($event, cproduct, 'cgst')">
-										
-									</ng-template>
-									<ng-template pTemplate="output">
-										{{cproduct.tncgst}}
-									</ng-template>
-								</p-cellEditor>
+							<td class="text-right">
+								{{cproduct.tncgst}}
 							</td>
 							<td class="text-right">{{cproduct.tncamt}}</td>
-							<td class="text-right" [pEditableColumn]="cproduct.tnsgst" pEditableColumnField="tnsgst">
-								<p-cellEditor>
-									<ng-template pTemplate="input">
-										<input pInputText type="number" [(ngModel)]="cproduct.tnsgst"
-											(ngModelChange)="onChange($event, cproduct, 'sgst')">
-										
-									</ng-template>
-									<ng-template pTemplate="output">
-										{{cproduct.tnsgst}}
-									</ng-template>
-								</p-cellEditor>
+							<td class="text-right">
+								{{cproduct.tnsgst}}
 							</td>
 							<td class="text-right">
 								{{cproduct.tnsamt}}
