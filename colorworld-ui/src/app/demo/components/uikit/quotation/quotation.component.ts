@@ -367,6 +367,7 @@ export class QuotationComponent implements OnInit {
                 this.computeBillSummary();
                 return;
         }
+        row.tntxable = parseFloat((row.tntamt / (1 + (row.tncgst / 100) + (row.tnsgst / 100))).toFixed(2));
         row.tncamt = parseFloat((row.tntxable * row.tncgst / 100).toFixed(2));
         row.tnsamt = parseFloat((row.tntxable * row.tnsgst / 100).toFixed(2));
         row.tntxable = parseFloat((row.tntamt - row.tncamt - row.tnsamt).toFixed(2));
