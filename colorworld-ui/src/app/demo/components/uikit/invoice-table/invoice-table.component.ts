@@ -126,7 +126,7 @@ export class InvoiceTableComponent {
           icon: 'pi pi-exclamation-triangle',
           accept: () => {
               this.spinner.show();
-              this.invoiceService.delete(data.tnbillno, this.billType).subscribe({
+              this.invoiceService.delete(data.tnbillno, data.tnbilltype).subscribe({
                   next: response => {
                       if(response.code == 200) {
                           this.messageService.add(successToastr("Invoice deleted successfully"));

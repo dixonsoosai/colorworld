@@ -63,6 +63,7 @@ export class InvoiceSummary {
     tnname: string = "";
     tnpgst: string = "";
     tntime: string = "";
+	tnbilltype: string = "";
 	gngstp : string = "";
 	gntxable: number = 0;
 	gncamt : number = 0;
