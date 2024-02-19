@@ -323,7 +323,7 @@ export class QuotationComponent implements OnInit {
             next: (response) => {
                 this.header = response['data'].header;
                 this.filename = `${this.header.tnbillno}_${this.header.tnname}_Tax Invoice.pdf`;
-                this.invoiceDate = new Date(this.header.tntime.substring(0,10));
+                this.invoiceDate = new Date(this.header.tntime);
                 this.selectedProducts = response['data'].details;
                 this.billType = this.header.tnbilltype;
                 this.computeBillSummary();
