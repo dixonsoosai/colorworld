@@ -3,6 +3,7 @@ package com.mrajupaint.colorworld.service.printer;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -20,25 +21,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
+import com.lowagie.text.DocumentException;
 import com.mrajupaint.colorworld.common.AppUtils;
 import com.mrajupaint.colorworld.config.Config;
 import com.mrajupaint.colorworld.entity.GSTSummary;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 
-import jakarta.annotation.PostConstruct;
-
 @Component(value = "QuotationService")
 public class QuotationService implements PrinterService {
 
-	private static final Logger LOGGER = LogManager.getLogger(TaxInvoice2Service.class);
+	private static final Logger LOGGER = LogManager.getLogger(QuotationService.class);
 
 	@Autowired
 	private Config config;
-	
-	@PostConstruct
-	public void init() {
-		
-	}
 	
 	/***
 	 * Steps:
@@ -53,7 +48,6 @@ public class QuotationService implements PrinterService {
 		Map<String, String> placeholder = createPlaceholder(taxInvoice);
 		try {
 			InputStream file = getClass().getClassLoader().getResourceAsStream("templates/quotation.html");
-			//InputStream file = new FileInputStream(new File("C:\\Users\\TIAA user\\git\\colorworld\\src\\main\\resources\\templates\\quotation.html"));
 			String finalContent = editContent(file, placeholder);
 			String outputFilename = config.getTaxInvoiceDirectory() + 
 					taxInvoice.getHeader().getTnbillno() +  
@@ -118,6 +112,13 @@ public class QuotationService implements PrinterService {
 		replaceKeyword.put("@CompanyContact", config.getCompanyMob());
 		replaceKeyword.put("@GST", config.getCompanyGst());
 		replaceKeyword.put("@PartyCompany", header.getTnname());
+		if(header.getTnname().equals("")) {
+			replaceKeyword.put("@Customer", "hide");		
+		}
+		else {
+			replaceKeyword.put("@Customer", "");
+			
+		}
 		replaceKeyword.put("@InvoiceNo", AppUtils.rephraseBill(header.getTnbillno()));
 		replaceKeyword.put("@InvoiceDate", 
 				AppUtils.formatDate(header.getTntime(), "dd-MM-yyyy hh:mm:ss aa"));
@@ -132,8 +133,7 @@ public class QuotationService implements PrinterService {
 		replaceKeyword.put("@TAmt", AppUtils.formatNum(totalGst.getGntamt()));
 		replaceKeyword.put("@GAmt", AppUtils.formatNum(Math.round(totalGst.getGntamt())));
 						
-		StringBuilder billBody= new StringBuilder();
-		billBody = convertToPages(taxInvoice);
+		StringBuilder billBody = convertToPages(taxInvoice);
 		replaceKeyword.put("@BillBody", billBody.toString());		
 		
 		//Read Logo File
@@ -150,9 +150,9 @@ public class QuotationService implements PrinterService {
 	}
 	
 
-	public void convertHtmlToPdf(String htmlContent, String outputPdfFilePath) throws Exception {
+	public void convertHtmlToPdf(String htmlContent, String outputPdfFilePath) throws IOException, DocumentException {
         //Replace all single tag
-		htmlContent = htmlContent.replaceAll("<br>", "<br></br>");
+		htmlContent = htmlContent.replace("<br>", "<br></br>");
 		File file = new File(outputPdfFilePath);
         try (OutputStream os = new FileOutputStream(file)) {
             ITextRenderer renderer = new ITextRenderer();
@@ -202,9 +202,9 @@ public class QuotationService implements PrinterService {
 		for(var bill: taxInvoice.getDetails()) {
 			var line = """
 					<tr>
-					 <td>%s</td>
-				     <td>%s</td>
-				     <td>%s</td>
+						<td>%s</td>
+						<td>%s</td>
+						<td>%s</td>
 					</tr>
 					""";
 				line = String.format(line, 

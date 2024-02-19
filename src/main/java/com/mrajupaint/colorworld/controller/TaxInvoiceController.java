@@ -20,7 +20,6 @@ import com.mrajupaint.colorworld.common.AppConstants;
 import com.mrajupaint.colorworld.config.LogTime;
 import com.mrajupaint.colorworld.entity.SPRequest;
 import com.mrajupaint.colorworld.entity.SSTNHDP;
-import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.InvoiceSummary;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.model.TaxInvoice;
@@ -33,8 +32,11 @@ public class TaxInvoiceController {
 
 	private static final Logger LOGGER = LogManager.getLogger(TaxInvoiceController.class);
 	
-	@Autowired
 	InvoiceService invoiceService;
+	
+	public TaxInvoiceController(@Autowired InvoiceService invoiceService) {
+		this.invoiceService = invoiceService;
+	}
 	
 	@LogTime
 	@GetMapping("bills")
@@ -52,7 +54,7 @@ public class TaxInvoiceController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in get bills method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -73,7 +75,7 @@ public class TaxInvoiceController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in quotationBills method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -95,7 +97,7 @@ public class TaxInvoiceController {
 			errorResponse.setData(0);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in refreshBilNum method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -108,7 +110,6 @@ public class TaxInvoiceController {
 			response.setCode(HttpStatus.OK.value());
 			response.setErrorMessage(Strings.EMPTY);
 			response.setStatus(AppConstants.SUCCESS);
-			//response.setData(accRegService.getBills(request));
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			var errorResponse = new ServiceResponse<List<SSTNHDP>>();
@@ -116,7 +117,7 @@ public class TaxInvoiceController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in get bill method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -124,7 +125,7 @@ public class TaxInvoiceController {
 	@LogTime
 	@DeleteMapping("bill")
 	public ResponseEntity<ServiceResponse<String>> bill(@RequestParam String billnum,
-			@RequestParam String billType) throws ColorWorldException {
+			@RequestParam String billType) {
 		var response = new ServiceResponse<String>();
 		try {
 			response.setCode(HttpStatus.OK.value());
@@ -132,7 +133,7 @@ public class TaxInvoiceController {
 			response.setStatus(AppConstants.SUCCESS);
 			response.setData(invoiceService.deleteBillByInvoice(Integer.parseInt(billnum), billType));
 		} catch (Exception e) {
-			LOGGER.error("Error while deleting Invoice {}", e);
+			LOGGER.error("Error while deleting Invoice", e);
 			response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			response.setStatus(AppConstants.FAILED);
 			response.setErrorMessage(e.getMessage());
@@ -157,7 +158,7 @@ public class TaxInvoiceController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in billDetails method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

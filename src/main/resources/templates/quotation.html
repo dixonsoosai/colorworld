@@ -7,6 +7,9 @@
             margin-top: 0cm;
             margin-bottom: 0cm;
 	    }
+	    .hide {
+			display: none!important;
+		}
         body {
             margin: 0px 0px 0px 0px;
             padding: 0px 0px 0px 0px;
@@ -96,7 +99,12 @@
         <div>@GST</div>
     </div>
     <div class="invoice_details">
-        <div class="flex" style="padding-left: 5px;">
+		<div class="flex @Customer" style="padding-left: 5px;">
+            <div style="width: 40px;">M/s.</div>
+            <div style="width: 10px">:</div>
+            <div>@PartyCompany</div>
+        </div>
+		<div class="flex" style="padding-left: 5px;">
             <div style="width: 40px;">Bill</div>
             <div style="width: 10px">:</div>
             <div>@InvoiceNo</div>

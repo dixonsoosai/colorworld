@@ -1,6 +1,5 @@
 package com.mrajupaint.colorworld.service;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -28,39 +26,28 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mrajupaint.colorworld.common.AppConstants;
 import com.mrajupaint.colorworld.common.AppUtils;
+import com.mrajupaint.colorworld.config.Config;
 import com.mrajupaint.colorworld.entity.SPRequest;
 import com.mrajupaint.colorworld.entity.SSACRGP;
 import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.repository.SSACRGPRepository;
 
-import jakarta.annotation.PostConstruct;
-
 @Service
 public class AccountRegisterService {
 
 	private static final Logger LOGGER = LogManager.getLogger(AccountRegisterService.class);
 	
-	@Value("${sales.header}")
-	private List<String> salesHeader;
-	
-	@Value("${account.registry.directory}")
-	private String accountsDirectory;
-	
-	@Autowired
 	SSACRGPRepository sSACRGPRepository;
 	
-	@PostConstruct
-	public void init() {
-		//Create Directory if not exists
-		File directory = new File(accountsDirectory);
-		if(directory.mkdirs()) {
-			LOGGER.info("Accounts Directory created");
-		}
-		if(!accountsDirectory.endsWith(File.separator)) {
-			accountsDirectory += File.separator;
-		}
+	Config config;
+	
+	public AccountRegisterService(@Autowired SSACRGPRepository sSACRGPRepository,
+			@Autowired Config config) {
+		this.sSACRGPRepository = sSACRGPRepository;
+		this.config = config;
 	}
+	
 	
 	public List<SSACRGP> getAllBills(){
 		return sSACRGPRepository.findAllByOrderByArdateDesc();
@@ -145,9 +132,9 @@ public class AccountRegisterService {
             
             // Create a header row
             Row headerRow = sheet.createRow(index);
-            for(int i=0; i< salesHeader.size(); i++) {
+            for(int i=0; i< config.getSalesHeader().size(); i++) {
             	Cell headerCell = headerRow.createCell(i);
-                headerCell.setCellValue(salesHeader.get(i));
+                headerCell.setCellValue(config.getSalesHeader().get(i));
             }
             
             // Add data rows
@@ -200,11 +187,11 @@ public class AccountRegisterService {
                 dataCell.setCellValue(bill.getArtype());
             }
             
-            for(int i = 0; i< salesHeader.size(); i++) {
+            for(int i = 0; i< config.getSalesHeader().size(); i++) {
             	sheet.autoSizeColumn(i);
             }
             
-            String filename = accountsDirectory + "Sales History_" 
+            String filename = config.getAccountsDirectory() + "Sales History_" 
             		+ AppUtils.formatDate(LocalDateTime.now(), "yyyyMMdd") + ".xlsx";
             try (FileOutputStream outputStream = new FileOutputStream(filename)) {
                 workbook.write(outputStream);

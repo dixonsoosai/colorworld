@@ -24,14 +24,21 @@ public class InvoiceService {
 
 	private static final Logger LOGGER = LogManager.getLogger(InvoiceService.class);
 	
-	@Autowired
 	SSTNHDPRepository headerRepository;
 	
-	@Autowired
 	SSGNJNPRepository gstRepository;
 	
-	@Autowired
 	TransactionRepository transactionRepository;
+	
+	public InvoiceService(
+			@Autowired SSTNHDPRepository headerRepository,
+			@Autowired SSGNJNPRepository gstRepository,
+			@Autowired TransactionRepository transactionRepository
+			) {
+		this.headerRepository = headerRepository;
+		this.gstRepository = gstRepository;
+		this.transactionRepository = transactionRepository;
+	}
 	
 	public List<InvoiceSummary> getInvoiceBills() {
 		return headerRepository.getInvoiceBills(); 

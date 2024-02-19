@@ -182,7 +182,7 @@ public class PostingService {
 			LOGGER.error("Total Taxable != Sum of Taxable or Total CGST != Sum of CGST or "
 					+ "Total SGST != Sum of SGST");
 			LOGGER.error("{} != {} or {} != {} or {} != {}",
-					totalTaxable, taxable, totalCGST, cAmt, totalSGST, sAmt, totalTamt, tAmt);
+					totalTaxable, taxable, totalCGST, cAmt, totalSGST, sAmt);
 			return "Invalid GST Transaction";
 		}
 		
@@ -196,7 +196,10 @@ public class PostingService {
 			return "Invalid GST Total";
 		}
 		
-		double billTaxable = 0, billCAmt = 0, billSAmt = 0, billTAmt = 0;
+		double billTaxable = 0;
+		double billCAmt = 0;
+		double billSAmt = 0;
+		double billTAmt = 0;
 		
 		for(int i=0; i< taxInvoice.getDetails().size(); i++) {
 			var billDetails = taxInvoice.getDetails().get(i);

@@ -25,7 +25,7 @@ public class CustomerService {
 	
 	@Transactional(rollbackFor = Exception.class)
 	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
-	public ServiceResponse<Object> addCustomer(Customer customer) throws Exception {
+	public ServiceResponse<Object> addCustomer(Customer customer) {
 		//Validation
 		var response = new ServiceResponse<Object>();
 		
@@ -34,9 +34,9 @@ public class CustomerService {
 			errorMessage.put("JPNAME", "Customer Name cannot be blank");
 		}
 		
-		if(!"".equals(customer.getJpmobno())) {		
+		if(!"".equals(customer.getJpmobno())) {
 			if(!customer.getJpmobno().matches("^(?:\\d{10})?$")) {
-				errorMessage.put("JPMOBNO", "Invalid Mob no");
+				errorMessage.put("JPMOBNO", "Invalid Mob no");		
 			}
 		}
 		

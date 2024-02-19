@@ -29,8 +29,11 @@ public class CustomerController {
 
 	private static final Logger LOGGER = LogManager.getLogger(CustomerController.class);
 	
-	@Autowired
 	private CustomerService customerService;
+	
+	public CustomerController(@Autowired CustomerService customerService) {
+		this.customerService = customerService;
+	}
 	
 	@LogTime
 	@GetMapping("customers")
@@ -48,7 +51,7 @@ public class CustomerController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in getCustomers method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -70,7 +73,7 @@ public class CustomerController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in getCustomer method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -88,7 +91,7 @@ public class CustomerController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in addCustomer method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -110,7 +113,7 @@ public class CustomerController {
 			errorResponse.setData("Customer deletion failed");
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in deleteCustomer method: ", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

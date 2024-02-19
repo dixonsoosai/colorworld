@@ -29,8 +29,11 @@ public class ProductController {
 
 	private static final Logger LOGGER = LogManager.getLogger(ProductController.class);
 	
-	@Autowired
-	private ProductService productService;
+	ProductService productService;
+	
+	public ProductController(@Autowired ProductService productService) {
+		this.productService = productService;
+	}
 	
 	@LogTime
 	@GetMapping("products")
@@ -48,7 +51,7 @@ public class ProductController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in get products method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -70,7 +73,7 @@ public class ProductController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in get product method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -87,7 +90,7 @@ public class ProductController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -109,7 +112,7 @@ public class ProductController {
 			errorResponse.setData("Product deletion failed");
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in deleteProduct method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

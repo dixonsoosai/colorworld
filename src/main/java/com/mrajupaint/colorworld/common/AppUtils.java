@@ -70,8 +70,7 @@ public class AppUtils {
 		BigDecimal bd = new BigDecimal(num);
         long number = bd.longValue();
         long no = bd.longValue();
-        //int decimal = (int) (bd.remainder(BigDecimal.ONE).doubleValue() * 100);
-        int digits_length = String.valueOf(no).length();
+        int digitsLength = String.valueOf(no).length();
         int i = 0;
         ArrayList<String> str = new ArrayList<>();
         HashMap<Integer, String> words = new HashMap<>();
@@ -103,16 +102,15 @@ public class AppUtils {
         words.put(70, "Seventy");
         words.put(80, "Eighty");
         words.put(90, "Ninety");
-        String digits[] = {"", "Hundred", "Thousand", "Lakh", "Crore"};
-        while (i < digits_length) {
+        String[] digits = {"", "Hundred", "Thousand", "Lakh", "Crore"};
+        while (i < digitsLength) {
             int divider = (i == 2) ? 10 : 100;
             number = no % divider;
             no = no / divider;
             i += divider == 10 ? 1 : 2;
             if (number > 0) {
                 int counter = str.size();
-                //String plural = (counter > 0 && number > 9) ? "s" : "";
-                String tmp = (number < 21) ? words.get(Integer.valueOf((int) number)) + " " + digits[counter] : words.get(Integer.valueOf((int) Math.floor(number / 10) * 10)) + " " + words.get(Integer.valueOf((int) (number % 10))) + " " + digits[counter];                
+                String tmp = (number < 21) ? words.get(Integer.valueOf((int) number)) + " " + digits[counter] : words.get(Integer.valueOf((int) number / 10) * 10) + " " + words.get(Integer.valueOf((int) (number % 10))) + " " + digits[counter];                
                 str.add(tmp);
             } else {
                 str.add("");
@@ -122,7 +120,6 @@ public class AppUtils {
         Collections.reverse(str);
         String rupees = String.join(" ", str).trim();
         rupees = rupees.substring(0,1) + rupees.substring(1).toLowerCase();
-        //String paise = (decimal) > 0 ? " And Paise " + words.get(Integer.valueOf((int) (decimal - decimal % 10))) + " " + words.get(Integer.valueOf((int) (decimal % 10))) : "";
         return "Rupees " + rupees + " only";
 	}
 	

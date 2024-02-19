@@ -36,8 +36,11 @@ public class AccountRegisterController {
 
 	private static final Logger LOGGER = LogManager.getLogger(AccountRegisterController.class);
 	
-	@Autowired
 	AccountRegisterService accRegService;
+	
+	public AccountRegisterController(@Autowired AccountRegisterService accRegService) {
+		this.accRegService = accRegService;
+	}
 	
 	@LogTime
 	@GetMapping("bills")
@@ -55,7 +58,7 @@ public class AccountRegisterController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in method: ", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -76,7 +79,7 @@ public class AccountRegisterController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in method: ", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -97,7 +100,7 @@ public class AccountRegisterController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in method: ", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -118,7 +121,7 @@ public class AccountRegisterController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in method: ", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -131,7 +134,7 @@ public class AccountRegisterController {
 					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Sales_Purchase History.xlsx\"")
 					.body(accRegService.downloadBills(request));
 		} catch (Exception e) {
-			LOGGER.error("Exception in method: {}", e);
+			LOGGER.error("Exception in method: ", e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}  
 	}

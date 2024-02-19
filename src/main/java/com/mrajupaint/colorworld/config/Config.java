@@ -61,12 +61,22 @@ public class Config {
 	
 	@PostConstruct
 	private void init() {
-		if(!taxInvoiceDirectory.endsWith(File.separator)) {
-			taxInvoiceDirectory += File.separator;
-		}
+		//Create Directory if not exists
 		File taxInvoice = new File(taxInvoiceDirectory);
 		if(taxInvoice.mkdir()) {
 			LOGGER.info("Tax Invoice Directory created");
+		}
+		File directory = new File(accountsDirectory);
+		if(directory.mkdirs()) {
+			LOGGER.info("Accounts Directory created");
+		}
+		
+		//Add separator
+		if(!taxInvoiceDirectory.endsWith(File.separator)) {
+			taxInvoiceDirectory += File.separator;
+		}
+		if(!accountsDirectory.endsWith(File.separator)) {
+			accountsDirectory += File.separator;
 		}
 	}
 	
