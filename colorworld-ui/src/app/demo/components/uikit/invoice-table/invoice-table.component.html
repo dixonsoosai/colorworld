@@ -41,7 +41,7 @@
             </th>
             <th>
                 <div class="flex align-items-center">
-                Company Name
+                Customer Name
                 <p-columnFilter type="text" field="tnname" display="menu"></p-columnFilter>
                 </div>
             </th>
@@ -85,7 +85,7 @@
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData>
-        <tr>
+        <tr [ngClass]="{'bg-red':rowData.invalid}">
             <td>{{rowData.tnbillno}}</td>
             <td>{{rowData.tntime | date: 'dd-MM-yyyy'}}</td>
             <td>{{rowData.tnname}}</td>

@@ -56,7 +56,16 @@ export class InvoiceTableComponent {
           next: response => {
               response.data.forEach(item => {
                   if(item != null) {
-                      item.tntime = item.tntime == null ? "" : new Date(item.tntime.substring(0,10));
+                      item.tntime = item.tntime == null ? "" : new Date(item.tntime);
+                  }
+                  item.invalid = false;
+                  if(item.tnbilltype == "P") {
+                    let expiry = new Date(item.tntime);
+                    expiry.setDate(expiry.getDate() + 7);
+                    console.log(expiry, item.tntime)
+                    if(expiry <= new Date()) {
+                        item.invalid = true;
+                    }
                   }
               });
               if(this.billType == "Q") {

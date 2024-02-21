@@ -27,7 +27,7 @@
       opacity: 0.1;
     }
 
-    .no_watermark {
+    .hide {
       display: none;
     }
 
@@ -173,29 +173,29 @@
       border-right: 0px;
     }
 
-    .gst-table,
-	  .gst-table td,
-	  .gst-table th {
-		   margin: 0px 0px 0px 0px;
-		   border-collapse: collapse;
-		   border-spacing: 0;
-		   padding: 4px;
-	  }
-
-	  .gst-details td, .gst-details th{
-		   border: 1px solid;
-	  }
-
-	  .gst-details th, .gst-details{
-		   border-top: hidden;
-	  }
-	  .gst-details td:first-child,  .gst-details th:first-child{
-		   border-left: hidden;
-	  }
-
-	  .gst-details, .gst-details td:last-child, .gst-details th:last-child {
-		   border-right: hidden;
-	  }
+	.gst-table,
+	.gst-table td,
+	.gst-table th {
+	   margin: 0px 0px 0px 0px;
+	   border-collapse: collapse;
+	   border-spacing: 0;
+	   padding: 4px;
+	 }
+	
+	 .gst-details td, .gst-details th{
+       border: 1px solid;
+	 }
+	
+	 .gst-details th, .gst-details{
+	   border-top: hidden;
+	 }
+	 .gst-details td:first-child,  .gst-details th:first-child{
+	   border-left: hidden;
+	 }
+	
+	 .gst-details, .gst-details td:last-child, .gst-details th:last-child {
+	   border-right: hidden;
+	 }
 
     .blank-row td {
       border-width:0px;
@@ -209,6 +209,9 @@
     	border-bottom: 1px solid black !important;
     	height: 227px !important;
     }
+    .disclaimer {
+		font-weight: bolder;
+	}
 
   </style>
 </head>
@@ -233,7 +236,8 @@
 			      <tbody>
 			        <tr>
 			          <td style="width: 50%;border-right: 2px solid">
-			            <p class="customer_name">M/S. @PartyCompany</p>
+			            <div class="customer_name">M/S. @PartyCompany</div>
+			            <div class="customer_name">GST No: @PartyGST</div>
 			          </td>
 			          <td style="width: 50%">
 			            <div class="invoice_num">Invoice no: @InvoiceNo</div>
@@ -267,13 +271,14 @@
       <tbody>
         <tr>
           <td style="width:70%;vertical-align: top;" class="no-margin-padding">
-            <div class="partyGst">Party GST No: @PartyGST</div>
             <div class="amtinwords">Amount in words: @AmountInWords</div>
             <div class="declaration">
               Declaration:<br>
                   We declare that this invoice shows the actual price of the goods described and all particulars
                   are true and correct
             </div>
+            <div class="@disclaimer">This bill is valid only for 7 days from the date of issuance</div>
+            
           </td>
           <td style="width:30%" class="no-margin-padding">
             <table class= "account-table" style="width: 100%;" cell-spacing="0">
