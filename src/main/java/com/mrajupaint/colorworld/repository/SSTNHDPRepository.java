@@ -12,26 +12,16 @@ import org.springframework.stereotype.Repository;
 import com.mrajupaint.colorworld.entity.SSTNHDP;
 import com.mrajupaint.colorworld.model.InvoiceSummary;
 
-import jakarta.websocket.server.PathParam;
-
 @Repository
 public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, Integer> {
 
 	@Query(value = """
 			SELECT max(tnbillno) + 1 as billno FROM sstnhdp 
 			where tntime between :startDate and :endDate 
-			and tnbilltype IN ('T','P')
 			""",
 			nativeQuery = true)
 	Optional<Integer> getBillNo(@Param("startDate") Timestamp startDate, 
 			@Param("endDate") Timestamp endDate);
-
-	@Query(value = """
-			SELECT max(tnbillno) + 1 as billno FROM sstnhdp 
-			where tnbilltype = :billType
-			""",
-			nativeQuery = true)
-	Optional<Integer> getBillNo(@PathParam("billType") String billType);
 	
 	SSTNHDP getByTnbillnoAndTnbilltype(int billnum, String billType);
 

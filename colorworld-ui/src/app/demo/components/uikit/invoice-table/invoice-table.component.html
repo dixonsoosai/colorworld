@@ -23,7 +23,7 @@
     [showCurrentPageReport]="true"
     [rowsPerPageOptions]="[10, 25, 50]"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-    [globalFilterFields]="['tnbillno', 'tntime', 'tnname','tnpgst','gngstp','gntxable','gncamt', 'gnsamt', 'gntamt']"
+    [globalFilterFields]="['tnbillno','tntime','tnname','tnpgst','gngstp','gntxable','gncamt','gnsamt','gntamt','tnbilltype']"
     >
     <ng-template pTemplate="header" let-columns>
         <tr>
@@ -78,7 +78,7 @@
             <th>
                 <div class="flex align-items-center">
                 Bill Type
-                <p-columnFilter type="text" field="tnpgst" display="menu"></p-columnFilter>
+                <p-columnFilter type="text" field="tnbilltype" display="menu"></p-columnFilter>
                 </div>
             </th>
             <th>Action</th>
