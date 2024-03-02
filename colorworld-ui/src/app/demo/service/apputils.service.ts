@@ -113,6 +113,7 @@ export const getInvoiceHeader = () : any => {
             'CGST',
             'SGST',
             'Total Amount',
+			'Bill Type'
         ],
     ];
 	return data;
@@ -151,7 +152,8 @@ export const formatInvoiceData = (data: InvoiceSummary[]) => {
 			gntxable: element.gntxable,
 			gncamt: element.gncamt,
 			gnsamt: element.gnsamt,
-			gntamt: element.gntamt
+			gntamt: element.gntamt,
+			tnbillType: element.tnbilltype
 		};
 	});
 }

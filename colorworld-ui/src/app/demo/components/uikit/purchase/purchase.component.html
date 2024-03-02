@@ -126,7 +126,7 @@
                         Invoice Date<span class="text-danger">&nbsp;*</span>
                     </label>
 					<div class="col-12 md:col-7">
-						<p-calendar dateFormat="yy-mm-dd"  [appendTo]="'body'" [showButtonBar]="true" 
+						<p-calendar dateFormat="yy-mm-dd"  [appendTo]="'body'" [showButtonBar]="true" [showTime]="true" [showSeconds]="true"
                         [(ngModel)] ="purchaseBill.ardate"></p-calendar>
 					</div>
 				</div>
@@ -219,7 +219,9 @@
 				<div class="field grid">
 					<label htmlFor="arbname" class="col-12 mb-2 md:col-3 md:mb-0 font-bold">Bank Name</label>
 					<div class="col-12 md:col-9">
-						<input pInputText type="text" [(ngModel)] ="purchaseBill.arbname"/>
+                        <p-autoComplete [(ngModel)]="purchaseBill.arbname" [suggestions]="filteredBank" 
+                            (completeMethod)="  ($event)"> 
+                        </p-autoComplete>
 					</div>
 				</div>
 

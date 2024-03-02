@@ -33,3 +33,8 @@ b {
     vertical-align: top;
     border-top: 1px solid #dee2e6;
 }
+
+.sticky {
+    position: sticky !important;
+    top:0;
+}

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mrajupaint.colorworld.common.AppUtils;
+import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.InvoiceSummary;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
@@ -43,43 +44,15 @@ public class InvoiceService {
 	public List<InvoiceSummary> getInvoiceBills() {
 		return headerRepository.getInvoiceBills(); 
 	}
-
-	public List<InvoiceSummary> getQuotaionBills() {
-		return headerRepository.getQuotationBills(); 
-	}
 	
-	public int refreshBillNum(Timestamp invoiceDate, String billType) {
+	public int refreshBillNum(Timestamp invoiceDate) {
 		Timestamp startDate = AppUtils.getStartFYear(invoiceDate);
 		Timestamp endDate = AppUtils.getEndFYear(invoiceDate);
 		Optional<Integer> billnum;
-		
-		switch(billType) {
-		case "T":
-			billnum = headerRepository.getBillNo(startDate, endDate);
-			if(billnum.isEmpty()) {
-				return Integer.parseInt(String.valueOf(AppUtils.getFinancialYear(invoiceDate)) 
-						+ "001");
-			}
-			break;
-		case "P":
-			billnum = headerRepository.getBillNo(startDate, endDate);
-			if(billnum.isEmpty()) {
-				return Integer.parseInt(String.valueOf(AppUtils.getFinancialYear(invoiceDate)) 
-						+ "001");
-			}
-			break;
-		case "Q":
-			billnum = headerRepository.getBillNo(billType);
-			if(billnum.isEmpty()) {
-				return 1;
-			}
-			break;
-		default:
-			billnum = headerRepository.getBillNo(billType);
-			if(billnum.isEmpty()) {
-				return 1;
-			}
-			break;
+		billnum = headerRepository.getBillNo(startDate, endDate);
+		if(billnum.isEmpty()) {
+			return Integer.parseInt(String.valueOf(AppUtils.getFinancialYear(invoiceDate)) 
+					+ "001");
 		}
 		return billnum.get();
 	}
@@ -89,12 +62,12 @@ public class InvoiceService {
 	public String deleteBillByInvoice(int billnum, String billType) throws Exception {
 		int count = headerRepository.deleteByTnbillnoAndTnbilltype(billnum, billType);
 		if(count > 1) {
-			throw new Exception("Delete count greater than 1 " + count);
+			throw new ColorWorldException("Delete count greater than 1 " + count);
 		}
 		LOGGER.info("Delete from SSTNHDP");
 		int gstcount = gstRepository.deleteAllByGnbillAndGnbilltype(billnum, billType);
 		if(gstcount >= 5) {
-			throw new Exception("Delete count greater than 1 " + count);
+			throw new ColorWorldException("Delete count greater than 1 " + count);
 		}
 		LOGGER.info("Delete from SSGNJNP");
 		transactionRepository.deleteInvoice(billnum, billType);

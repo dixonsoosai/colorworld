@@ -41,17 +41,9 @@ public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, Integer> {
 			SELECT tnbillno, tnname, tnpgst, tnbilltype, tntime, 
 			gngstp, gntxable, gncamt, gnsamt, gntamt 
 			FROM SSTNHDP h, SSGNJNP gst 
-			where h.tnbillno = gst.gnbill and h.tnbilltype IN ('T','P') 
+			where h.tnbillno = gst.gnbill 
 			order by tnbillno desc, tntime desc, gngstp"""
 			, nativeQuery = true)
 	List<InvoiceSummary> getInvoiceBills();
 
-	@Query(value = """
-			SELECT tnbillno, tnname, tnpgst, tnbilltype, tntime, 
-			gngstp, gntxable, gncamt, gnsamt, gntamt 
-			FROM SSTNHDP h, SSGNJNP gst 
-			where h.tnbillno = gst.gnbill and h.tnbilltype = 'Q'
-			order by tnbillno desc, tntime desc, gngstp"""
-			, nativeQuery = true)
-	List<InvoiceSummary> getQuotationBills();
 }

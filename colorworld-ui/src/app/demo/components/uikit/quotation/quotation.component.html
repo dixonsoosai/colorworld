@@ -5,7 +5,7 @@
 	<p-tabMenu [model]="items" [activeItem]="activeItem" (activeItemChange)="onActiveItemChange($event)"></p-tabMenu>
 
 	<div id="products" *ngIf="this.activeItem.label == 'Products'">
-		<div class="flex justify-content-between mt-4">
+		<div class="flex justify-content-between mt-4 sticky">
 			<div class="field grid">
 				<label htmlFor="name3" class="col-12 mb-2 md:col-2 md:mb-0">Search</label>
 				<div class="col-12 md:col-10">
@@ -22,6 +22,7 @@
 			</div>
 
 		</div>
+
 		<div class="flex flex-wrap gap-4" id="productView">
 			<div *ngFor="let product of productList" style="width:32%;height:100%" class="my-2">
 				<p-card>
@@ -53,6 +54,19 @@
 	</div>
 
 	<div id="tax-invoice" *ngIf="this.activeItem.label == 'Invoice'">
+
+		<div class="mt-4 flex flex-wrap gap-3 justify-content-center">
+			<div class="flex align-items-center">
+				<p-radioButton name="billType" value="Q" [(ngModel)]="header.tnbilltype"></p-radioButton>
+				<label class="ml-2">Quotation</label>
+			</div>
+			
+			<div class="flex align-items-center">
+				<p-radioButton name="billType" value="T" [(ngModel)]="header.tnbilltype"></p-radioButton>
+				<label class="ml-2">Tax Invoice</label>
+			</div>
+		</div>
+
 		<div class="mt-4">
 			<div class="grid mt-4">
 				<div class="lg:col md:col-6">
@@ -322,6 +336,17 @@
 						</div>
 					</div>
 				</p-card>
+				<div class="mt-4 flex flex-wrap gap-3 justify-content-center">
+					<div class="flex align-items-center">
+						<p-radioButton name="billType" value="Q" [(ngModel)]="header.tnbilltype"></p-radioButton>
+						<label class="ml-2">Quotation</label>
+					</div>
+					
+					<div class="flex align-items-center">
+						<p-radioButton name="billType" value="T" [(ngModel)]="header.tnbilltype"></p-radioButton>
+						<label class="ml-2">Tax Invoice</label>
+					</div>
+				</div>
 				<div class="flex justify-content-start gap-3 mt-4 align-items-center">
 					<p-button label="Generate Bill" (click)="generateBill()"></p-button>
 					<p-button label="Clear Bill" (click)="clearBill()"></p-button>

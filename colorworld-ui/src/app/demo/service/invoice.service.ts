@@ -12,13 +12,8 @@ export class InvoiceService {
 
   constructor(private httpClient: HttpClient) { }
 
-  fetchAll(billType: string): Observable<any> {
-    if(billType == "Q") {
-      return this.httpClient.get(`${this.baseUrl}tax-invoice/quotationBills`);
-    }
-    else {
+  fetchAll(): Observable<any> {
       return this.httpClient.get(`${this.baseUrl}tax-invoice/bills`);
-    }
   }
 
   fetch(invoice: string, billType: string): Observable<any> {

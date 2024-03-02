@@ -100,6 +100,7 @@ export class TaxInvoiceComponent implements OnInit {
     clearBill() {
         this.overflowLimit = 17;
         this.header = new Header();
+        this.header.tnbilltype = "T";
         this.selectedProducts = [];
         this.gstSummary.clear();
         this.billSummary = new BillSummary();

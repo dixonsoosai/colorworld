@@ -44,6 +44,9 @@ export class PurchaseComponent implements OnInit {
     customerSuggestions: string[];
     filteredInvoice: string[];
 
+    bankList: string[] = ["HDFC Bank", "Thane Dist Bank"];
+    filteredBank: string[];
+
     @ViewChild('dt1') dt: Table;
 
     @ViewChild('filter') filter!: ElementRef;
@@ -85,6 +88,21 @@ export class PurchaseComponent implements OnInit {
             }
         );
     }
+
+    searchBank(event: AutoCompleteCompleteEvent) {
+        let filtered: string[] = [];
+        let query = event.query;
+        for (let i = 0; i < this.bankList.length; i++) {
+            let bankName = this.bankList[i];
+            if (bankName.toLowerCase().indexOf(query.toLowerCase()) == 0 ||
+                query.trim() == '') 
+            {
+                filtered.push(bankName);
+            }
+        }
+        this.filteredBank = filtered;
+    }
+
     searchInvoice(event: AutoCompleteCompleteEvent) {
         let filtered: string[] = [];
         let query = event.query;
@@ -130,6 +148,7 @@ export class PurchaseComponent implements OnInit {
             this.purchaseBill.artext = this.purchaseBill.arbname = this.purchaseBill.archqdte = "";
         }
     }
+
     populateDetails() {
         let temp: Customer[] = this.customerList.filter(
             (customer) => customer.jpname == this.purchaseBill.arname
@@ -201,6 +220,7 @@ export class PurchaseComponent implements OnInit {
 
     save() {
         let errorFlag = false;
+        console.log(this.purchaseBill.ardate);
         if (this.purchaseBill.arbillno == '') {
             this.messageService.add(
                 errorToastr('Invoice Number cannot be blank')

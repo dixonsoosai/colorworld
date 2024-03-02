@@ -14,7 +14,6 @@ import { NgxSpinnerService } from 'ngx-spinner';
 })
 export class InvoiceTableComponent {
 
-  @Input() billType;
   @ViewChild('dt1') dt: Table;
   @ViewChild('filter') filter!: ElementRef;
   
@@ -52,7 +51,7 @@ export class InvoiceTableComponent {
 
   fetchAll() {
       this.spinner.show();
-      this.invoiceService.fetchAll(this.billType).subscribe({
+      this.invoiceService.fetchAll().subscribe({
           next: response => {
               response.data.forEach(item => {
                   if(item != null) {
@@ -68,9 +67,6 @@ export class InvoiceTableComponent {
                     }
                   }
               });
-              if(this.billType == "Q") {
-                response.data = response.data.filter(e => e.gngstp === "Total");
-              }
               this.invoiceDetails = response.data;
               this.loading = false;
           }, 

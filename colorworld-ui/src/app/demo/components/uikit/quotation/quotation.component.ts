@@ -75,6 +75,7 @@ export class QuotationComponent implements OnInit {
             this.activeItem = this.items[1];
         }
         else {
+            this.header.tnbilltype = "Q";
             this.activeItem = this.items[0];
             this.invoiceDate = new Date();
             this.generateNewInvoiceNum();
@@ -99,6 +100,7 @@ export class QuotationComponent implements OnInit {
     clearBill() {
         this.overflowLimit = 17;
         this.header = new Header();
+        this.header.tnbilltype = "Q";
         this.selectedProducts = [];
         this.gstSummary.clear();
         this.billSummary = new BillSummary();
@@ -255,6 +257,10 @@ export class QuotationComponent implements OnInit {
             errorFlag = true;
         }
 
+        if (this.newProduct.pnhsnc == 0) {
+            this.messageService.add(errorToastr("HSN Code cannot be blank"));
+            errorFlag = true;
+        }
         if (errorFlag) {
             return;
         }
@@ -389,6 +395,23 @@ export class QuotationComponent implements OnInit {
 
     validateCompanyDetails(): boolean {
         let validFlag = true;
+        if(this.header.tnbilltype == "Q") {
+            return true;
+        }
+        if (this.header.tnname == "") {
+            this.messageService.add(errorToastr("Company Name cannot be blank"));
+            validFlag = false;
+        }
+
+        if (this.header.tnpgst == "") {
+            this.messageService.add(errorToastr("Company GST cannot be blank"));
+            validFlag = false;
+        }
+
+        if (this.header.tntext.length > 40) {
+            this.messageService.add(errorToastr("Comments should be less than 40 chars"));
+            validFlag = false;
+        }
         return validFlag;
     }
 
@@ -397,15 +420,14 @@ export class QuotationComponent implements OnInit {
         let header = {...this.header};
         header.tntime = getISTDate(this.invoiceDate);
         header.tntotal  = this.billSummary.bstamt;
-        header.tnbilltype = this.billType;
         let seq = 0;
         this.selectedProducts.forEach(element => {
             element.tnseqno = ++seq
             element.tnbillno = header.tnbillno;
-            element.tnbilltype = this.billType;
+            element.tnbilltype = header.tnbilltype;
         });
         this.gstSummary.forEach(element => {
-            element.gnbilltype = this.billType;
+            element.gnbilltype = header.tnbilltype;
             element.gnbill = header.tnbillno;
         });
         //Generate Summary

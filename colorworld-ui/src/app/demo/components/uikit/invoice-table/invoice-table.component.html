@@ -97,14 +97,14 @@
             <td class="text-center">{{rowData.tnbilltype}}</td>
             <td>
                 <div class="flex gap-3">
-                    <div *ngIf="billType !== 'Q'">
+                    <div *ngIf="rowData.tnbilltype !== 'Q'">
                         <a [routerLink]="['/home/tax-invoice/' + rowData.tnbillno + '/' + rowData.tnbilltype]">
                             <i class="pi pi-eye" style="font-size: 1.5rem;cursor: pointer;" pTooltip="View" 
                                 tooltipPosition="bottom">
                             </i>
                         </a>
                     </div>
-                    <div *ngIf="billType === 'Q'">
+                    <div *ngIf="rowData.tnbilltype === 'Q'">
                         <a [routerLink]="['/home/quotation/' + rowData.tnbillno]">
                             <i class="pi pi-eye" style="font-size: 1.5rem;cursor: pointer;" pTooltip="View" 
                                 tooltipPosition="bottom">

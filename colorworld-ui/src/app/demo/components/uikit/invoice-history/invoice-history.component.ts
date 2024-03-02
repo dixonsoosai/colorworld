@@ -14,10 +14,6 @@ export class InvoiceHistoryComponent {
 
     ngOnInit() {
 
-        this.items = [
-            { label: 'Tax Invoice', icon: 'pi pi-fw pi-wallet' },
-            { label: 'Quotation', icon: 'pi pi-fw pi-slack' }   
-        ];
         if(sessionStorage.getItem("SalesInvoiceHistory") != null || sessionStorage.getItem("SalesInvoiceHistory") != undefined) {
             this.activeItem = this.items.filter(e => e.label == sessionStorage.getItem("SalesInvoiceHistory"))[0];
         }

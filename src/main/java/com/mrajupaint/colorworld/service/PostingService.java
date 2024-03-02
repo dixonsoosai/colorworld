@@ -127,7 +127,7 @@ public class PostingService {
 					"Bill generated successfully", buffer.get());
 		}
 		catch(Exception e) {
-			LOGGER.error("Error while writing exception {}", e);
+			LOGGER.error("Error while writing exception ", e);
 			throw new ColorWorldException(e.getMessage());
 		}
 	}
@@ -154,9 +154,15 @@ public class PostingService {
 	
 	private String validateGST(TaxInvoice taxInvoice, int billNum) {
 		//Individual CGST & SGST
-		double taxable = 0, cAmt = 0, sAmt = 0, tAmt = 0;
+		double taxable = 0;
+		double cAmt = 0;
+		double sAmt = 0;
+		double tAmt = 0;
 		//Total CGST & SGST
-		double totalTaxable = 0, totalCGST = 0,totalSGST = 0,totalTamt = 0;
+		double totalTaxable = 0;
+		double totalCGST = 0;
+		double totalSGST = 0;
+		double totalTamt = 0;
 		
 		var header = taxInvoice.getHeader();
 		for(int i=0; i< taxInvoice.getGst().size(); i++) {
@@ -227,8 +233,7 @@ public class PostingService {
 		if(taxInvoice.getHeader().getTnbillno() != 0) {
 			return taxInvoice.getHeader().getTnbillno();
 		}
-		return invoiceService.refreshBillNum(taxInvoice.getHeader().getTntime(), 
-				taxInvoice.getHeader().getTnbilltype());
+		return invoiceService.refreshBillNum(taxInvoice.getHeader().getTntime());
 	}
 	
 	public double round(double num) {
