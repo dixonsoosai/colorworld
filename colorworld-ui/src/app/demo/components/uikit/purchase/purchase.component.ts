@@ -170,6 +170,7 @@ export class PurchaseComponent implements OnInit {
         this.purchaseService.fetchAll().subscribe({
             next: (response) => {
                 response.data.forEach((item) => {
+                    item.artamt = item.artamt.toFixed(0);
                     if (item != null) {
                         item.ardate =
                             item.ardate == null || item.ardate == ''
