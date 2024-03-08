@@ -33,3 +33,16 @@ b {
     vertical-align: top;
     border-top: 1px solid #dee2e6;
 }
+
+.scroll-to-top {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    opacity: 1;
+    transition: all .2s ease-in-out;
+}
+  
+.show-scrollTop {
+    opacity: 1;
+    transition: all .2s ease-in-out;
+}
