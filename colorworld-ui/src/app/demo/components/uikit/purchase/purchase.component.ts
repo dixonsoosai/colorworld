@@ -201,10 +201,11 @@ export class PurchaseComponent implements OnInit {
 
     exportExcel(dataTable: Table) {
         this.spinner.show();
-        let filteredData =
-            dataTable.filteredValue == null
-                ? this.purchaseDetails
-                : dataTable.filteredValue;
+        let filteredData = dataTable.filteredValue == null ? Object.create(this.purchaseDetails) : 
+            Object.create(dataTable.filteredValue);
+        filteredData.sort((f1, f2) => {
+            return f1.ardate <= f2.ardate ? -1 : 1;
+        });
         saveAsExcelFile(
             formatPurchaseBillData(filteredData),
             getPurchaseHistoryHeader(),

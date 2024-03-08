@@ -26,10 +26,7 @@ export class InvoiceTableComponent {
   position = "top";
   
   overflowLimit: number  = 17;
-
-  items: MenuItem[] | undefined;
-  activeItem: MenuItem | undefined;
-
+  
   constructor(private invoiceService: InvoiceService,
       private spinner: NgxSpinnerService,
       private messageService: MessageService,
@@ -38,15 +35,8 @@ export class InvoiceTableComponent {
       ) { }
 
   ngOnInit() {
-      this.items = invoiceHistory;
-      this.activeItem = this.items[0];
       this.fetchAll();
       this.configureFilter();
-  }
-
-  onActiveItemChange(event: MenuItem) {
-      console.log(event)
-      this.activeItem = event;
   }
 
   fetchAll() {
@@ -61,7 +51,6 @@ export class InvoiceTableComponent {
                   if(item.tnbilltype == "P") {
                     let expiry = new Date(item.tntime);
                     expiry.setDate(expiry.getDate() + 7);
-                    console.log(expiry, item.tntime)
                     if(expiry <= new Date()) {
                         item.invalid = true;
                     }
@@ -101,7 +90,8 @@ export class InvoiceTableComponent {
 
   exportExcel(dataTable: Table) {
       this.spinner.show();
-      let filteredData = dataTable.filteredValue == null ? this.invoiceDetails : dataTable.filteredValue;
+      let filteredData = dataTable.filteredValue == null ? Object.create(this.invoiceDetails) : Object.create(dataTable.filteredValue)
+      filteredData.sort((f1, f2) => f1.tntime <= f2.tntime ? -1 : 1);
       saveAsExcelFile(formatInvoiceData(filteredData), getInvoiceHeader(), "Invoice History");
       this.spinner.hide();
   }

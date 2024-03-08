@@ -11,7 +11,7 @@
 				<div class="col-12 md:col-10">
 					<span class="p-input-icon-left">
 						<i class="pi pi-search"></i>
-						<input type="text" id="searchSuggestion" pInputText (keyup)="filter($event)" />
+						<input type="text" pInputText (keyup)="filter()" [(ngModel)]="globalFilter"/>
 					</span>
 				</div>
 			</div>

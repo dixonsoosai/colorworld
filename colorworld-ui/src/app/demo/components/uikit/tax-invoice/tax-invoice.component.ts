@@ -1,7 +1,7 @@
 import * as $ from 'jquery';
 import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 import { BillSummary, InvoiceItem, ProductItem } from 'src/app/demo/domain/product';
-import { Component, HostListener, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, HostListener, OnInit } from '@angular/core';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Customer } from 'src/app/demo/domain/customer';
 import { CustomersService } from 'src/app/demo/service/customers.service';
@@ -18,10 +18,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
     styleUrls: ['./tax-invoice.component.scss'],
     providers: [MessageService, ConfirmationService]
 })
-export class TaxInvoiceComponent implements OnInit {
+export class TaxInvoiceComponent implements OnInit, AfterViewChecked {
 
     newBill = true;
-
+    globalFilter = "";
     //Tab Menu Configuration
     items: MenuItem[] | undefined;
     activeItem: MenuItem | undefined;
@@ -80,6 +80,12 @@ export class TaxInvoiceComponent implements OnInit {
             this.invoiceDate = new Date();
             this.generateNewInvoiceNum();
             this.extractFromSession();
+        }
+    }
+
+    ngAfterViewChecked () {
+        if(this.activeItem.label == "Products") {
+            this.filter();
         }
     }
 
@@ -218,7 +224,7 @@ export class TaxInvoiceComponent implements OnInit {
 
     //Filter     
     filter() {
-        let filteredProduct = $("#searchSuggestion").val().toLowerCase();
+        let filteredProduct = this.globalFilter.toLowerCase();
         //Visible fails if backspace is pressed
         $("#productView div").filter(function () {
             $(this).toggle($(this).text().toLowerCase().indexOf(filteredProduct) > -1)
