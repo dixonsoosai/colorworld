@@ -44,9 +44,10 @@ export class InvoiceTableComponent {
       this.invoiceService.fetchAll().subscribe({
           next: response => {
               response.data.forEach(item => {
-                  if(item != null) {
-                      item.tntime = item.tntime == null ? "" : new Date(item.tntime);
+                  if(item.tntime != null) {
+                      item.tntime = new Date(item.tntime);
                   }
+                  item.gntamt = item.gntamt.toFixed(0);
                   item.invalid = false;
                   if(item.tnbilltype == "P") {
                     let expiry = new Date(item.tntime);
