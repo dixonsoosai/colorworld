@@ -47,7 +47,7 @@ export class InvoiceTableComponent {
                   if(item.tntime != null) {
                       item.tntime = new Date(item.tntime);
                   }
-                  item.gntamt = item.gntamt.toFixed(0);
+                  item.gntamt = parseFloat(item.gntamt.toFixed(0));
                   item.invalid = false;
                   if(item.tnbilltype == "P") {
                     let expiry = new Date(item.tntime);
@@ -92,7 +92,7 @@ export class InvoiceTableComponent {
   exportExcel(dataTable: Table) {
       this.spinner.show();
       let filteredData = dataTable.filteredValue == null ? Object.create(this.invoiceDetails) : Object.create(dataTable.filteredValue)
-      filteredData.sort((f1, f2) => f1.tntime <= f2.tntime ? -1 : 1);
+      filteredData.sort((f1, f2) => f1.tnbillno <= f2.tnbillno ? -1 : 1);
       saveAsExcelFile(formatInvoiceData(filteredData), getInvoiceHeader(), "Invoice History");
       this.spinner.hide();
   }
