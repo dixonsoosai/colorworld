@@ -8,7 +8,7 @@
 		<version>3.1.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.mrajupaint</groupId>
+	<groupId>com.formula</groupId>
 	<artifactId>colorworld</artifactId>
 	<version>1.0.0</version>
 	<packaging>war</packaging>
@@ -26,12 +26,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
-		<!--
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -59,11 +53,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -121,12 +110,12 @@
 
 	<!-- Maven task for building Angular Project-->	
 	<build>
-		<finalName>mrajupaint</finalName>
+		<finalName>formula</finalName>
 		<plugins>
 			<plugin>
 			 	<artifactId>maven-war-plugin</artifactId>
 			    <configuration>
-					<warName>mrajupaint</warName>
+					<warName>formula</warName>
 				 	<webResources>
 				        <resource>
 				            <directory>src/main/webapp</directory>
@@ -145,7 +134,7 @@
 	            <artifactId>frontend-maven-plugin</artifactId>
 	            <version>1.12.0</version> 
 	            <configuration>
-	                <workingDirectory>colorworld-ui</workingDirectory>
+	                <workingDirectory>formula-ui</workingDirectory>
         			<installDirectory>target</installDirectory>
         			<nodeVersion>v18.17.1</nodeVersion>
             		<npmVersion>9.6.5</npmVersion>
