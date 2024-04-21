@@ -17,7 +17,8 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Car Shades',
                 items: [
-                    { label: 'Formula', icon: 'pi pi-fw pi-palette', routerLink: ['/home/formula'] },
+                    { label: 'Formula', icon: 'pi pi-palette', routerLink: ['/home/formula'] },
+                    { label: 'Tinter Converter', icon: 'pi pi-cog', routerLink: ['/home/tinter-converter'] },
                 ]
             }
         ];

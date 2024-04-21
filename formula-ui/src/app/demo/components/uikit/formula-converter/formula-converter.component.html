@@ -1,0 +1,19 @@
+<p-card  header="Tinter Converter">
+    <div class="flex flex-wrap gap-3 p-fluid">
+        <div class="flex-auto">
+            <label for="tinterQty" class="font-bold">Enter Tinter Qty</label>
+            <p-inputNumber inputId="tinterQty" [(ngModel)]="tinterQty" class="mt-2" (onInput)="convert()"
+                [minFractionDigits]="2"></p-inputNumber>
+        </div>
+    </div>
+
+    <div class="flex gap-3 mt-4 flex-column text-xl">
+        <div>
+            <span class="font-bold">Tinter Qty:</span> {{esdeeTinterQty}}
+        </div>
+        <div>
+            <span class="font-bold">Binder Qty:</span> {{binderQty}}
+        </div>
+    </div>
+
+</p-card>

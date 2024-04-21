@@ -3,47 +3,69 @@
 <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog> 
 
 <p-card header="Formula">
-	<div class="scroll-to-top">
-		<p-button styleClass="p-button-outlined" icon="pi pi-arrow-circle-up"
-			data-toggle="button" (click)="scrollToTop()"></p-button>
-	</div>
-	<div class="flex justify-content-between">
-		<div class="field grid">
-			<label htmlFor="name3" class="col-12 mb-2 md:col-2 md:mb-0">Search</label>
-			<div class="col-12 md:col-10">
-				<span class="p-input-icon-left">
+	<p-table [value]="formulaList"
+		#dt1
+		[paginator]="true"
+		[rows]="5"
+		[showCurrentPageReport]="true"
+		currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    	[rowsPerPageOptions]="[5, 10, 20]"
+		[globalFilterFields]="['brand', 'model', 'shade', 'variant', 'code']"
+	>
+		<ng-template pTemplate="caption">
+			<div class="flex">
+				<button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
+				<span class="p-input-icon-left ml-auto">
 					<i class="pi pi-search"></i>
-					<input type="text" pInputText id="searchSuggestion" (keyup)="filter()"/>
+					<input pInputText type="text" (input)="dt1.filterGlobal($event.target.value, 'contains')" 
+						placeholder="Search keyword" id="search-formula" 
+					/>
 				</span>
 			</div>
-		</div>
-	</div>
-
-    <div class="flex flex-wrap gap-4" id="productView">
-        <div *ngFor="let formula of formulaList" style="width:32%;height:100%" class="my-2">
-			<p-card>
-				<h4>{{formula.brand}}</h4>
-				<p class="card-text">{{formula.model}}</p>
-				<div class="flex row justify-content-between">
-					<span>Shade</span>
-					<b>{{formula.shade}}</b>
-				</div>
-				<div class="flex row justify-content-between">
-					<span>Variant</span>
-					<b>{{formula.variant}}</b>
-				</div>
-				<div class="flex row justify-content-between">
-					<span>Code</span>
-					<b>{{formula.code}}</b>
-				</div>
-				
-				<div class="mt-4 flex justify-content-end gap-3">
-					<p-button label="View" styleClass="p-button-outlined" (click) ="view(formula)"></p-button>
-					<p-button label="Delete" styleClass="p-button-outlined" (click)="delete(formula)"></p-button>
-				</div>
-            </p-card>
-        </div>
-    </div>
+		</ng-template>
+		<ng-template pTemplate="header">
+			<tr>
+				<th>
+					Brand
+					<p-columnFilter type="text" field="brand" display="menu"></p-columnFilter>
+				</th>
+				<th>
+					Model
+					<p-columnFilter type="text" field="model" display="menu"></p-columnFilter>
+				</th>
+				<th>
+					Shade
+					<p-columnFilter type="text" field="shade" display="menu"></p-columnFilter>
+				</th>
+				<th>
+					Variant
+					<p-columnFilter type="text" field="variant" display="menu"></p-columnFilter>
+				</th>
+				<th>
+					Code
+					<p-columnFilter type="text" field="code" display="menu"></p-columnFilter>
+				</th>
+				<th>
+					Action
+				</th>
+			</tr>
+		</ng-template>
+		<ng-template pTemplate="body" let-formula>
+			<tr>
+				<td>{{ formula.brand }}</td>
+				<td>{{ formula.model }}</td>
+				<td>{{ formula.shade }}</td>
+				<td>{{ formula.variant }}</td>
+				<td>{{ formula.code}}</td>
+				<td>
+					<div class="flex gap-3">
+						<p-button label="View" (onClick)="view(formula)"></p-button>
+					</div>
+					
+				</td>
+			</tr>
+		</ng-template>
+	</p-table>
 </p-card>
 
 <p-dialog header="Formula" [(visible)]="formulaVisible" [style]="{width: '50vw'}">

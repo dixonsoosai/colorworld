@@ -5,6 +5,7 @@ import { FormulaBody, FormulaHeader } from 'src/app/demo/domain/formula';
 import { errorToastr } from 'src/app/demo/service/apputils.service';
 import { FormulaService } from 'src/app/demo/service/formula.service';
 import * as $ from 'jquery';
+import { Table } from 'primeng/table';
 
 @Component({
   selector: 'app-formula',
@@ -40,6 +41,10 @@ export class FormulaComponent{
     window.scrollTo(0, 0);
   }
 
+  clear(table: Table) {
+    table.clear();
+  }
+  
   getCarShades() {
     this.spinner.show();
     this.formulaService.fetchAll().subscribe(
