@@ -3,6 +3,10 @@
 <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
 <span class="loader" *ngIf="isLoading"></span>
 <p-card>
+	<div class="scroll-to-top">
+		<p-button styleClass="p-button-outlined" icon="pi pi-arrow-circle-up"
+			data-toggle="button" (click)="scrollToTop()"></p-button>
+	</div>
     <div class="flex justify-content-between">
 		<div class="field grid">
 			<label htmlFor="name3" class="col-12 mb-2 md:col-2 md:mb-0">Search</label>

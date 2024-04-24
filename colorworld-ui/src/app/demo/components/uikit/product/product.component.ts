@@ -120,6 +120,10 @@ export class ProductComponent {
         this.filter();
     }
 
+    scrollToTop() {
+        window.scrollTo(0, 0);
+    }
+
     filterQty() {
         let size = this.filteredQty.length;
         let filteredQty = this.filteredQty;
@@ -210,7 +214,7 @@ export class ProductComponent {
             next: response => {
                 if(response.code == 200) {
                     this.messageService.add(successToastr("Product added successfully"));
-                    this.fetchAll();
+                    //this.fetchAll();
                 }
             },
             error: error => {
