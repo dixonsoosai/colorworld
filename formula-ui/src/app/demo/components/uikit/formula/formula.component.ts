@@ -25,10 +25,13 @@ export class FormulaComponent{
 
   qty = 100;
 
+  tinterQty = 0;
+  esdeeTinterQty = 0;
+  binderQty = 0;
+
   constructor(
     private spinner: NgxSpinnerService,
     private messageService: MessageService,
-    private confirmationService: ConfirmationService,
     private formulaService: FormulaService) {
 
   }
@@ -45,6 +48,11 @@ export class FormulaComponent{
     table.clear();
   }
   
+  convert() {
+    this.esdeeTinterQty = parseFloat((this.tinterQty * 0.33).toFixed(2));
+    this.binderQty = parseFloat((this.tinterQty - this.esdeeTinterQty).toFixed(2));
+  }
+
   getCarShades() {
     this.spinner.show();
     this.formulaService.fetchAll().subscribe(
@@ -67,6 +75,7 @@ export class FormulaComponent{
   }
 
   view(formula) {
+    this.tinterQty = 0;
     this.spinner.show();
     this.formulaService.fetch(formula.code).subscribe({
       next: response => {

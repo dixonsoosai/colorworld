@@ -69,7 +69,7 @@
 </p-card>
 
 <p-dialog header="Formula" [(visible)]="formulaVisible" [style]="{width: '50vw'}">
-	<div class="flex justify-content-center tile">
+	<div class="flex justify-content-center tile gap-4">
 		<div style="width: 300px;">
 			<div class="flex row justify-content-between">
 				<span>Brand</span>
@@ -92,13 +92,33 @@
 				<b>{{codeHeader.code}}</b>
 			</div>
 		</div>
+
+		<div>
+			<div class="flex flex-wrap gap-3 p-fluid">
+				<div class="flex-auto">
+					<label for="tinterQty" class="font-bold">Enter Tinter Qty</label>
+					<p-inputNumber inputId="tinterQty" [(ngModel)]="tinterQty" class="mt-2" (onInput)="convert()"
+						[minFractionDigits]="2"></p-inputNumber>
+				</div>
+			</div>
+		
+			<div class="flex gap-3 mt-4 flex-column">
+				<div>
+					<span class="font-bold">Tinter Qty:</span> {{esdeeTinterQty}}
+				</div>
+				<div>
+					<span class="font-bold">Binder Qty:</span> {{binderQty}}
+				</div>
+			</div>
+		</div>
 		
 	</div>
 	<div class="mt-4 text-center">
 		<label  class="mr-2"><b>Enter quantity in ml: </b></label>
 		<p-inputNumber inputId="withoutgrouping" [useGrouping]="false" [(ngModel)]="qty" (onInput)="change()"
 		styleClass="input-styling"></p-inputNumber>
-	</div>
+	</div>	
+
 	<div class="flex row justify-content-center gap-4 mt-4">
 		<p-table [value]="codeBody">
 			<ng-template pTemplate="header">
