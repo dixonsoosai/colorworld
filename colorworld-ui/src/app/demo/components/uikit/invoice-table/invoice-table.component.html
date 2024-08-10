@@ -1,14 +1,44 @@
 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-beat" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
 <p-toast></p-toast>
 <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>  
+
+<div class="flex gap-4 justify-content-between">
+    <div class="flex gap-3 align-items-center">
+        <div>
+            <p-radioButton name="reportFormat" value="S" [(ngModel)]="reportFormat"/>
+            <label for="reportFormat" class="ml-2">
+                Single Month
+            </label>
+        </div>
+        <div>
+            <p-radioButton name="reportFormat" value="M" [(ngModel)]="reportFormat"/>
+            <label for="reportFormat" class="ml-2">
+                Multiple Months
+            </label>
+        </div>
+        <div>
+
+        </div>
+    </div>
+    <div class="flex gap-3">
+        <div *ngIf="reportFormat == 'S'">
+            Date:&nbsp;&nbsp;
+            <p-calendar [(ngModel)]="filterDate" view="month" dateFormat="mm-yy" (onSelect) ="filterInvoice()" #filter></p-calendar>
+        </div>
+    
+        <div *ngIf="reportFormat == 'M'">
+            Date:&nbsp;&nbsp;
+            <p-calendar [(ngModel)]="filterMonths" view="month" dateFormat="mm-yy" (onSelect) ="filterInvoice()" 
+             selectionMode="multiple" [readonlyInput]="true" #filter></p-calendar>
+        </div>
+    </div>
+    
+</div>
+
 <div class="flex my-4">
     <div class="flex gap-3">
         <button pButton label="Clear" pRipple class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
         <button pButton label="Download" pRipple class="p-button-outlined" icon="pi pi-file-excel" (click)="exportExcel(dt1)" pTooltip="XLSX" tooltipPosition="bottom"></button>
-        <div>
-            Date:&nbsp;&nbsp;
-            <p-calendar [(ngModel)]="filterDate" view="month" dateFormat="mm-yy" (onSelect) ="filterInvoice()" #filter></p-calendar>
-        </div>
     </div>
     <span class="p-input-icon-left ml-auto">
         <i class="pi pi-search"></i>

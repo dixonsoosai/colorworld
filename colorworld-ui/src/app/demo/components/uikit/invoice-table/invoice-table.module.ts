@@ -26,6 +26,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 	FormsModule,
 	InputTextModule,
 	NgxSpinnerModule,
+	RadioButtonModule,
 	RippleModule,
 	TabMenuModule,
 	TableModule,

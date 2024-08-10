@@ -23,8 +23,9 @@ export class InvoiceTableComponent {
   
   filteredData;
   filterDate;
+  filterMonths = [];
   position = "top";
-  
+  reportFormat = "S";
   overflowLimit: number  = 17;
   
   constructor(private invoiceService: InvoiceService,
@@ -39,6 +40,10 @@ export class InvoiceTableComponent {
       this.configureFilter();
   }
 
+  toggleFormat() {
+    console.log("Entered")
+    this.dt.clear();
+  }
   fetchAll() {
       this.spinner.show();
       this.invoiceService.fetchAll().subscribe({
@@ -69,10 +74,17 @@ export class InvoiceTableComponent {
   }
   
   filterInvoice() {
-      let startDate = new Date(this.filterDate);
-      let endDate = getLastDay(startDate);
-      const dateRange = [startDate, endDate];
-      this.dt.filter(dateRange, 'tntime', 'dateContains');
+    if(this.filterMonths.length < 2 && this.reportFormat == 'M') {
+        return;
+    }
+    if(this.filterMonths.length > 2) {
+        this.filterMonths = [];
+        return;
+    }
+    let startDate = this.reportFormat == "S" ? new Date(this.filterDate) : new Date(this.filterMonths[0]);
+    let endDate = this.reportFormat == "S" ? getLastDay(startDate) : getLastDay(this.filterMonths[1]);
+    const dateRange = [startDate, endDate];
+    this.dt.filter(dateRange, 'tntime', 'dateContains');
   }
 
   configureFilter() {
