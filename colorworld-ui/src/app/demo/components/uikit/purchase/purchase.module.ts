@@ -17,6 +17,7 @@ import { DialogModule } from 'primeng/dialog';
 import { CalendarModule } from 'primeng/calendar';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
 	imports: [
@@ -33,6 +34,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 		InputTextModule,
 		NgxSpinnerModule,
 		PurchaseRoutingModule,
+		RadioButtonModule,
 		RippleModule,
 		TableModule,
 		ToastModule,

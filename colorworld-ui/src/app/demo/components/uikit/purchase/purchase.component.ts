@@ -38,6 +38,8 @@ export class PurchaseComponent implements OnInit {
     visible = false;
     purchaseBill: PurchaseBill = new PurchaseBill();
     filterDate;
+    filterMonths = [];
+    reportFormat = "S";
 
     customerList: Customer[] = [];
     filteredCustomers: any[];
@@ -46,6 +48,7 @@ export class PurchaseComponent implements OnInit {
 
     bankList: string[] = ["HDFC Bank", "Thane Dist Bank"];
     filteredBank: string[];
+    
 
     @ViewChild('dt1') dt: Table;
 
@@ -159,8 +162,15 @@ export class PurchaseComponent implements OnInit {
     }
 
     filterPurchase() {
-        let startDate = new Date(this.filterDate);
-        let endDate = getLastDay(startDate);
+        if(this.filterMonths.length < 2 && this.reportFormat == 'M') {
+            return;
+        }
+        if(this.filterMonths.length > 2) {
+            this.filterMonths = [];
+            return;
+        }
+        let startDate = this.reportFormat == "S" ? new Date(this.filterDate) : new Date(this.filterMonths[0]);
+        let endDate = this.reportFormat == "S" ? getLastDay(startDate) : getLastDay(this.filterMonths[1]);
         const dateRange = [startDate, endDate];
         this.dt.filter(dateRange, 'ardate', 'dateContains');
     }
