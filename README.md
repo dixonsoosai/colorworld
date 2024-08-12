@@ -30,4 +30,10 @@ npm start
 3. package.json -> base-href
 4. src -> app -> layout -> topbar & footer
 5. src -> app -> demo -> uikit -> tax-invoice -> overflowLimit
-6. pom.xml -> war file 
+6. pom.xml -> war file
+
+#Docker File
+1. Change the working directory to colorworld
+2. docker build -t repo/invoice:v1 .
+3. docker run -p 8080:8080 -name color-world -it repo/invoice:v1 #Parameter Sequence is important
+4. docker exec -it container_id sh #SSH into Docker Container
