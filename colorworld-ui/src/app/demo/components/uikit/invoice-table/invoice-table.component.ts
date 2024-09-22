@@ -3,7 +3,7 @@ import { ConfirmationService, FilterService, MenuItem, MessageService } from 'pr
 import { errorToastr, formatInvoiceData, getInvoiceHeader, getLastDay, invoiceHistory, saveAsExcelFile, successToastr } from 'src/app/demo/service/apputils.service';
 import { InvoiceService } from 'src/app/demo/service/invoice.service';
 import { Table } from 'primeng/table';
-import { InvoiceSummary } from 'src/app/demo/domain/product';
+import { BillSummary, InvoiceSummary } from 'src/app/demo/domain/product';
 import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
@@ -27,6 +27,7 @@ export class InvoiceTableComponent {
   position = "top";
   reportFormat = "S";
   overflowLimit: number  = 17;
+  billSummary = new BillSummary();
   
   constructor(private invoiceService: InvoiceService,
       private spinner: NgxSpinnerService,
@@ -41,7 +42,6 @@ export class InvoiceTableComponent {
   }
 
   toggleFormat() {
-    console.log("Entered")
     this.dt.clear();
   }
   fetchAll() {
@@ -99,6 +99,7 @@ export class InvoiceTableComponent {
       table.clear();
       this.filterDate = "";
       document.getElementById("searchText")["value"] = "";
+      window.location.reload();
   }
 
   exportExcel(dataTable: Table) {
@@ -155,5 +156,24 @@ export class InvoiceTableComponent {
               });
           }
       });
-  }
+    }
+
+    clearBillSummary() {
+        this.billSummary.bsfamt = 0;
+        this.billSummary.bsnamt = 0;
+        this.billSummary.bsroff = 0;
+        this.billSummary.bstamt = 0;
+        this.billSummary.bstcgst = 0;
+        this.billSummary.bstsgst = 0;
+    }
+
+    reCalculate(event) {
+        this.clearBillSummary();
+        event.filteredValue.forEach(e => {
+            this.billSummary.bsnamt += e.gntxable;
+            this.billSummary.bstcgst += e.gncamt;
+            this.billSummary.bstsgst += e.gnsamt;
+            this.billSummary.bsfamt += e.gntamt;
+        });
+    }
 }

@@ -14,6 +14,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { RadioButtonModule } from 'primeng/radiobutton';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   declarations: [InvoiceTableComponent],
@@ -26,6 +27,7 @@ import { RadioButtonModule } from 'primeng/radiobutton';
 	FormsModule,
 	InputTextModule,
 	NgxSpinnerModule,
+	OverlayPanelModule,
 	RadioButtonModule,
 	RippleModule,
 	TabMenuModule,

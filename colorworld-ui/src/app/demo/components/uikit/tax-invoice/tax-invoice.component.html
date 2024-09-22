@@ -1,6 +1,31 @@
 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-beat" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
 <p-toast></p-toast>
 <p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-overlayPanel #op>
+	<div style="width: 200px;margin-left: auto;" class="mr-4 shadow">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td>Net Amount</td>
+					<td class="text-right">{{billSummary.bsnamt | number : '1.2-2'}}</td>
+				</tr>
+				<tr>
+					<td>Total CGST</td>
+					<td class="text-right">{{billSummary.bstcgst | number : '1.2-2'}}</td>
+				</tr>
+				<tr>
+					<td>Total SGST</td>
+					<td class="text-right">{{billSummary.bstsgst | number : '1.2-2'}}</td>
+				</tr>
+				<tr>
+					<td>Final Amount</td>
+					<td class="text-right">{{billSummary.bsfamt | number : '1.2-2'}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</p-overlayPanel>
+
 <p-card>
 	<p-tabMenu [model]="items" [activeItem]="activeItem" (activeItemChange)="onActiveItemChange($event)"></p-tabMenu>
 
@@ -19,10 +44,14 @@
 					</span>
 				</div>
 			</div>
-			<div class="flex justify-content-between gap-3">
-				<p-multiSelect [options]="qty" [(ngModel)]="filteredQty" optionLabel="name" (onClear) = "clearQty()"
-					defaultLabel="Select Qty" (onChange) = "filterQty()" [showClear]="true">
-				</p-multiSelect>
+			<div class="flex gap-4">
+				<p-button (onClick)="op.toggle($event)" icon="pi pi-shopping-cart" label="Cart" />
+				
+				<div class="flex justify-content-between gap-3">
+					<p-multiSelect [options]="qty" [(ngModel)]="filteredQty" optionLabel="name" (onClear) = "clearQty()"
+						defaultLabel="Select Qty" (onChange) = "filterQty()" [showClear]="true">
+					</p-multiSelect>
+				</div>
 			</div>
 
 		</div>

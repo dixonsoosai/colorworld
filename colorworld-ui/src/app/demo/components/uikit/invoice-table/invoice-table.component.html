@@ -1,6 +1,30 @@
 <ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "medium" color = "#fff" type = "ball-beat" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
 <p-toast></p-toast>
-<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>  
+<p-confirmDialog [style]="{width: '50vw'}"></p-confirmDialog>
+<p-overlayPanel #op>
+	<div style="width: 200px;margin-left: auto;" class="mr-4 shadow">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td>Net Amount</td>
+					<td class="text-right">{{billSummary.bsnamt | number : '1.2-2'}}</td>
+				</tr>
+				<tr>
+					<td>Total CGST</td>
+					<td class="text-right">{{billSummary.bstcgst | number : '1.2-2'}}</td>
+				</tr>
+				<tr>
+					<td>Total SGST</td>
+					<td class="text-right">{{billSummary.bstsgst | number : '1.2-2'}}</td>
+				</tr>
+				<tr>
+					<td>Final Amount</td>
+					<td class="text-right">{{billSummary.bsfamt | number : '1.2-2'}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</p-overlayPanel>
 
 <div class="flex gap-4 justify-content-between">
     <div class="flex gap-3 align-items-center">
@@ -39,6 +63,7 @@
     <div class="flex gap-3">
         <button pButton label="Clear" pRipple class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt1)"></button>
         <button pButton label="Download" pRipple class="p-button-outlined" icon="pi pi-file-excel" (click)="exportExcel(dt1)" pTooltip="XLSX" tooltipPosition="bottom"></button>
+        <button pButton label="View Bill" pRipple class="p-button-outlined" icon="pi pi-shopping-cart" (click)="op.toggle($event)" pTooltip="Bill Summary" tooltipPosition="bottom"></button>
     </div>
     <span class="p-input-icon-left ml-auto">
         <i class="pi pi-search"></i>
@@ -54,6 +79,7 @@
     [rowsPerPageOptions]="[10, 25, 50]"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
     [globalFilterFields]="['tnbillno','tntime','tnname','tnpgst','gngstp','gntxable','gncamt','gnsamt','gntamt','tnbilltype']"
+    (onFilter)="reCalculate($event)"
     >
     <ng-template pTemplate="header" let-columns>
         <tr>

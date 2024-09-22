@@ -21,6 +21,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { QuotationRoutingModule } from './quotation-routing.module';
 import { QuotationComponent } from './quotation.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
 	imports: [
@@ -39,6 +40,7 @@ import { QuotationComponent } from './quotation.component';
 		InputTextModule,
 		MultiSelectModule,
 		NgxSpinnerModule,
+		OverlayPanelModule,
 		RadioButtonModule,
 		RippleModule,
 		TabMenuModule,

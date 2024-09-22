@@ -21,9 +21,11 @@ import { PurchaseBill } from 'src/app/demo/domain/purchase';
 import { PurchaseService } from 'src/app/demo/service/purchase.service';
 import { Table } from 'primeng/table';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { BillSummary } from 'src/app/demo/domain/product';
 
 @Component({
     templateUrl: './purchase.component.html',
+    styleUrls: ['./purchase.component.scss'],
     providers: [
         MessageService,
         ConfirmationService,
@@ -48,7 +50,7 @@ export class PurchaseComponent implements OnInit {
 
     bankList: string[] = ["HDFC Bank", "Thane Dist Bank"];
     filteredBank: string[];
-    
+    billSummary = new BillSummary();
 
     @ViewChild('dt1') dt: Table;
 
@@ -196,7 +198,7 @@ export class PurchaseComponent implements OnInit {
                 this.fetchInvoiceList();
             },
             error: (error) => {
-                console.log(error);
+                console.error(error);
                 this.messageService.add(errorToastr("Error fetching Purchase Bills"));
                 this.spinner.hide();
             },
@@ -208,6 +210,7 @@ export class PurchaseComponent implements OnInit {
         table.clear();
         this.filterDate = '';
         document.getElementById('searchText')['value'] = '';
+        window.location.reload();
     }
 
     exportExcel(dataTable: Table) {
@@ -232,7 +235,6 @@ export class PurchaseComponent implements OnInit {
 
     save() {
         let errorFlag = false;
-        console.log(this.purchaseBill.ardate);
         if (this.purchaseBill.arbillno == '') {
             this.messageService.add(
                 errorToastr('Invoice Number cannot be blank')
@@ -424,5 +426,26 @@ export class PurchaseComponent implements OnInit {
                 );
                 break;
         }
+    }
+
+    clearBillSummary() {
+        this.billSummary.bsfamt = 0;
+        this.billSummary.bsnamt = 0;
+        this.billSummary.bsroff = 0;
+        this.billSummary.bstamt = 0;
+        this.billSummary.bstcgst = 0;
+        this.billSummary.bstsgst = 0;
+    }
+
+    reCalculate(event) {
+        this.clearBillSummary();
+        this.billSummary = new BillSummary();
+        event.filteredValue.forEach(e => {
+            this.billSummary.bsnamt += e.arnamt;
+            this.billSummary.bstcgst += e.arcgst;
+            this.billSummary.bstsgst += e.arsgst;
+        });
+        
+        this.billSummary.bsfamt = this.billSummary.bsnamt + this.billSummary.bstcgst + this.billSummary.bstsgst;
     }
 }
