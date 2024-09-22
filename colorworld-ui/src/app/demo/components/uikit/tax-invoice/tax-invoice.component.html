@@ -44,10 +44,10 @@
 					</span>
 				</div>
 			</div>
-			<div class="flex gap-4">
-				<p-button (onClick)="op.toggle($event)" icon="pi pi-shopping-cart" label="Cart" />
-				
-				<div class="flex justify-content-between gap-3">
+			<div class="flex gap-4 align-items-center">
+				<div style="font-weight:700;font-size: large;">Total Amount: {{billSummary.bsfamt | number : '1.2-2'}}</div>
+				<i class="pi pi-info-circle"style="font-size: 2rem;color: var(--primary-color)"  (click)="op.toggle($event)" pTooltip="Bill Summary" tooltipPosition="bottom"></i>
+        		<div class="flex justify-content-between gap-3">
 					<p-multiSelect [options]="qty" [(ngModel)]="filteredQty" optionLabel="name" (onClear) = "clearQty()"
 						defaultLabel="Select Qty" (onChange) = "filterQty()" [showClear]="true">
 					</p-multiSelect>

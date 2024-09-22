@@ -170,10 +170,12 @@ export class InvoiceTableComponent {
     reCalculate(event) {
         this.clearBillSummary();
         event.filteredValue.forEach(e => {
-            this.billSummary.bsnamt += e.gntxable;
-            this.billSummary.bstcgst += e.gncamt;
-            this.billSummary.bstsgst += e.gnsamt;
-            this.billSummary.bsfamt += e.gntamt;
+            if(e.gngstp == "Total") {
+                this.billSummary.bsnamt += e.gntxable;
+                this.billSummary.bstcgst += e.gncamt;
+                this.billSummary.bstsgst += e.gnsamt;
+                this.billSummary.bsfamt += e.gntamt;
+            }
         });
     }
 }
