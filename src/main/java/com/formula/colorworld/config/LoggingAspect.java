@@ -21,7 +21,7 @@ public class LoggingAspect {
 
 	ObjectMapper mapper = new ObjectMapper();
 	
-	@Around(value = "@annotation(com.formula.colorworld.config.LogTime)")
+	@Around(value = "within(com.formula.colorworld.controller.*)")
 	public Object advice(ProceedingJoinPoint joinPoint) {
 		try {
 			LOGGER.info("********************************************************");

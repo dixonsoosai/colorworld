@@ -3,6 +3,8 @@ package com.formula.colorworld.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.formula.colorworld.entity.Car;
@@ -40,6 +42,10 @@ public class FormulaService {
 	
 	public List<Formula> getFormula(String code) {
 		return formulaRepository.findByCode(code);
+	}
+
+	public Page<Car> getPages(int page, int size) {
+		return carRepository.findAll(PageRequest.of(page, size));
 	}
 	
 }
