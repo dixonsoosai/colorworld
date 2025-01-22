@@ -129,7 +129,7 @@ public class AppUtils {
 			return bill;
 		}
 		int year = Integer.parseInt(bill.substring(0, 4));
-		return bill.substring(4,7) + "/" + year + "-" + String.valueOf(year + 1).substring(2,4);
+		return bill.substring(4,bill.length()) + "/" + year + "-" + String.valueOf(year + 1).substring(2,4);
 	}
 	
 	AppUtils() throws ColorWorldException {
