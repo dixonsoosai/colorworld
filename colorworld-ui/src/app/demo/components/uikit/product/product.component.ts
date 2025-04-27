@@ -2,7 +2,7 @@ import * as $ from 'jquery';
 import { Component } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DialogService } from 'primeng/dynamicdialog';
-import { errorToastr, productUnits, successToastr } from 'src/app/demo/service/apputils.service';
+import { errorToastr, successToastr } from 'src/app/demo/service/apputils.service';
 import { ProductItem } from 'src/app/demo/domain/product';
 import { ProductsService } from 'src/app/demo/service/products.service';
 import { NgxSpinnerService } from 'ngx-spinner';

@@ -62,6 +62,15 @@ export const getISOCurrentDate = () => {
 	return new Date().toISOString();
 };
 
+export const getCurrentStartDate = () => {
+	var date = new Date();
+	return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+export const getCurrentEndDate = () => {
+	return getLastDay(new Date());
+}
+
 export const getISODate = (date: Date) => {
 	return date.toISOString();
 };
@@ -79,6 +88,13 @@ export const getDMY = (date: Date): string => {
 	let formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${(date.getFullYear()).toString()}`;
 	return formattedDate;
 }
+
+export const getStartDay = (date: Date) => {
+
+	let currentMonth = date.getMonth();
+	let currentYear = date.getFullYear();
+	return new Date(currentYear, currentMonth, 1, 0, 0, 0);
+};
 
 export const getLastDay = (date: Date) => {
 
