@@ -2,6 +2,7 @@ package com.mrajupaint.colorworld.controller;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
@@ -25,15 +26,12 @@ import com.mrajupaint.colorworld.service.ProductService;
 
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class ProductController {
 
 	private static final Logger LOGGER = LogManager.getLogger(ProductController.class);
 	
-	ProductService productService;
-	
-	public ProductController(@Autowired ProductService productService) {
-		this.productService = productService;
-	}
+	private final ProductService productService;
 	
 	@LogTime
 	@GetMapping("products")

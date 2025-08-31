@@ -2,6 +2,7 @@ package com.mrajupaint.colorworld.controller;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
@@ -32,16 +33,14 @@ import com.mrajupaint.colorworld.service.AccountRegisterService;
 @RestController
 @CrossOrigin("*")
 @RequestMapping("sale-purchase")
+@RequiredArgsConstructor
 public class AccountRegisterController {
 
 	private static final Logger LOGGER = LogManager.getLogger(AccountRegisterController.class);
 	
-	AccountRegisterService accRegService;
+	private final AccountRegisterService accRegService;
 	
-	public AccountRegisterController(@Autowired AccountRegisterService accRegService) {
-		this.accRegService = accRegService;
-	}
-	
+
 	@LogTime
 	@GetMapping("bills")
 	public ResponseEntity<ServiceResponse<List<SSACRGP>>> bills() {

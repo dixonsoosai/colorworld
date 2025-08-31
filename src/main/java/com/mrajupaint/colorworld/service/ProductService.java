@@ -3,8 +3,8 @@ package com.mrajupaint.colorworld.service;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -19,15 +19,15 @@ import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.repository.ProductRepository;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
 
-	@Autowired
-	ProductRepository productRepository;
+	private final ProductRepository productRepository;
 	
 	@Transactional(rollbackFor = Exception.class)
-	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+	@Retryable(backoff = @Backoff(delay = 1000))
 	public ServiceResponse<Object> addProduct(Product product) {
-		var response = new ServiceResponse<Object>();
+		var response = new ServiceResponse<>();
 		var errorMessage = new HashMap<String, String>();
 		//Validation
 		if(AppUtils.isBlank(product.getPncmpy())) {
@@ -61,7 +61,7 @@ public class ProductService {
 	}
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
-	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+	@Retryable(backoff = @Backoff(delay = 1000))
 	public String deleteProduct(String productCode) throws ColorWorldException {
 		int count = productRepository.deleteByPnpdcd(productCode);
 		if(count > 1) {
@@ -72,11 +72,8 @@ public class ProductService {
 	
 	public Product getProduct(String productCode) {
 		var product = productRepository.findById(productCode);
-		if(product.isPresent()) {
-			return product.get();
-		}
-		return null;
-	}
+        return product.orElse(null);
+    }
 	
 	public List<Product> getAllProducts() {
 		return productRepository.findAll();

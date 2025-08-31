@@ -3,11 +3,10 @@ package com.mrajupaint.colorworld.service;
 import java.io.FileOutputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -15,7 +14,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -33,22 +31,15 @@ import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.repository.SSACRGPRepository;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class AccountRegisterService {
 
-	private static final Logger LOGGER = LogManager.getLogger(AccountRegisterService.class);
-	
-	SSACRGPRepository sSACRGPRepository;
-	
-	Config config;
-	
-	public AccountRegisterService(@Autowired SSACRGPRepository sSACRGPRepository,
-			@Autowired Config config) {
-		this.sSACRGPRepository = sSACRGPRepository;
-		this.config = config;
-	}
-	
-	
+	private final SSACRGPRepository sSACRGPRepository;
+
+    private final Config config;
+
 	public List<SSACRGP> getAllBills(){
 		return sSACRGPRepository.findAllByOrderByArdateDesc();
 	}
@@ -88,20 +79,11 @@ public class AccountRegisterService {
 	}
 	
 	@Transactional
-	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+	@Retryable(backoff = @Backoff(delay = 1000))
 	public ServiceResponse<Object> addBillDetails(SSACRGP accountDetails){
 		//Validation
-		var response = new ServiceResponse<Object>();
-		
-		var errorMessage = new HashMap<String, String>();
-		if(!errorMessage.isEmpty()) {
-			response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
-			response.setErrorMessage(AppConstants.VALIDATION_ERROR);
-			response.setData(errorMessage);
-			return response;
-		}
-		
-		sSACRGPRepository.save(accountDetails);
+		var response = new ServiceResponse<>();
+        sSACRGPRepository.save(accountDetails);
 		response.setCode(HttpStatus.OK.value());
 		response.setStatus(AppConstants.SUCCESS);
 		response.setErrorMessage(Strings.EMPTY);
@@ -110,7 +92,7 @@ public class AccountRegisterService {
 	}
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
-	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+	@Retryable(backoff = @Backoff(delay = 1000))
 	public String deleteBillByBillNo(String billNo, String companyName) throws ColorWorldException{
 		int count = sSACRGPRepository.deleteByArbillnoAndArname(billNo, companyName);
 		if(count > 1) {
@@ -183,7 +165,7 @@ public class AccountRegisterService {
                 dataCell = dataRow.createCell(colIndex++);
                 dataCell.setCellValue(bill.getArtext());
 
-                dataCell = dataRow.createCell(colIndex++);
+                dataCell = dataRow.createCell(colIndex);
                 dataCell.setCellValue(bill.getArtype());
             }
             
@@ -195,12 +177,12 @@ public class AccountRegisterService {
             		+ AppUtils.formatDate(LocalDateTime.now(), "yyyyMMdd") + ".xlsx";
             try (FileOutputStream outputStream = new FileOutputStream(filename)) {
                 workbook.write(outputStream);
-                LOGGER.info("Excel file created successfully.");
+                log.info("Excel file created successfully.");
             }
             return new FileSystemResource(filename);
             
         } catch (Exception e) {
-        	LOGGER.error("Exception while generating excel: {}", e.getMessage(), e);
+            log.error("Exception while generating excel: {}", e.getMessage(), e);
         }
 		return null;
 

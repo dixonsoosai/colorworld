@@ -1,5 +1,6 @@
 package com.mrajupaint.colorworld.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,28 +25,19 @@ import com.mrajupaint.colorworld.service.InvoiceService;
 import com.mrajupaint.colorworld.service.PostingService;
 
 @RestController
-@RequestMapping("posting")
 @CrossOrigin("*")
+@RequestMapping("posting")
+@RequiredArgsConstructor
 public class PostingController {
 
 	private static final Logger LOGGER = LogManager.getLogger(PostingController.class);
 	
-	PostingService postingService;
+	private final PostingService postingService;
 	
-	InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 	
-	Config config;
-	
-	public PostingController(
-			@Autowired PostingService postingService,
-			@Autowired InvoiceService invoiceService,
-			@Autowired Config config
-			) {
-		this.postingService = postingService;
-		this.invoiceService = invoiceService;
-		this.config = config;
-	}
-	
+	private final Config config;
+
 	@LogTime
 	@PostMapping("generateBill")
 	public ResponseEntity<String> generateBill(@RequestParam(defaultValue = "17") String overflowLimit,

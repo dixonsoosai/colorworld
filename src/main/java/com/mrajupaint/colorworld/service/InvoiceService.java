@@ -4,9 +4,10 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -20,27 +21,17 @@ import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
 import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
 import com.mrajupaint.colorworld.repository.TransactionRepository;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class InvoiceService {
+    
+	private final SSTNHDPRepository headerRepository;
 
-	private static final Logger LOGGER = LogManager.getLogger(InvoiceService.class);
-	
-	SSTNHDPRepository headerRepository;
-	
-	SSGNJNPRepository gstRepository;
-	
-	TransactionRepository transactionRepository;
-	
-	public InvoiceService(
-			@Autowired SSTNHDPRepository headerRepository,
-			@Autowired SSGNJNPRepository gstRepository,
-			@Autowired TransactionRepository transactionRepository
-			) {
-		this.headerRepository = headerRepository;
-		this.gstRepository = gstRepository;
-		this.transactionRepository = transactionRepository;
-	}
-	
+    private final SSGNJNPRepository gstRepository;
+
+    private final TransactionRepository transactionRepository;
+
 	public List<InvoiceSummary> getInvoiceBills() {
 		return headerRepository.getInvoiceBills(); 
 	}
@@ -50,28 +41,25 @@ public class InvoiceService {
 		Timestamp endDate = AppUtils.getEndFYear(invoiceDate);
 		Optional<Integer> billnum;
 		billnum = headerRepository.getBillNo(startDate, endDate);
-		if(billnum.isEmpty()) {
-			return Integer.parseInt(String.valueOf(AppUtils.getFinancialYear(invoiceDate)) 
-					+ "001");
-		}
-		return billnum.get();
-	}
+        return billnum.orElseGet(() -> Integer.parseInt(AppUtils.getFinancialYear(invoiceDate)
+                + "001"));
+    }
 	
 	@Transactional(rollbackFor = Exception.class)
-	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+	@Retryable(backoff = @Backoff(delay = 1000))
 	public String deleteBillByInvoice(int billnum, String billType) throws Exception {
 		int count = headerRepository.deleteByTnbillnoAndTnbilltype(billnum, billType);
 		if(count > 1) {
 			throw new ColorWorldException("Delete count greater than 1 " + count);
 		}
-		LOGGER.info("Delete from SSTNHDP");
+		log.info("Delete from SSTNHDP");
 		int gstcount = gstRepository.deleteAllByGnbillAndGnbilltype(billnum, billType);
 		if(gstcount >= 5) {
 			throw new ColorWorldException("Delete count greater than 1 " + count);
 		}
-		LOGGER.info("Delete from SSGNJNP");
+        log.info("Delete from SSGNJNP");
 		transactionRepository.deleteInvoice(billnum, billType);
-		LOGGER.info("Delete from SSTNJNP");
+        log.info("Delete from SSTNJNP");
 		return "Bill deleted successfully";
 	}
 

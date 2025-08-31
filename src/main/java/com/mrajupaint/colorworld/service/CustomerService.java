@@ -3,8 +3,9 @@ package com.mrajupaint.colorworld.service;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -17,17 +18,18 @@ import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.repository.CustomerRepository;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
 
-	@Autowired
-	CustomerRepository customerRepository;
+	private final CustomerRepository customerRepository;
 	
 	@Transactional(rollbackFor = Exception.class)
-	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+	@Retryable(backoff = @Backoff(delay = 1000))
 	public ServiceResponse<Object> addCustomer(Customer customer) {
 		//Validation
-		var response = new ServiceResponse<Object>();
+		var response = new ServiceResponse<>();
 		
 		var errorMessage = new HashMap<String, String>();
 		if(customer.getJpname().isBlank()) {
@@ -57,7 +59,7 @@ public class CustomerService {
 	}
 	
 	@Transactional(rollbackFor = ColorWorldException.class)
-	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))
+	@Retryable(backoff = @Backoff(delay = 1000))
 	public String deleteCustomer(int customerId) throws ColorWorldException {
 		int count = customerRepository.deleteByJpid(customerId);
 		if(count > 1) {
@@ -68,11 +70,8 @@ public class CustomerService {
 	
 	public Customer getCustomer(int customerId) {
 		var customer = customerRepository.findById(customerId);
-		if(customer.isPresent()) {
-			return customer.get();
-		}
-		return null;
-	}
+        return customer.orElse(null);
+    }
 	
 	public List<Customer> getAllCustomers() {
 		return customerRepository.findAll();

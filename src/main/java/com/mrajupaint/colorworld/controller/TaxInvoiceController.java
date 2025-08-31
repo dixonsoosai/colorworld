@@ -3,10 +3,9 @@ package com.mrajupaint.colorworld.controller;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,26 +17,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.mrajupaint.colorworld.common.AppConstants;
 import com.mrajupaint.colorworld.config.LogTime;
-import com.mrajupaint.colorworld.entity.SPRequest;
 import com.mrajupaint.colorworld.entity.SSTNHDP;
 import com.mrajupaint.colorworld.model.InvoiceSummary;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.service.InvoiceService;
 
+@Slf4j
 @RestController
 @CrossOrigin("*")
 @RequestMapping("tax-invoice")
+@RequiredArgsConstructor
 public class TaxInvoiceController {
+    
+	private final InvoiceService invoiceService;
 
-	private static final Logger LOGGER = LogManager.getLogger(TaxInvoiceController.class);
-	
-	InvoiceService invoiceService;
-	
-	public TaxInvoiceController(@Autowired InvoiceService invoiceService) {
-		this.invoiceService = invoiceService;
-	}
-	
 	@LogTime
 	@GetMapping("bills")
 	public ResponseEntity<ServiceResponse<List<InvoiceSummary>>> bills() {
@@ -54,15 +48,14 @@ public class TaxInvoiceController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in get bills method:", e);
+            log.error("Exception in get bills method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@LogTime
 	@GetMapping("refreshBilNum")
-	public ResponseEntity<ServiceResponse<Integer>> refreshBilNum(@RequestParam String billDate,
-			@RequestParam String billType) {
+	public ResponseEntity<ServiceResponse<Integer>> refreshBilNum(@RequestParam String billDate) {
 		try {
 			var response = new ServiceResponse<Integer>();
 			response.setCode(HttpStatus.OK.value());
@@ -76,14 +69,14 @@ public class TaxInvoiceController {
 			errorResponse.setData(0);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in refreshBilNum method:", e);
+            log.error("Exception in refreshBilNum method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@LogTime
 	@GetMapping("bill")
-	public ResponseEntity<ServiceResponse<List<SSTNHDP>>> bill(SPRequest request) {
+	public ResponseEntity<ServiceResponse<List<SSTNHDP>>> bill() {
 		try {
 			var response = new ServiceResponse<List<SSTNHDP>>();
 			response.setCode(HttpStatus.OK.value());
@@ -96,23 +89,23 @@ public class TaxInvoiceController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in get bill method:", e);
+            log.error("Exception in get bill method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@LogTime
 	@DeleteMapping("bill")
-	public ResponseEntity<ServiceResponse<String>> bill(@RequestParam String billnum,
+	public ResponseEntity<ServiceResponse<String>> bill(@RequestParam String billNum,
 			@RequestParam String billType) {
 		var response = new ServiceResponse<String>();
 		try {
 			response.setCode(HttpStatus.OK.value());
 			response.setErrorMessage(Strings.EMPTY);
 			response.setStatus(AppConstants.SUCCESS);
-			response.setData(invoiceService.deleteBillByInvoice(Integer.parseInt(billnum), billType));
+			response.setData(invoiceService.deleteBillByInvoice(Integer.parseInt(billNum), billType));
 		} catch (Exception e) {
-			LOGGER.error("Error while deleting Invoice", e);
+            log.error("Error while deleting Invoice", e);
 			response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			response.setStatus(AppConstants.FAILED);
 			response.setErrorMessage(e.getMessage());
@@ -122,14 +115,14 @@ public class TaxInvoiceController {
 	
 	@LogTime
 	@GetMapping("billDetails")
-	public ResponseEntity<ServiceResponse<TaxInvoice>> billDetails(@RequestParam String billnum,
+	public ResponseEntity<ServiceResponse<TaxInvoice>> billDetails(@RequestParam String billNum,
 			@RequestParam String billType) {
 		try {
 			var response = new ServiceResponse<TaxInvoice>();
 			response.setCode(HttpStatus.OK.value());
 			response.setErrorMessage(Strings.EMPTY);
 			response.setStatus(AppConstants.SUCCESS);
-			response.setData(invoiceService.getBillDetails(billnum, billType));
+			response.setData(invoiceService.getBillDetails(billNum, billType));
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			var errorResponse = new ServiceResponse<TaxInvoice>();
@@ -137,7 +130,7 @@ public class TaxInvoiceController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in billDetails method:", e);
+            log.error("Exception in billDetails method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
