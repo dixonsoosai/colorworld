@@ -1,6 +1,5 @@
 package com.mrajupaint.colorworld.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -10,27 +9,24 @@ import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
 import com.mrajupaint.colorworld.repository.TransactionRepository;
 import com.mrajupaint.colorworld.service.printer.PrinterService;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class PDFService {
 	
-	@Autowired
-	private SSTNHDPRepository headerRepository;
+	private final SSTNHDPRepository headerRepository;
 	
-	@Autowired
-	private TransactionRepository transactionRepository;
+	private final TransactionRepository transactionRepository;
 	
-	@Autowired
-	private SSGNJNPRepository gstRepository;
+	private final SSGNJNPRepository gstRepository;
 	
-	@Autowired
 	@Qualifier("TaxInvoiceService")
 	private PrinterService taxInvoiceService;
 	
-	@Autowired
 	@Qualifier("TaxInvoice2Service")
 	private PrinterService taxInvoice2Service;
 	
-	@Autowired
 	@Qualifier("QuotationService")
 	private PrinterService quotationService;
 	

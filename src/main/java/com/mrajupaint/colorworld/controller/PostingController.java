@@ -1,8 +1,5 @@
 package com.mrajupaint.colorworld.controller;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,28 +20,21 @@ import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.service.InvoiceService;
 import com.mrajupaint.colorworld.service.PostingService;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("posting")
 @CrossOrigin("*")
+@RequiredArgsConstructor
 public class PostingController {
 
-	private static final Logger LOGGER = LogManager.getLogger(PostingController.class);
+	private final PostingService postingService;
 	
-	PostingService postingService;
+	private final InvoiceService invoiceService;
 	
-	InvoiceService invoiceService;
-	
-	Config config;
-	
-	public PostingController(
-			@Autowired PostingService postingService,
-			@Autowired InvoiceService invoiceService,
-			@Autowired Config config
-			) {
-		this.postingService = postingService;
-		this.invoiceService = invoiceService;
-		this.config = config;
-	}
+	private final Config config;
 	
 	@LogTime
 	@PostMapping("generateBill")
@@ -57,7 +47,7 @@ public class PostingController {
 			headers.add(AppConstants.CONTENT_DISPOSITION, "attachment; filename=\"Tax Invoice.html\"");
 			return new ResponseEntity<>(postingService.postBill(taxInvoice).getData(), headers, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Exception in generateBill method: ", e);
+			log.error("Exception in generateBill method: ", e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -71,7 +61,7 @@ public class PostingController {
 			headers.add(AppConstants.CONTENT_DISPOSITION, "attachment; filename=\"Tax Invoice.html\"");
 			return new ResponseEntity<>(postingService.downloadBill(taxInvoice).getData(), headers, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Exception in downloadBill method:", e);
+			log.error("Exception in downloadBill method:", e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -88,7 +78,7 @@ public class PostingController {
 			headers.add(AppConstants.CONTENT_DISPOSITION, "attachment; filename=\"Tax Invoice.html\"");
 			return new ResponseEntity<>(postingService.downloadBill(taxInvoice).getData(), headers, HttpStatus.OK);
 		} catch (Exception e) {
-			LOGGER.error("Exception in downloadBillNum method:", e);
+			log.error("Exception in downloadBillNum method:", e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

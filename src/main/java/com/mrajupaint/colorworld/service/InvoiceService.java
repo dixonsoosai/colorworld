@@ -4,9 +4,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -20,26 +17,19 @@ import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
 import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
 import com.mrajupaint.colorworld.repository.TransactionRepository;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class InvoiceService {
 
-	private static final Logger LOGGER = LogManager.getLogger(InvoiceService.class);
+	private final SSTNHDPRepository headerRepository;
 	
-	SSTNHDPRepository headerRepository;
+	private final SSGNJNPRepository gstRepository;
 	
-	SSGNJNPRepository gstRepository;
-	
-	TransactionRepository transactionRepository;
-	
-	public InvoiceService(
-			@Autowired SSTNHDPRepository headerRepository,
-			@Autowired SSGNJNPRepository gstRepository,
-			@Autowired TransactionRepository transactionRepository
-			) {
-		this.headerRepository = headerRepository;
-		this.gstRepository = gstRepository;
-		this.transactionRepository = transactionRepository;
-	}
+	private final TransactionRepository transactionRepository;
 	
 	public List<InvoiceSummary> getInvoiceBills() {
 		return headerRepository.getInvoiceBills(); 
@@ -64,14 +54,14 @@ public class InvoiceService {
 		if(count > 1) {
 			throw new ColorWorldException("Delete count greater than 1 " + count);
 		}
-		LOGGER.info("Delete from SSTNHDP");
+		log.info("Delete from SSTNHDP");
 		int gstcount = gstRepository.deleteAllByGnbillAndGnbilltype(billnum, billType);
 		if(gstcount >= 5) {
 			throw new ColorWorldException("Delete count greater than 1 " + count);
 		}
-		LOGGER.info("Delete from SSGNJNP");
+		log.info("Delete from SSGNJNP");
 		transactionRepository.deleteInvoice(billnum, billType);
-		LOGGER.info("Delete from SSTNJNP");
+		log.info("Delete from SSTNJNP");
 		return "Bill deleted successfully";
 	}
 

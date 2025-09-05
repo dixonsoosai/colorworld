@@ -2,10 +2,7 @@ package com.mrajupaint.colorworld.controller;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,17 +20,16 @@ import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.service.CustomerService;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class CustomerController {
-
-	private static final Logger LOGGER = LogManager.getLogger(CustomerController.class);
 	
-	private CustomerService customerService;
-	
-	public CustomerController(@Autowired CustomerService customerService) {
-		this.customerService = customerService;
-	}
+	private final CustomerService customerService;
 	
 	@LogTime
 	@GetMapping("customers")
@@ -51,7 +47,7 @@ public class CustomerController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in getCustomers method:", e);
+			log.error("Exception in getCustomers method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -73,7 +69,7 @@ public class CustomerController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in getCustomer method:", e);
+			log.error("Exception in getCustomer method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -91,7 +87,7 @@ public class CustomerController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in addCustomer method:", e);
+			log.error("Exception in addCustomer method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -113,7 +109,7 @@ public class CustomerController {
 			errorResponse.setData("Customer deletion failed");
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in deleteCustomer method: ", e);
+			log.error("Exception in deleteCustomer method: ", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

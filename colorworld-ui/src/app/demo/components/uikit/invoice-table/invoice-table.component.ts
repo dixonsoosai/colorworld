@@ -62,6 +62,12 @@ export class InvoiceTableComponent {
                     }
                   }
               });
+            // Sort by tntime (ascending) and then by tnbillno (ascending)
+            response.data.sort((a, b) => {
+                const timeDiff = b.tntime.getTime() - a.tntime.getTime();
+                if (timeDiff !== 0) return timeDiff;
+                return b.tnbillno > a.tnbillno;
+            });
               this.invoiceDetails = response.data;
               this.loading = false;
           }, 

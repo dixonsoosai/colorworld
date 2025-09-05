@@ -2,10 +2,7 @@ package com.mrajupaint.colorworld.controller;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,17 +20,16 @@ import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.service.ProductService;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @CrossOrigin
+@RequiredArgsConstructor
 public class ProductController {
 
-	private static final Logger LOGGER = LogManager.getLogger(ProductController.class);
-	
-	ProductService productService;
-	
-	public ProductController(@Autowired ProductService productService) {
-		this.productService = productService;
-	}
+	private final ProductService productService;
 	
 	@LogTime
 	@GetMapping("products")
@@ -51,7 +47,7 @@ public class ProductController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in get products method:", e);
+			log.error("Exception in get products method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -73,7 +69,7 @@ public class ProductController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in get product method:", e);
+			log.error("Exception in get product method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -90,7 +86,7 @@ public class ProductController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method:", e);
+			log.error("Exception in method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -112,7 +108,7 @@ public class ProductController {
 			errorResponse.setData("Product deletion failed");
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in deleteProduct method:", e);
+			log.error("Exception in deleteProduct method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

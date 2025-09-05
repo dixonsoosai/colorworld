@@ -2,10 +2,7 @@ package com.mrajupaint.colorworld.controller;
 
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,18 +26,17 @@ import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.service.AccountRegisterService;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @CrossOrigin("*")
 @RequestMapping("sale-purchase")
+@RequiredArgsConstructor
 public class AccountRegisterController {
 
-	private static final Logger LOGGER = LogManager.getLogger(AccountRegisterController.class);
-	
-	AccountRegisterService accRegService;
-	
-	public AccountRegisterController(@Autowired AccountRegisterService accRegService) {
-		this.accRegService = accRegService;
-	}
+	private final AccountRegisterService accRegService;
 	
 	@LogTime
 	@GetMapping("bills")
@@ -58,7 +54,7 @@ public class AccountRegisterController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: ", e);
+			log.error("Exception in method: ", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -79,7 +75,7 @@ public class AccountRegisterController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: ", e);
+			log.error("Exception in method: ", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -100,7 +96,7 @@ public class AccountRegisterController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: ", e);
+			log.error("Exception in method: ", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -121,7 +117,7 @@ public class AccountRegisterController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in method: ", e);
+			log.error("Exception in method: ", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -134,7 +130,7 @@ public class AccountRegisterController {
 					.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"Sales_Purchase History.xlsx\"")
 					.body(accRegService.downloadBills(request));
 		} catch (Exception e) {
-			LOGGER.error("Exception in method: ", e);
+			log.error("Exception in method: ", e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}  
 	}

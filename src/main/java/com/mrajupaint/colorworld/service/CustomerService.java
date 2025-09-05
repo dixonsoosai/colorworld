@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -17,11 +16,13 @@ import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.repository.CustomerRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
 
-	@Autowired
-	CustomerRepository customerRepository;
+	private final CustomerRepository customerRepository;
 	
 	@Transactional(rollbackFor = Exception.class)
 	@Retryable(maxAttempts = 3, backoff = @Backoff(delay = 1000))

@@ -168,7 +168,7 @@ export const formatInvoiceData = (data: InvoiceSummary[]) => {
 			gntxable: element.gntxable,
 			gncamt: element.gncamt,
 			gnsamt: element.gnsamt,
-			gntamt: element.gntamt.toFixed(2),
+			gntamt: element.gntxable + element.gncamt + element.gnsamt,
 			tnbillType: element.tnbilltype
 		};
 	});

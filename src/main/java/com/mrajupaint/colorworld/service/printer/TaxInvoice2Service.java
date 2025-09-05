@@ -16,9 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -27,13 +24,15 @@ import com.mrajupaint.colorworld.config.Config;
 import com.mrajupaint.colorworld.entity.GSTSummary;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component(value = "TaxInvoice2Service")
+@RequiredArgsConstructor
 public class TaxInvoice2Service implements PrinterService {
 
-	private static final Logger LOGGER = LogManager.getLogger(TaxInvoice2Service.class);
-
-	@Autowired
-	private Config config;
+	private final Config config;
 	
 	/***
 	 * Steps:
@@ -54,7 +53,7 @@ public class TaxInvoice2Service implements PrinterService {
 			return downloadContent(finalContent, outputFilename);
 			
 		} catch (Exception e) {
-			LOGGER.error("Exception while generating PDF: {}", e.getMessage(), e);
+			log.error("Exception while generating PDF: {}", e.getMessage(), e);
 			return null;
 		}
 	}
@@ -70,11 +69,11 @@ public class TaxInvoice2Service implements PrinterService {
 			try {
 				convertHtmlToPdf(content, pdfFile);
 			} catch (Exception e) {
-				LOGGER.error("Exception while converting to PDF file: {}", e.getMessage(), e);
+				log.error("Exception while converting to PDF file: {}", e.getMessage(), e);
 			}
 			return content;
 		} catch (Exception e) {
-			LOGGER.error("Exception while writing to HTML file: {}", e.getMessage(), e);
+			log.error("Exception while writing to HTML file: {}", e.getMessage(), e);
 			return null;
 		}
 	}
@@ -94,7 +93,7 @@ public class TaxInvoice2Service implements PrinterService {
 	        }   
 		}
 		catch(Exception e) {
-			LOGGER.error("Exception while reading file: {}", e.getMessage(), e);
+			log.error("Exception while reading file: {}", e.getMessage(), e);
 		}
 		
 		return finalContent;
@@ -153,7 +152,7 @@ public class TaxInvoice2Service implements PrinterService {
             String base64Image = "data:image/jpg;base64," + Base64.getEncoder().encodeToString(bytes);
             replaceKeyword.put("@img", base64Image);
         } catch (Exception e) {
-            LOGGER.error("Failed to read signature file: {}", e.getMessage(), e);
+        	log.error("Failed to read signature file: {}", e.getMessage(), e);
         }
 		
 		return replaceKeyword;

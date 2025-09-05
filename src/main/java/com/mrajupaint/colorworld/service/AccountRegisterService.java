@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -15,7 +13,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -33,22 +30,18 @@ import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.repository.SSACRGPRepository;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class AccountRegisterService {
 
-	private static final Logger LOGGER = LogManager.getLogger(AccountRegisterService.class);
+	private final SSACRGPRepository sSACRGPRepository;
 	
-	SSACRGPRepository sSACRGPRepository;
-	
-	Config config;
-	
-	public AccountRegisterService(@Autowired SSACRGPRepository sSACRGPRepository,
-			@Autowired Config config) {
-		this.sSACRGPRepository = sSACRGPRepository;
-		this.config = config;
-	}
-	
-	
+	private final Config config;
+		
 	public List<SSACRGP> getAllBills(){
 		return sSACRGPRepository.findAllByOrderByArdateDesc();
 	}
@@ -195,12 +188,12 @@ public class AccountRegisterService {
             		+ AppUtils.formatDate(LocalDateTime.now(), "yyyyMMdd") + ".xlsx";
             try (FileOutputStream outputStream = new FileOutputStream(filename)) {
                 workbook.write(outputStream);
-                LOGGER.info("Excel file created successfully.");
+                log.info("Excel file created successfully.");
             }
             return new FileSystemResource(filename);
             
         } catch (Exception e) {
-        	LOGGER.error("Exception while generating excel: {}", e.getMessage(), e);
+        	log.error("Exception while generating excel: {}", e.getMessage(), e);
         }
 		return null;
 

@@ -3,9 +3,6 @@ package com.mrajupaint.colorworld.service;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
@@ -21,30 +18,28 @@ import com.mrajupaint.colorworld.repository.SSGNJNPRepository;
 import com.mrajupaint.colorworld.repository.SSTNHDPRepository;
 import com.mrajupaint.colorworld.repository.SSTNJNPRepository;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class PostingService {
 	
-	private static final Logger LOGGER = LogManager.getLogger(PostingService.class);
+	private final SSTNJNPRepository sSTNJNPRepository;
 	
-	@Autowired
-	SSTNJNPRepository sSTNJNPRepository;
+	private final SSGNJNPRepository sSGNJNPRepository;
 	
-	@Autowired
-	SSGNJNPRepository sSGNJNPRepository;
+	private final SSTNHDPRepository sSTNHDPRepository;
 	
-	@Autowired
-	SSTNHDPRepository sSTNHDPRepository;
+	private final PDFService pdfService;
 	
-	@Autowired
-	PDFService pdfService;
-	
-	@Autowired
-	InvoiceService invoiceService;
+	private final InvoiceService invoiceService;
 	
 	public ServiceResponse<String> downloadBill(TaxInvoice taxInvoice) {
 		//Header should be present
 		if(checkNull(taxInvoice.getHeader(), taxInvoice.getDetails(), taxInvoice.getGst())) {
-			LOGGER.error("Invalid GST format, GST Detail is null");
+			log.error("Invalid GST format, GST Detail is null");
 			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);
 		}
 		
@@ -53,21 +48,21 @@ public class PostingService {
 		 * Details should contain at-least 1 entries
 		 */
 		if(taxInvoice.getGst().size() < 2 || taxInvoice.getDetails().isEmpty()) {
-			LOGGER.error("Invalid GST format, GST Detail missing gst entries");
+			log.error("Invalid GST format, GST Detail missing gst entries");
 			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);	
 		}
 		//Header Validation
 		int billNum = taxInvoice.getHeader().getTnbillno();
 		var response = validateHeader(taxInvoice.getHeader(), billNum);
 		if(!response.equals("****")) {
-			LOGGER.error(response);
+			log.error(response);
 			return new ServiceResponse<>(501, AppConstants.FAILED, response, null);
 		}
 		
 		//GST Validation
 		response = validateGST(taxInvoice, billNum);
 		if(!response.equals("****")) {
-			LOGGER.error(response);
+			log.error(response);
 			return new ServiceResponse<>(501, AppConstants.FAILED, response, null);
 		}
 		String buffer = pdfService.generateInvoice(taxInvoice);
@@ -81,7 +76,7 @@ public class PostingService {
 		
 		//Header should be present
 		if(checkNull(taxInvoice.getHeader(), taxInvoice.getDetails(), taxInvoice.getGst())) {
-			LOGGER.error("Invalid GST format");
+			log.error("Invalid GST format");
 			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);
 		}
 		
@@ -90,18 +85,18 @@ public class PostingService {
 		 * Details should contain at-least 1 entries
 		 */
 		if(taxInvoice.getGst().size() < 2 || taxInvoice.getDetails().isEmpty()) {
-			LOGGER.error("Invalid GST format");
+			log.error("Invalid GST format");
 			return new ServiceResponse<>(501, AppConstants.FAILED, "Invalid GST format",null);	
 		}
 		int billNum = 0;
 		synchronized (this) {
 			//Generate Bill No
 			billNum = generateBillNum(taxInvoice);
-			LOGGER.info("New Bill number: {}", billNum);
+			log.info("New Bill number: {}", billNum);
 			//Header Validation
 			var response = validateHeader(taxInvoice.getHeader(), billNum);
 			if(!response.equals("****")) {
-				LOGGER.error(response);
+				log.error(response);
 				return new ServiceResponse<>(501, AppConstants.FAILED, 
 						response, null);
 			}
@@ -109,7 +104,7 @@ public class PostingService {
 			//GST Validation
 			response = validateGST(taxInvoice, billNum);
 			if(!response.equals("****")) {
-				LOGGER.error(response);
+				log.error(response);
 				return new ServiceResponse<>(501, AppConstants.FAILED, 
 						response, null);
 			}
@@ -127,7 +122,7 @@ public class PostingService {
 					"Bill generated successfully", buffer.get());
 		}
 		catch(Exception e) {
-			LOGGER.error("Error while writing exception ", e);
+			log.error("Error while writing exception ", e);
 			throw new ColorWorldException(e.getMessage());
 		}
 	}
@@ -185,18 +180,18 @@ public class PostingService {
 		
 		if(round(totalTaxable) != round(taxable) || round(totalCGST) != round(cAmt) 
 				|| round(totalSGST) != round(sAmt) || round(totalTamt) != round(tAmt)) {
-			LOGGER.error("Total Taxable != Sum of Taxable or Total CGST != Sum of CGST or "
+			log.error("Total Taxable != Sum of Taxable or Total CGST != Sum of CGST or "
 					+ "Total SGST != Sum of SGST");
-			LOGGER.error("{} != {} or {} != {} or {} != {}",
+			log.error("{} != {} or {} != {} or {} != {}",
 					totalTaxable, taxable, totalCGST, cAmt, totalSGST, sAmt);
 			return "Invalid GST Transaction";
 		}
 		
 		if((round(totalTamt) != round(totalTaxable + totalCGST + totalSGST)) || 
 				(round(tAmt) != round(taxable + cAmt + sAmt))) {
-			LOGGER.error("Total Amount != Taxable + CGST + SGST or "
+			log.error("Total Amount != Taxable + CGST + SGST or "
 					+ "Sum of Total Amt != Sum of (Taxable + CGST + SGST)");
-			LOGGER.error("{} != {} + {} + {} or {} != {} + {} + {}", 
+			log.error("{} != {} + {} + {} or {} != {} + {} + {}", 
 					totalTamt, totalTaxable, totalCGST, totalSGST,
 					tAmt, taxable, cAmt, sAmt);
 			return "Invalid GST Total";
@@ -217,11 +212,11 @@ public class PostingService {
 		}
 		if(round(billTaxable) != round(totalTaxable) || round(billCAmt) != round(totalCGST) || 
 				round(billSAmt) != round(totalSGST) || round(header.getTntotal()) != round(billTAmt)) {
-			LOGGER.info("Bill Details: Body  GST");
-			LOGGER.info("Taxable: {} {}", billTaxable, totalTaxable);
-			LOGGER.info("CGST: {} {}", billCAmt, totalCGST);
-			LOGGER.info("SGST: {} {}", billSAmt, totalSGST);
-			LOGGER.info("Total: {} {}", round(header.getTntotal()), round(billTAmt));
+			log.info("Bill Details: Body  GST");
+			log.info("Taxable: {} {}", billTaxable, totalTaxable);
+			log.info("CGST: {} {}", billCAmt, totalCGST);
+			log.info("SGST: {} {}", billSAmt, totalSGST);
+			log.info("Total: {} {}", round(header.getTntotal()), round(billTAmt));
 			return "Invalid Billing Entries";
 		}
 		

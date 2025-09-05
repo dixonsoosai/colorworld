@@ -3,10 +3,7 @@ package com.mrajupaint.colorworld.controller;
 import java.sql.Timestamp;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.util.Strings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,18 +22,17 @@ import com.mrajupaint.colorworld.model.ServiceResponse;
 import com.mrajupaint.colorworld.model.TaxInvoice;
 import com.mrajupaint.colorworld.service.InvoiceService;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @CrossOrigin("*")
 @RequestMapping("tax-invoice")
+@RequiredArgsConstructor
 public class TaxInvoiceController {
 
-	private static final Logger LOGGER = LogManager.getLogger(TaxInvoiceController.class);
-	
-	InvoiceService invoiceService;
-	
-	public TaxInvoiceController(@Autowired InvoiceService invoiceService) {
-		this.invoiceService = invoiceService;
-	}
+	private final InvoiceService invoiceService;
 	
 	@LogTime
 	@GetMapping("bills")
@@ -54,7 +50,7 @@ public class TaxInvoiceController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in get bills method:", e);
+			log.error("Exception in get bills method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -76,7 +72,7 @@ public class TaxInvoiceController {
 			errorResponse.setData(0);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in refreshBilNum method:", e);
+			log.error("Exception in refreshBilNum method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -96,7 +92,7 @@ public class TaxInvoiceController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in get bill method:", e);
+			log.error("Exception in get bill method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -112,7 +108,7 @@ public class TaxInvoiceController {
 			response.setStatus(AppConstants.SUCCESS);
 			response.setData(invoiceService.deleteBillByInvoice(Integer.parseInt(billnum), billType));
 		} catch (Exception e) {
-			LOGGER.error("Error while deleting Invoice", e);
+			log.error("Error while deleting Invoice", e);
 			response.setCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
 			response.setStatus(AppConstants.FAILED);
 			response.setErrorMessage(e.getMessage());
@@ -137,7 +133,7 @@ public class TaxInvoiceController {
 			errorResponse.setData(null);
 			errorResponse.setErrorMessage(e.getMessage());
 			errorResponse.setStatus(AppConstants.FAILED);
-			LOGGER.error("Exception in billDetails method:", e);
+			log.error("Exception in billDetails method:", e);
 			return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
