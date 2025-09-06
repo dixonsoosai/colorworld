@@ -16,9 +16,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -114,17 +111,24 @@ public class TaxInvoiceService implements PrinterService {
 		replaceKeyword.put("@CompanyAccountDetails", config.getAccountDetails());
 		replaceKeyword.put("@PartyCompany", header.getTnname());
 		replaceKeyword.put("@PartyGST", header.getTnpgst());
-		replaceKeyword.put("@InvoiceNo", AppUtils.rephraseBill(header.getTnbillno()));
+		replaceKeyword.put("@InvoiceNo", AppUtils.rephraseBill(header.getTnbillno(), header.getTnbilltype()));
 		replaceKeyword.put("@Comments", header.getTntext().trim());
 		replaceKeyword.put("@InvoiceDate", 
 				AppUtils.formatDate(header.getTntime(), "dd-MM-yyyy"));
 		replaceKeyword.put("@AmountInWords", 
 				AppUtils.convertToWords((int) Math.round(header.getTntotal()) ));
-		if(header.getTnbilltype().equals("T")) {
-			replaceKeyword.put("@BillType", "Tax Invoice");
-		}
-		else {
-			replaceKeyword.put("@BillType", "Proforma Invoice");
+		switch(header.getTnbilltype()) {
+			case "P":
+				replaceKeyword.put("@BillType", "Proforma Invoice");
+				replaceKeyword.put("@watermark", "watermark");
+				replaceKeyword.put("@disclaimer", "disclaimer");
+				break;
+			case "T":
+			default:
+				replaceKeyword.put("@BillType", "Tax Invoice");
+				replaceKeyword.put("@watermark", "hide");
+				replaceKeyword.put("@disclaimer", "hide");
+				break;
 		}
 		SSGNJNP totalGst = gstList.get("Total");
 		replaceKeyword.put("@AmtB4Tax", AppUtils.formatNum(totalGst.getGntxable()));

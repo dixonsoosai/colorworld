@@ -123,13 +123,18 @@ public class AppUtils {
         return "Rupees " + rupees + " only";
 	}
 	
-	public static String rephraseBill(int billnum) {
+	public static String rephraseBill(int billnum, String billType) {
 		String bill = String.valueOf(billnum);
 		if(billnum <= 2000000) {
 			return bill;
 		}
+		
 		int year = Integer.parseInt(bill.substring(0, 4));
-		return bill.substring(4,bill.length()) + "/" + year + "-" + String.valueOf(year + 1).substring(2,4);
+		var invoice = bill.substring(4,bill.length()) + "/" + year + "-" + String.valueOf(year + 1).substring(2,4);
+		if("CM".equals(billType)) {
+			invoice += "/CM";
+		}
+		return invoice;
 	}
 	
 	AppUtils() throws ColorWorldException {

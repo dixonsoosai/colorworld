@@ -118,7 +118,7 @@ public class QuotationService implements PrinterService {
 			replaceKeyword.put("@Customer", "");
 			
 		}
-		replaceKeyword.put("@InvoiceNo", AppUtils.rephraseBill(header.getTnbillno()));
+		replaceKeyword.put("@InvoiceNo", AppUtils.rephraseBill(header.getTnbillno(), header.getTnbilltype()));
 		replaceKeyword.put("@InvoiceDate", 
 				AppUtils.formatDate(header.getTntime(), "dd-MM-yyyy hh:mm:ss aa"));
 		replaceKeyword.put("@AmountInWords", 

@@ -90,13 +90,17 @@
 		
 		<div class="mt-4 flex flex-wrap gap-3 justify-content-center">
 			<div class="flex align-items-center">
-				<p-radioButton name="billType" value="T" [(ngModel)]="header.tnbilltype"></p-radioButton>
+				<p-radioButton name="billType" value="T" [(ngModel)]="header.tnbilltype" (click)="generateNewInvoiceNum()"></p-radioButton>
 				<label class="ml-2">Tax Invoice</label>
 			</div>
 			
 			<div class="flex align-items-center">
-				<p-radioButton name="billType" value="P" [(ngModel)]="header.tnbilltype"></p-radioButton>
+				<p-radioButton name="billType" value="P" [(ngModel)]="header.tnbilltype" (click)="generateNewInvoiceNum()"></p-radioButton>
 				<label class="ml-2">Proforma Invoice</label>
+			</div>
+			<div class="flex align-items-center">
+				<p-radioButton name="billType" value="CM" [(ngModel)]="header.tnbilltype" (click)="generateNewInvoiceNum()"></p-radioButton>
+				<label class="ml-2">Special Bills</label>
 			</div>
 		</div>
 
@@ -433,15 +437,20 @@
 
 				<div class="mt-4 flex flex-wrap gap-3 justify-content-center">
 					<div class="flex align-items-center">
-						<p-radioButton name="billType" value="T" [(ngModel)]="header.tnbilltype"></p-radioButton>
+						<p-radioButton name="billType" value="T" [(ngModel)]="header.tnbilltype" (click)="generateNewInvoiceNum()"></p-radioButton>
 						<label class="ml-2">Tax Invoice</label>
 					</div>
 					
 					<div class="flex align-items-center">
-						<p-radioButton name="billType" value="P" [(ngModel)]="header.tnbilltype"></p-radioButton>
+						<p-radioButton name="billType" value="P" [(ngModel)]="header.tnbilltype" (click)="generateNewInvoiceNum()"></p-radioButton>
 						<label class="ml-2">Proforma Invoice</label>
 					</div>
+					<div class="flex align-items-center">
+						<p-radioButton name="billType" value="CM" [(ngModel)]="header.tnbilltype" (click)="generateNewInvoiceNum()"></p-radioButton>
+						<label class="ml-2">Special Bills</label>
+					</div>
 				</div>
+
 			</div>
 		</div>
 	</div>

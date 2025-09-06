@@ -10,10 +10,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.mrajupaint.colorworld.entity.SSTNHDP;
+import com.mrajupaint.colorworld.entity.SSTNHDP_KEY;
 import com.mrajupaint.colorworld.model.InvoiceSummary;
 
 @Repository
-public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, Integer> {
+public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, SSTNHDP_KEY> {
 
 	@Query(value = """
 			SELECT max(tnbillno) + 1 as billno FROM sstnhdp 
@@ -21,6 +22,17 @@ public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, Integer> {
 			""",
 			nativeQuery = true)
 	Optional<Integer> getBillNo(@Param("startDate") Timestamp startDate, 
+			@Param("endDate") Timestamp endDate);
+
+	@Query(value = """
+			SELECT max(tnbillno) + 1 as billno FROM sstnhdp 
+			where tntime between :startDate and :endDate 
+			and tnbillType = :billType 
+			""",
+			nativeQuery = true)
+	Optional<Integer> getBillNoByBillType(
+			@Param("billType") String billType,
+			@Param("startDate") Timestamp startDate, 
 			@Param("endDate") Timestamp endDate);
 	
 	SSTNHDP getByTnbillnoAndTnbilltype(int billnum, String billType);
@@ -32,6 +44,7 @@ public interface SSTNHDPRepository extends JpaRepository<SSTNHDP, Integer> {
 			gngstp, gntxable, gncamt, gnsamt, gntamt 
 			FROM SSTNHDP h, SSGNJNP gst 
 			where h.tnbillno = gst.gnbill 
+			and h.tnbilltype = gst.gnbilltype 
 			order by tnbillno desc, tntime desc, gngstp"""
 			, nativeQuery = true)
 	List<InvoiceSummary> getInvoiceBills();

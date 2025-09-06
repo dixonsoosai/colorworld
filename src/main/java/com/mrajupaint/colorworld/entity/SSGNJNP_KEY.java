@@ -7,4 +7,6 @@ public class SSGNJNP_KEY {
 
 	private int gnbill;
 	private String gngstp;
+	private String gnbilltype;
+	
 }

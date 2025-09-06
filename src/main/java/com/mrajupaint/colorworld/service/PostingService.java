@@ -225,10 +225,11 @@ public class PostingService {
 	
 	private int generateBillNum(TaxInvoice taxInvoice) {
 		
-		if(taxInvoice.getHeader().getTnbillno() != 0) {
-			return taxInvoice.getHeader().getTnbillno();
+		var header = taxInvoice.getHeader();
+		if(header.getTnbillno() != 0) {
+			return header.getTnbillno();
 		}
-		return invoiceService.refreshBillNum(taxInvoice.getHeader().getTntime());
+		return invoiceService.refreshBillNum(header.getTntime(), header.getTnbilltype());
 	}
 	
 	public double round(double num) {

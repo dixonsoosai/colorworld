@@ -3,12 +3,14 @@ package com.mrajupaint.colorworld.entity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "SSTNHDP")
+@IdClass(SSTNHDP_KEY.class)
 public class SSTNHDP
 {
 	@Id
@@ -28,6 +30,7 @@ public class SSTNHDP
 	private double tntotal;
 	@Column
 	private String tntext;
+	@Id
 	@Column
 	private String tnbilltype;
 

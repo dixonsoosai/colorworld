@@ -35,11 +35,14 @@ public class InvoiceService {
 		return headerRepository.getInvoiceBills(); 
 	}
 	
-	public int refreshBillNum(Timestamp invoiceDate) {
+	public int refreshBillNum(Timestamp invoiceDate, String billType) {
 		Timestamp startDate = AppUtils.getStartFYear(invoiceDate);
 		Timestamp endDate = AppUtils.getEndFYear(invoiceDate);
 		Optional<Integer> billnum;
-		billnum = headerRepository.getBillNo(startDate, endDate);
+		billnum = switch(billType) {
+			case "CM" -> headerRepository.getBillNoByBillType(billType, startDate, endDate); 
+			default -> headerRepository.getBillNo(startDate, endDate);
+		};
 		if(billnum.isEmpty()) {
 			return Integer.parseInt(String.valueOf(AppUtils.getFinancialYear(invoiceDate)) 
 					+ "001");

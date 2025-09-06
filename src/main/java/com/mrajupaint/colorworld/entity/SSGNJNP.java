@@ -27,6 +27,7 @@ public class SSGNJNP
 	private double gnsamt;
 	@Column
 	private double gntamt;
+	@Id
 	@Column
 	private String gnbilltype;
 }

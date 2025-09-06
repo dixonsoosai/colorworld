@@ -64,7 +64,7 @@ public class TaxInvoiceController {
 			response.setCode(HttpStatus.OK.value());
 			response.setErrorMessage(Strings.EMPTY);
 			response.setStatus(AppConstants.SUCCESS);
-			response.setData(invoiceService.refreshBillNum(Timestamp.valueOf(billDate)));
+			response.setData(invoiceService.refreshBillNum(Timestamp.valueOf(billDate), billType));
 			return new ResponseEntity<>(response, HttpStatus.OK);
 		} catch (Exception e) {
 			var errorResponse = new ServiceResponse<Integer>();

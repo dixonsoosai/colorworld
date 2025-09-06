@@ -510,7 +510,8 @@ export class TaxInvoiceComponent implements OnInit, AfterViewChecked {
         customer.jpaddress = this.header.tnaddress;
         customer.jpdate = getISTDate(this.invoiceDate);
         customer.jppgst = this.header.tnpgst;
-        customer.jpmobno = this.header.tnmobno;
+        customer.jpmobno = this.header.tnmobno || "";
+        console.log(customer)
         this.customerService.add(customer).subscribe({
             next: response => {
                 if(response.code == 200) {

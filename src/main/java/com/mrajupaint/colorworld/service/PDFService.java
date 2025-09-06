@@ -1,5 +1,6 @@
 package com.mrajupaint.colorworld.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +22,15 @@ public class PDFService {
 	
 	private final SSGNJNPRepository gstRepository;
 	
+	@Autowired
 	@Qualifier("TaxInvoiceService")
 	private PrinterService taxInvoiceService;
 	
+	@Autowired
 	@Qualifier("TaxInvoice2Service")
 	private PrinterService taxInvoice2Service;
 	
+	@Autowired
 	@Qualifier("QuotationService")
 	private PrinterService quotationService;
 	
@@ -41,15 +45,17 @@ public class PDFService {
 	
 	public String generateInvoice(TaxInvoice invoice) {
 		PrinterService printerService;
-		if(invoice.getHeader().getTnbilltype().equals("T")) {
-			printerService = taxInvoice2Service;
+		switch(invoice.getHeader().getTnbilltype()) {
+			case "T":
+			case "P":
+			case "CM":
+				printerService = taxInvoice2Service;
+				break;
+			default:
+				printerService = quotationService;
+				break;
 		}
-		else if(invoice.getHeader().getTnbilltype().equals("P")) {
-			printerService = taxInvoice2Service;
-		}
-		else {
-			printerService = quotationService;
-		}
+		
 		return printerService.printInvoice(invoice);
 	}
 }
