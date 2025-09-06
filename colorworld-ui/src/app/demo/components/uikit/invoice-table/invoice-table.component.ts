@@ -38,8 +38,9 @@ export class InvoiceTableComponent {
       ) { }
 
   ngOnInit() {
-      this.fetchAll();
-      this.configureFilter();
+    this.filterDate = new Date();            
+    this.fetchAll();
+    this.configureFilter();
   }
 
   toggleFormat() {
@@ -64,7 +65,6 @@ export class InvoiceTableComponent {
                 }
             });
             if(this.initLoad) {
-                this.filterDate = new Date();
                 this.filterInvoice();
                 this.initLoad = false;
             }
@@ -112,15 +112,15 @@ export class InvoiceTableComponent {
     this.spinner.show();
     let filteredData = dataTable.filteredValue == null ? Object.create(this.invoiceDetails) : Object.create(dataTable.filteredValue)
     filteredData.sort((f1, f2) => {
-    // First sort by tnbilltype descending
-    if (f1.tnbilltype > f2.tnbilltype) return -1;
-    if (f1.tnbilltype < f2.tnbilltype) return 1;
+        // First sort by tnbilltype descending
+        if (f1.tnbilltype > f2.tnbilltype) return -1;
+        if (f1.tnbilltype < f2.tnbilltype) return 1;
 
-    // Then sort by tnbillno ascending
-    if (f1.tnbillno < f2.tnbillno) return -1;
-    if (f1.tnbillno > f2.tnbillno) return 1;
+        // Then sort by tnbillno ascending
+        if (f1.tnbillno < f2.tnbillno) return -1;
+        if (f1.tnbillno > f2.tnbillno) return 1;
 
-    return 0;
+        return 0;
     });
     saveAsExcelFile(formatInvoiceData(filteredData), getInvoiceHeader(), "Invoice History");
     this.spinner.hide();

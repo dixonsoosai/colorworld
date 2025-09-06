@@ -66,6 +66,7 @@ export class PurchaseComponent implements OnInit {
         private filterService: FilterService
     ) {}
     ngOnInit(): void {
+        this.filterDate = new Date();
         this.fetchAll();
         this.fetchCustomerList();
         this.configureFilter();
@@ -196,7 +197,6 @@ export class PurchaseComponent implements OnInit {
                     }
                 });
                 if(this.initLoad) {
-                    this.filterDate = new Date();
                     this.filterPurchase();
                     this.initLoad = false;
                 }
