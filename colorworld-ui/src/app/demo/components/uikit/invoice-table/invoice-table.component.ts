@@ -28,6 +28,7 @@ export class InvoiceTableComponent {
   reportFormat = "S";
   overflowLimit: number  = 17;
   billSummary = new BillSummary();
+  initLoad = true;
   
   constructor(private invoiceService: InvoiceService,
       private spinner: NgxSpinnerService,
@@ -47,33 +48,32 @@ export class InvoiceTableComponent {
   fetchAll() {
       this.spinner.show();
       this.invoiceService.fetchAll().subscribe({
-          next: response => {
-              response.data.forEach(item => {
-                  if(item.tntime != null) {
-                      item.tntime = new Date(item.tntime);
-                  }
-                  item.gntamt = parseFloat(item.gntamt.toFixed(0));
-                  item.invalid = false;
-                  if(item.tnbilltype == "P") {
+        next: response => {
+            response.data.forEach(item => {
+                if(item.tntime != null) {
+                    item.tntime = new Date(item.tntime);
+                }
+                item.gntamt = parseFloat(item.gntamt.toFixed(0));
+                item.invalid = false;
+                if(item.tnbilltype == "P") {
                     let expiry = new Date(item.tntime);
                     expiry.setDate(expiry.getDate() + 7);
                     if(expiry <= new Date()) {
                         item.invalid = true;
                     }
-                  }
-              });
-            // Sort by tntime (ascending) and then by tnbillno (ascending)
-            response.data.sort((a, b) => {
-                const timeDiff = b.tntime.getTime() - a.tntime.getTime();
-                if (timeDiff !== 0) return timeDiff;
-                return b.tnbillno > a.tnbillno;
+                }
             });
-              this.invoiceDetails = response.data;
-              this.loading = false;
+            if(this.initLoad) {
+                this.filterDate = new Date();
+                this.filterInvoice();
+                this.initLoad = false;
+            }
+            this.invoiceDetails = response.data;
+            this.loading = false;
           }, 
           error: error => {
-              this.loading = false;
-              this.spinner.hide();
+            this.loading = false;
+            this.spinner.hide();
           },
           complete:() => this.spinner.hide()
       });
@@ -94,83 +94,83 @@ export class InvoiceTableComponent {
   }
 
   configureFilter() {
-      this.filterService.register("dateContains", (value, filter): boolean => {
-          let startDate = filter[0];
-          let endDate = filter[1];
-          return value>= startDate && value <= endDate;
-      });
+    this.filterService.register("dateContains", (value, filter): boolean => {
+        let startDate = filter[0];
+        let endDate = filter[1];
+        return value>= startDate && value <= endDate;
+    });
   }
 
   clear(table: Table) {
-      table.clear();
-      this.filterDate = "";
-      document.getElementById("searchText")["value"] = "";
-      window.location.reload();
+    table.clear();
+    this.filterDate = "";
+    document.getElementById("searchText")["value"] = "";
+    window.location.reload();
   }
 
   exportExcel(dataTable: Table) {
-      this.spinner.show();
-      let filteredData = dataTable.filteredValue == null ? Object.create(this.invoiceDetails) : Object.create(dataTable.filteredValue)
-      filteredData.sort((f1, f2) => {
-        // First sort by tnbilltype descending
-        if (f1.tnbilltype > f2.tnbilltype) return -1;
-        if (f1.tnbilltype < f2.tnbilltype) return 1;
+    this.spinner.show();
+    let filteredData = dataTable.filteredValue == null ? Object.create(this.invoiceDetails) : Object.create(dataTable.filteredValue)
+    filteredData.sort((f1, f2) => {
+    // First sort by tnbilltype descending
+    if (f1.tnbilltype > f2.tnbilltype) return -1;
+    if (f1.tnbilltype < f2.tnbilltype) return 1;
 
-        // Then sort by tnbillno ascending
-        if (f1.tnbillno < f2.tnbillno) return -1;
-        if (f1.tnbillno > f2.tnbillno) return 1;
+    // Then sort by tnbillno ascending
+    if (f1.tnbillno < f2.tnbillno) return -1;
+    if (f1.tnbillno > f2.tnbillno) return 1;
 
-        return 0;
-        });
-        saveAsExcelFile(formatInvoiceData(filteredData), getInvoiceHeader(), "Invoice History");
-        this.spinner.hide();
+    return 0;
+    });
+    saveAsExcelFile(formatInvoiceData(filteredData), getInvoiceHeader(), "Invoice History");
+    this.spinner.hide();
   }
 
-  download(data: InvoiceSummary) {
+    download(data: InvoiceSummary) {
       this.spinner.show();
       this.invoiceService.downloadByBill(data.tnbillno, this.overflowLimit).subscribe({
-          next:response => {
-              let htmlContent = response;
-              const newWindow = window.open('Tax Invoice', '_blank');
-              newWindow.document.write(htmlContent);
-              newWindow.document.close();
-          },
-          error : error => {
-              this.messageService.add(errorToastr("Error generating Invoice"));
-              console.error(error);
-              this.spinner.hide();
-          },
-          complete:() => this.spinner.hide()
+        next:response => {
+            let htmlContent = response;
+            const newWindow = window.open('Tax Invoice', '_blank');
+            newWindow.document.write(htmlContent);
+            newWindow.document.close();
+        },
+        error : error => {
+            this.messageService.add(errorToastr("Error generating Invoice"));
+            console.error(error);
+            this.spinner.hide();
+        },
+        complete:() => this.spinner.hide()
       });
   }
   
   delete(data: InvoiceSummary) {
-      this.confirmationService.confirm({
-          message: `Are you sure that you want to delete Invoice: ${data.tnbillno}?` ,
-          header: 'Confirmation',
-          icon: 'pi pi-exclamation-triangle',
-          accept: () => {
-              this.spinner.show();
-              this.invoiceService.delete(data.tnbillno, data.tnbilltype).subscribe({
-                  next: response => {
-                      if(response.code == 200) {
-                          this.messageService.add(successToastr("Invoice deleted successfully"));
-                          window.location.reload();
-                      }
-                      else {
-                          this.messageService.add(errorToastr("Error deleting Invoice"));
-                          console.error(response);
-                      }
-                  },
-                  error: error => {
-                      this.messageService.add(errorToastr("Error deleting Invoice"));
-                      console.error(error);
-                      this.spinner.hide();
-                  },
-                  complete:() => this.spinner.hide()
+    this.confirmationService.confirm({
+        message: `Are you sure that you want to delete Invoice: ${data.tnbillno}?` ,
+        header: 'Confirmation',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            this.spinner.show();
+            this.invoiceService.delete(data.tnbillno, data.tnbilltype).subscribe({
+                next: response => {
+                    if(response.code == 200) {
+                        this.messageService.add(successToastr("Invoice deleted successfully"));
+                        window.location.reload();
+                    }
+                    else {
+                        this.messageService.add(errorToastr("Error deleting Invoice"));
+                        console.error(response);
+                    }
+                },
+                error: error => {
+                    this.messageService.add(errorToastr("Error deleting Invoice"));
+                    console.error(error);
+                    this.spinner.hide();
+                },
+                complete:() => this.spinner.hide()
 
-              });
-          }
+            });
+        }
       });
     }
 

@@ -55,6 +55,7 @@ export class PurchaseComponent implements OnInit {
     @ViewChild('dt1') dt: Table;
 
     @ViewChild('filter') filter!: ElementRef;
+    initLoad = true;
 
     constructor(
         private spinner: NgxSpinnerService,
@@ -194,6 +195,11 @@ export class PurchaseComponent implements OnInit {
                                 : new Date(item.archqdte.substring(0, 10));
                     }
                 });
+                if(this.initLoad) {
+                    this.filterDate = new Date();
+                    this.filterPurchase();
+                    this.initLoad = false;
+                }
                 this.purchaseDetails = response.data;
                 this.fetchInvoiceList();
             },
