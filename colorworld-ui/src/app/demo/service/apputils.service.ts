@@ -160,7 +160,7 @@ export const getPurchaseHistoryHeader = () : any => {
 export const formatInvoiceData = (data: InvoiceSummary[]) => {
 	return data.map(element => {
 		return {
-			tnbillno: formatBillNum(element.tnbillno),
+			tnbillno: formatBillNum(element.tnbillno, element.tnbilltype),
 			tntime: getDMY(new Date(element.tntime)),
 			tnname: element.tnname,
 			tnpgst: element.tnpgst,
@@ -174,12 +174,16 @@ export const formatInvoiceData = (data: InvoiceSummary[]) => {
 	});
 }
 
-export const formatBillNum = (billnum: number): string => {
+export const formatBillNum = (billnum: number, billType: string): string => {
 
 	if(billnum > 2000000){
 		let year = parseInt(billnum.toString().substring(0,4));
 		let num = billnum.toString().substring(4);
-		return `${num}/${year.toString()}-${(year + 1).toString().substring(2, 4)}`;
+		let invoice = `${num}/${year.toString()}-${(year + 1).toString().substring(2, 4)}`;
+		if(billType === "CM") {
+			invoice += "/CM"; 
+		}
+		return invoice;
 	}
 	return billnum.toString();
 };

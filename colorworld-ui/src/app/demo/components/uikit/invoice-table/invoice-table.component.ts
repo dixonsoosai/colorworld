@@ -111,9 +111,19 @@ export class InvoiceTableComponent {
   exportExcel(dataTable: Table) {
       this.spinner.show();
       let filteredData = dataTable.filteredValue == null ? Object.create(this.invoiceDetails) : Object.create(dataTable.filteredValue)
-      filteredData.sort((f1, f2) => f1.tnbillno <= f2.tnbillno ? -1 : 1);
-      saveAsExcelFile(formatInvoiceData(filteredData), getInvoiceHeader(), "Invoice History");
-      this.spinner.hide();
+      filteredData.sort((f1, f2) => {
+        // First sort by tnbilltype descending
+        if (f1.tnbilltype > f2.tnbilltype) return -1;
+        if (f1.tnbilltype < f2.tnbilltype) return 1;
+
+        // Then sort by tnbillno ascending
+        if (f1.tnbillno < f2.tnbillno) return -1;
+        if (f1.tnbillno > f2.tnbillno) return 1;
+
+        return 0;
+        });
+        saveAsExcelFile(formatInvoiceData(filteredData), getInvoiceHeader(), "Invoice History");
+        this.spinner.hide();
   }
 
   download(data: InvoiceSummary) {
