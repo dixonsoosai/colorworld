@@ -28,7 +28,6 @@ export class InvoiceTableComponent {
   reportFormat = "S";
   overflowLimit: number  = 17;
   billSummary = new BillSummary();
-  initLoad = true;
   
   constructor(private invoiceService: InvoiceService,
       private spinner: NgxSpinnerService,
@@ -64,10 +63,6 @@ export class InvoiceTableComponent {
                     }
                 }
             });
-            if(this.initLoad) {
-                this.filterInvoice();
-                this.initLoad = false;
-            }
             this.invoiceDetails = response.data;
             this.loading = false;
           }, 
