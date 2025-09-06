@@ -37,7 +37,6 @@ export class InvoiceTableComponent {
       ) { }
 
   ngOnInit() {
-    this.filterDate = new Date();            
     this.fetchAll();
     this.configureFilter();
   }
