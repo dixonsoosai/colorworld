@@ -7,4 +7,5 @@ public class SSTNJNP_KEY {
 
 	private int tnbillno;
 	private int tnseqno;
+	private String tnbilltype;
 }

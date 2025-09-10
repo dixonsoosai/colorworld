@@ -1,15 +1,18 @@
 package com.mrajupaint.colorworld.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mrajupaint.colorworld.common.AppUtils;
+import com.mrajupaint.colorworld.config.LogTime;
 import com.mrajupaint.colorworld.exception.ColorWorldException;
 import com.mrajupaint.colorworld.model.InvoiceSummary;
 import com.mrajupaint.colorworld.model.TaxInvoice;
@@ -31,8 +34,21 @@ public class InvoiceService {
 	
 	private final TransactionRepository transactionRepository;
 	
+	private List<InvoiceSummary> invoiceSummary = new ArrayList<>();
+
+	@Async
+	@LogTime
+	public void refreshInvoiceSummary() {
+		synchronized(this) {
+			invoiceSummary = headerRepository.getInvoiceBills();
+		}
+	}
+	
 	public List<InvoiceSummary> getInvoiceBills() {
-		return headerRepository.getInvoiceBills(); 
+		if(invoiceSummary.isEmpty()) {
+			refreshInvoiceSummary();
+		}
+		return invoiceSummary; 
 	}
 	
 	public int refreshBillNum(Timestamp invoiceDate, String billType) {
@@ -65,6 +81,7 @@ public class InvoiceService {
 		log.info("Delete from SSGNJNP");
 		transactionRepository.deleteInvoice(billnum, billType);
 		log.info("Delete from SSTNJNP");
+		refreshInvoiceSummary();
 		return "Bill deleted successfully";
 	}
 

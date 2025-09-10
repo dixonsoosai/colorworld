@@ -62,6 +62,24 @@ export class InvoiceTableComponent {
                     }
                 }
             });
+            response.data.sort((a, b) => {
+                // 1. billtype DESC
+                if (a.tnbilltype < b.tnbilltype) return 1;
+                if (a.tnbilltype > b.tnbilltype) return -1;
+
+                // 2. date part of tntime DESC
+                const aDate = new Date(a.tntime.getFullYear(), a.tntime.getMonth(), a.tntime.getDate());
+                const bDate = new Date(b.tntime.getFullYear(), b.tntime.getMonth(), b.tntime.getDate());
+
+                if (aDate < bDate) return 1;
+                if (aDate > bDate) return -1;
+
+                // 3. billno DESC (assuming numeric, if string use localeCompare)
+                if (a.tnbillno < b.tnbillno) return 1;
+                if (a.tnbillno > b.tnbillno) return -1;
+
+                return 0;
+            });
             this.invoiceDetails = response.data;
             this.loading = false;
           }, 
