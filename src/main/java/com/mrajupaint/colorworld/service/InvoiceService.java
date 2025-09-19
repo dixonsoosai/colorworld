@@ -2,8 +2,10 @@ package com.mrajupaint.colorworld.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -34,22 +36,48 @@ public class InvoiceService {
 	
 	private final TransactionRepository transactionRepository;
 	
-	private List<InvoiceSummary> invoiceSummary = new ArrayList<>();
+	private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
+	private volatile List<InvoiceSummary> invoiceSummary = Collections.emptyList();
 
 	@Async
-	@LogTime
-	public void refreshInvoiceSummary() {
-		synchronized(this) {
-			invoiceSummary = headerRepository.getInvoiceBills();
-		}
-	}
-	
-	public List<InvoiceSummary> getInvoiceBills() {
-		if(invoiceSummary.isEmpty()) {
-			refreshInvoiceSummary();
-		}
-		return invoiceSummary; 
-	}
+    @LogTime
+    public void refreshInvoiceSummary() {
+        rwLock.writeLock().lock();
+        try {
+            invoiceSummary = Collections.unmodifiableList(
+                new ArrayList<>(headerRepository.getInvoiceBills())
+            );
+        } finally {
+            rwLock.writeLock().unlock();
+        }
+    }
+
+    @LogTime
+    private void forceRefreshInvoiceSummary() {
+        rwLock.writeLock().lock();
+        try {
+            invoiceSummary = Collections.unmodifiableList(
+                new ArrayList<>(headerRepository.getInvoiceBills())
+            );
+        } finally {
+            rwLock.writeLock().unlock();
+        }
+    }
+
+    public List<InvoiceSummary> getInvoiceBills() {
+        rwLock.readLock().lock();
+        try {
+            if (invoiceSummary.isEmpty()) {
+                // must release read lock before doing a write
+                rwLock.readLock().unlock();
+                forceRefreshInvoiceSummary();
+                rwLock.readLock().lock(); // reacquire before returning
+            }
+            return invoiceSummary;
+        } finally {
+            rwLock.readLock().unlock();
+        }
+    }
 	
 	public int refreshBillNum(Timestamp invoiceDate, String billType) {
 		Timestamp startDate = AppUtils.getStartFYear(invoiceDate);
