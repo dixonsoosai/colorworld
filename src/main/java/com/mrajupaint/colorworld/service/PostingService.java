@@ -118,7 +118,6 @@ public class PostingService {
 			sSTNJNPRepository.saveAll(taxInvoice.getDetails());
 			sSTNHDPRepository.save(taxInvoice.getHeader());
 			sSGNJNPRepository.saveAll(taxInvoice.getGst());
-			invoiceService.refreshInvoiceSummary();
 			return new ServiceResponse<>(200, AppConstants.SUCCESS, 
 					"Bill generated successfully", buffer.get());
 		}

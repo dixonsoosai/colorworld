@@ -50,6 +50,9 @@ public class PostingController {
 			log.error("Exception in generateBill method: ", e);
 			return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		finally {
+			invoiceService.refreshInvoiceSummary();
+		}
 	}
 	
 	@LogTime

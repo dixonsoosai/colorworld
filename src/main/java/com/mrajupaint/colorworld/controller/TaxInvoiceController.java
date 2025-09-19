@@ -113,6 +113,9 @@ public class TaxInvoiceController {
 			response.setStatus(AppConstants.FAILED);
 			response.setErrorMessage(e.getMessage());
 		}
+		finally {
+			invoiceService.refreshInvoiceSummary();
+		}
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	

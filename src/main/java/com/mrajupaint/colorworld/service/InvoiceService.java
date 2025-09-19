@@ -81,7 +81,6 @@ public class InvoiceService {
 		log.info("Delete from SSGNJNP");
 		transactionRepository.deleteInvoice(billnum, billType);
 		log.info("Delete from SSTNJNP");
-		refreshInvoiceSummary();
 		return "Bill deleted successfully";
 	}
 
